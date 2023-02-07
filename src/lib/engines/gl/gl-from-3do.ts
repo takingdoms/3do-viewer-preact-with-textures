@@ -41,11 +41,11 @@ function glModelFrom3do(object3do: Object3do, ctx: GlContext): GlModel {
   const pyramidColor = new GlColorBuffer(ctx.getGl(), ctx.getProgramInfo().attribLocations.vertexColor);
   pyramidColor.bufferData(
     GlColorBuffer.createBufferSourceFromColors([
-      white,  white,  white,          // left triangle   (white)
-      red,    red,    red,            // up triangle     (red)
-      green,  green,  green,          // right triangle  (green)
-      blue,   blue,   blue,           // bottom triangle (blue)
-      yellow, yellow, yellow, yellow, // base square     (yellow)
+      blue,   red,    white,          // left triangle   (white)
+      red,    green,  white,          // up triangle     (red)
+      green,  yellow, white,          // right triangle  (green)
+      blue,   yellow, white,          // bottom triangle (blue)
+      blue,   red,    green, yellow,  // base square     (yellow)
     ])
   );
 
