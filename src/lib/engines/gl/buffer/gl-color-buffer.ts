@@ -29,14 +29,7 @@ export class GlColorBuffer extends GlArrayBuffer {
   }
 
   static createBufferSourceFromColors(colors: ColorRGBA[]): BufferSource {
-    const data: number[] = [];
-
-    for (let i = 0; i < colors.length; ++i) {
-      const nextColor = colors[i];
-      // colors = colors.concat(nextColor, nextColor, nextColor, nextColor);
-      data.push(...nextColor, ...nextColor, ...nextColor, ...nextColor);
-    }
-
+    const data: number[] = colors.flat();
     return new Float32Array(data);
   }
 }

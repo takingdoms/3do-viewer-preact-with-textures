@@ -113,6 +113,7 @@ export class WebGlRenderer extends Engine {
     const yOffset = this.modelControls.translationY * TRANSLATION_MODIFIER * -1;
     const zOffset = (BASE_CAMERA_OFFSET + this.modelControls.zoom * ZOOM_MODIFIER) * -1;
 
+
     this.rootEntity.resetTransformations();
     this.rootEntity.translate(xOffset, yOffset, zOffset);
     this.rootEntity.rotateX(glMatrix.toRadian(this.modelControls.rotationX * .75));

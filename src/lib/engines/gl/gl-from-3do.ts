@@ -5,6 +5,7 @@ import { GlPositionBuffer } from "./buffer/gl-position-buffer";
 import { GlContext } from "./gl-context";
 import { GlEntity } from "./gl-entity";
 import { GlModel } from "./gl-model";
+import { ColorRGBA } from "./types";
 
 export function glEntityFrom3do(object3do: Object3do, ctx: GlContext): GlEntity {
   const model = glModelFrom3do(object3do, ctx);
@@ -14,48 +15,52 @@ export function glEntityFrom3do(object3do: Object3do, ctx: GlContext): GlEntity 
 }
 
 function glModelFrom3do(object3do: Object3do, ctx: GlContext): GlModel {
-  const cubePosition = new GlPositionBuffer(ctx.getGl(), ctx.getProgramInfo().attribLocations.vertexPosition);
-  cubePosition.bufferData(
+  const v0 = [-1,  0, +1];
+  const v1 = [-1,  0, -1];
+  const v2 = [+1,  0, -1];
+  const v3 = [+1,  0, +1];
+  const v4 = [ 0, +1,  0];
+
+  const pyramidPosition = new GlPositionBuffer(ctx.getGl(), ctx.getProgramInfo().attribLocations.vertexPosition);
+  pyramidPosition.bufferData(
     GlPositionBuffer.createBufferSourceFromPositions([
-      // Front face
-      -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0,
-      // Back face
-      -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0,
-      // Top face
-      -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0,
-      // Bottom face
-      -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0,
-      // Right face
-      1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0,
-      // Left face
-      -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0,
+      ...v0, ...v1, ...v4,        // left
+      ...v1, ...v2, ...v4,        // up
+      ...v2, ...v3, ...v4,        // right
+      ...v0, ...v3, ...v4,        // down
+      ...v0, ...v1, ...v2, ...v3, // base
     ])
   );
 
-  const cubeColor = new GlColorBuffer(ctx.getGl(), ctx.getProgramInfo().attribLocations.vertexColor);
-  cubeColor.bufferData(
+  const white: ColorRGBA = [1.0, 1.0, 1.0, 1.0];
+  const red: ColorRGBA = [1.0, 0.0, 0.0, 1.0];
+  const green: ColorRGBA = [0.0, 1.0, 0.0, 1.0];
+  const blue: ColorRGBA = [0.0, 0.0, 1.0, 1.0];
+  const yellow: ColorRGBA = [1.0, 1.0, 0.0, 1.0];
+
+  const pyramidColor = new GlColorBuffer(ctx.getGl(), ctx.getProgramInfo().attribLocations.vertexColor);
+  pyramidColor.bufferData(
     GlColorBuffer.createBufferSourceFromColors([
-      [1.0, 1.0, 1.0, 1.0], // Front face: white
-      [1.0, 0.0, 0.0, 1.0], // Back face: red
-      [0.0, 1.0, 0.0, 1.0], // Top face: green
-      [0.0, 0.0, 1.0, 1.0], // Bottom face: blue
-      [1.0, 1.0, 0.0, 1.0], // Right face: yellow
-      [1.0, 0.0, 1.0, 1.0], // Left face: purple
+      white,  white,  white,          // left triangle   (white)
+      red,    red,    red,            // up triangle     (red)
+      green,  green,  green,          // right triangle  (green)
+      blue,   blue,   blue,           // bottom triangle (blue)
+      yellow, yellow, yellow, yellow, // base square     (yellow)
     ])
   );
 
-  const cubeIndices = new GlIndexBuffer(ctx.getGl());
-  cubeIndices.bufferData(
+  const pyramidIndices = new GlIndexBuffer(ctx.getGl());
+  pyramidIndices.bufferData(
     GlIndexBuffer.createBufferSourceFromIndices([
-        0,  1,  2,  0,  2,  3, // front
-        4,  5,  6,  4,  6,  7, // back
-        8,  9, 10,  8, 10, 11, // top
-      12, 13, 14, 12, 14, 15, // bottom
-      16, 17, 18, 16, 18, 19, // right
-      20, 21, 22, 20, 22, 23, // left
+       0,  1,  2, // left
+       3,  4,  5, // up
+       6,  7,  8, // right
+       9, 10, 11, // down
+      12, 13, 14, // base (top-left half)
+      12, 14, 15, // base (bottom-right half)
     ])
   );
 
-  const model = new GlModel(cubePosition, cubeColor, cubeIndices);
+  const model = new GlModel(pyramidPosition, pyramidColor, pyramidIndices);
   return model;
 }
