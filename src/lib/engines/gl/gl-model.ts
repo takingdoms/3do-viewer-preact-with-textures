@@ -18,11 +18,6 @@ export class GlModel {
     this.indexBuffer = indexBuffer;
   }
 
-  static createFromTODO(todo: any): GlModel {
-    throw 'TODO';
-    // return new GlObject();
-  }
-
   draw(ctx: GlContext) {
     this.positionBuffer.use();
     this.colorBuffer.use();

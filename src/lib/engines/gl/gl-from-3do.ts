@@ -5,7 +5,8 @@ import { GlPositionBuffer } from "./buffer/gl-position-buffer";
 import { GlContext } from "./gl-context";
 import { GlEntity } from "./gl-entity";
 import { GlModel } from "./gl-model";
-import { ColorRGBA } from "./types";
+import { GlModelHelpers } from "./gl-model-helpers";
+import { ColorRGBA, Vector3 } from "./types";
 
 export function glEntityFrom3do(object3do: Object3do, ctx: GlContext): GlEntity {
   const model = glModelFrom3do(object3do, ctx);
@@ -15,22 +16,11 @@ export function glEntityFrom3do(object3do: Object3do, ctx: GlContext): GlEntity 
 }
 
 function glModelFrom3do(object3do: Object3do, ctx: GlContext): GlModel {
-  const v0 = [-1,  0, +1];
-  const v1 = [-1,  0, -1];
-  const v2 = [+1,  0, -1];
-  const v3 = [+1,  0, +1];
-  const v4 = [ 0, +1,  0];
-
-  const pyramidPosition = new GlPositionBuffer(ctx.getGl(), ctx.getProgramInfo().attribLocations.vertexPosition);
-  pyramidPosition.bufferData(
-    GlPositionBuffer.createBufferSourceFromPositions([
-      ...v0, ...v1, ...v4,        // left
-      ...v1, ...v2, ...v4,        // up
-      ...v2, ...v3, ...v4,        // right
-      ...v0, ...v3, ...v4,        // down
-      ...v0, ...v1, ...v2, ...v3, // base
-    ])
-  );
+  const v0: Vector3 = [-1,  0, +1];
+  const v1: Vector3 = [-1,  0, -1];
+  const v2: Vector3 = [+1,  0, -1];
+  const v3: Vector3 = [+1,  0, +1];
+  const v4: Vector3 = [ 0, +1,  0];
 
   const white: ColorRGBA = [1.0, 1.0, 1.0, 1.0];
   const red: ColorRGBA = [1.0, 0.0, 0.0, 1.0];
@@ -38,29 +28,21 @@ function glModelFrom3do(object3do: Object3do, ctx: GlContext): GlModel {
   const blue: ColorRGBA = [0.0, 0.0, 1.0, 1.0];
   const yellow: ColorRGBA = [1.0, 1.0, 0.0, 1.0];
 
-  const pyramidColor = new GlColorBuffer(ctx.getGl(), ctx.getProgramInfo().attribLocations.vertexColor);
-  pyramidColor.bufferData(
-    GlColorBuffer.createBufferSourceFromColors([
-      blue,   red,    white,          // left triangle   (white)
-      red,    green,  white,          // up triangle     (red)
-      green,  yellow, white,          // right triangle  (green)
-      blue,   yellow, white,          // bottom triangle (blue)
-      blue,   red,    green, yellow,  // base square     (yellow)
-    ])
-  );
-
-  const pyramidIndices = new GlIndexBuffer(ctx.getGl());
-  pyramidIndices.bufferData(
-    GlIndexBuffer.createBufferSourceFromIndices([
-       0,  1,  2, // left
-       3,  4,  5, // up
-       6,  7,  8, // right
-       9, 10, 11, // down
-      12, 13, 14, // base (top-left half)
-      12, 14, 15, // base (bottom-right half)
-    ])
-  );
-
-  const model = new GlModel(pyramidPosition, pyramidColor, pyramidIndices);
-  return model;
+  return GlModelHelpers.createModelFromIndexedColoredVertices(ctx, {
+    vertices: [
+      { vertex: v0, color: blue },
+      { vertex: v1, color: red },
+      { vertex: v2, color: green },
+      { vertex: v3, color: yellow },
+      { vertex: v4, color: white },
+    ],
+    indices: [
+      0, 1, 4,
+      1, 2, 4,
+      2, 3, 4,
+      0, 3, 4,
+      0, 1, 2,
+      0, 2, 3,
+    ],
+  });
 }
