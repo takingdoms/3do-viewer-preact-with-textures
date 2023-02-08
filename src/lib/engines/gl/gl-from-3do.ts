@@ -29,12 +29,12 @@ function glModelFrom3do(object3do: Object3do, ctx: GlContext): GlModel {
   const yel: ColorRGBA = [1.0, 1.0, 0.0, 1.0];
 
   return GlModelHelpers.createModelFromSmartColoredVertices(ctx, [
-    { vertex: v0, color: blu }, { vertex: v1, color: blu }, { vertex: v4, color: blu },
-    { vertex: v1, color: red }, { vertex: v2, color: red }, { vertex: v4, color: red },
-    { vertex: v2, color: gre }, { vertex: v3, color: gre }, { vertex: v4, color: gre },
-    { vertex: v0, color: yel }, { vertex: v3, color: yel }, { vertex: v4, color: yel },
+    { vertex: v0, color: blu }, { vertex: v1, color: red }, { vertex: v4, color: wht },
+    { vertex: v1, color: red }, { vertex: v2, color: gre }, { vertex: v4, color: wht },
+    { vertex: v2, color: gre }, { vertex: v3, color: yel }, { vertex: v4, color: wht },
+    { vertex: v0, color: blu }, { vertex: v3, color: yel }, { vertex: v4, color: wht },
 
-    { vertex: v0, color: wht }, { vertex: v1, color: wht }, { vertex: v2, color: wht },
-    { vertex: v0, color: wht }, { vertex: v2, color: wht }, { vertex: v3, color: wht },
+    { vertex: v0, color: blu }, { vertex: v1, color: red }, { vertex: v2, color: gre },
+    { vertex: v0, color: blu }, { vertex: v2, color: gre }, { vertex: v3, color: yel },
   ]);
 }

@@ -43,12 +43,11 @@ function createModelFromIndexedColoredVertices(ctx: GlContext, data: IndexedColo
   return new GlModel(position, color, indices);
 }
 
-// v0    0
-// v1    1
-// v2    2
-// v0    3
-// v2    4
-
+/**
+ * Similar to createModelFromIndexedColoredVertices but you can simply pass only the vertex+color
+ * information and the function will automatically remove redundant (identical vertex+color) items
+ * and automatically generate indices.
+ */
 function createModelFromSmartColoredVertices(ctx: GlContext, data: ColoredVertex[]): GlModel {
   const uniqueData: ColoredVertex[] = []; // data but without redundant (identical) items
   const uniqueDataIndices: number[] = []; // indexes data's items into the uniqueData items
@@ -68,6 +67,9 @@ function createModelFromSmartColoredVertices(ctx: GlContext, data: ColoredVertex
     uniqueData.push(item);
     uniqueDataIndices.push(uniqueData.length - 1);
   }
+
+  // console.log(data);
+  // console.log(uniqueData);
 
   return createModelFromIndexedColoredVertices(ctx, {
     vertices: uniqueData,
