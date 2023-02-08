@@ -28,25 +28,13 @@ function glModelFrom3do(object3do: Object3do, ctx: GlContext): GlModel {
   const blu: ColorRGBA = [0.0, 0.0, 1.0, 1.0];
   const yel: ColorRGBA = [1.0, 1.0, 0.0, 1.0];
 
-  return GlModelHelpers.createModelFromIndexedColoredVertices(ctx, {
-    vertices: [
-      { vertex: v0, color: blu }, { vertex: v1, color: blu }, { vertex: v4, color: blu }, // 0, 1, 2
-      { vertex: v1, color: red }, { vertex: v2, color: red }, { vertex: v4, color: red }, // 3, 4, 5
-      { vertex: v2, color: gre }, { vertex: v3, color: gre }, { vertex: v4, color: gre }, // 6, 7, 8
-      { vertex: v0, color: yel }, { vertex: v3, color: yel }, { vertex: v4, color: yel }, // 9, 10, 11
+  return GlModelHelpers.createModelFromSmartColoredVertices(ctx, [
+    { vertex: v0, color: blu }, { vertex: v1, color: blu }, { vertex: v4, color: blu },
+    { vertex: v1, color: red }, { vertex: v2, color: red }, { vertex: v4, color: red },
+    { vertex: v2, color: gre }, { vertex: v3, color: gre }, { vertex: v4, color: gre },
+    { vertex: v0, color: yel }, { vertex: v3, color: yel }, { vertex: v4, color: yel },
 
-      { vertex: v0, color: wht }, // 12
-      { vertex: v1, color: wht }, // 13
-      { vertex: v2, color: wht }, // 14
-      { vertex: v3, color: wht }, // 15
-    ],
-    indices: [
-      0, 1, 2,
-      3, 4, 5,
-      6, 7, 8,
-      9, 10, 11,
-      12, 13, 14,
-      12, 14, 15,
-    ],
-  });
+    { vertex: v0, color: wht }, { vertex: v1, color: wht }, { vertex: v2, color: wht },
+    { vertex: v0, color: wht }, { vertex: v2, color: wht }, { vertex: v3, color: wht },
+  ]);
 }
