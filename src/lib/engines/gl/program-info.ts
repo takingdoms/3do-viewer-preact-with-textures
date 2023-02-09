@@ -7,5 +7,6 @@ export type ProgramInfo = {
   uniformLocations: {
     modelViewMatrix: WebGLUniformLocation;
     projectionMatrix: WebGLUniformLocation;
+    baseColor: WebGLUniformLocation;
   };
 };

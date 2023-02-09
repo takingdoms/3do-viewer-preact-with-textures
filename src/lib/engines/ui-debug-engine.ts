@@ -1,14 +1,14 @@
-import { Engine, EngineListener } from "./engine";
+import { Engine, EngineConfig, EngineListener } from "./engine";
 import { ModelControls } from "../types";
 
 export class UiDebugEngine extends Engine {
   private ctx: CanvasRenderingContext2D;
   private renderCount = 0;
 
-  constructor(canvas: HTMLCanvasElement, modelControls: ModelControls, listener: EngineListener) {
-    super(canvas, modelControls, listener);
+  constructor(config: EngineConfig) {
+    super(config);
 
-    const ctx = canvas.getContext('2d');
+    const ctx = config.canvas.getContext('2d');
 
     if (ctx === null) {
       window.alert('Canvas not supported in this browser.');
@@ -24,6 +24,8 @@ export class UiDebugEngine extends Engine {
   }
 
   protected render(): void {
+    const { modelControls } = this.getConfig();
+
     console.log(`Rendering next 🖼️ (#${this.renderCount})`);
     const startTime = performance.now();
 
@@ -49,13 +51,13 @@ export class UiDebugEngine extends Engine {
       `renderCount: ${this.renderCount}`,
       `viewWidth: ${viewWidth}`,
       `viewHeight: ${viewHeight}`,
-      `zoom: ${this.modelControls.zoom}`,
-      `rotationX: ${this.modelControls.rotationX}`,
-      `rotationY: ${this.modelControls.rotationY}`,
-      `rotationZ: ${this.modelControls.rotationZ}`,
-      `translationX: ${this.modelControls.translationX}`,
-      `translationY: ${this.modelControls.translationY}`,
-      `viewMode: ${this.modelControls.viewMode}`,
+      `zoom: ${modelControls.zoom}`,
+      `rotationX: ${modelControls.rotationX}`,
+      `rotationY: ${modelControls.rotationY}`,
+      `rotationZ: ${modelControls.rotationZ}`,
+      `translationX: ${modelControls.translationX}`,
+      `translationY: ${modelControls.translationY}`,
+      `viewMode: ${modelControls.viewMode}`,
     ];
 
     const textSize = 18;

@@ -1,17 +1,22 @@
-import { mat4 } from "gl-matrix";
+import { mat4, ReadonlyVec4 } from "gl-matrix";
 import { GlContext } from "./gl-context";
 import { GlModel } from "./gl-model";
 import { Vector3 } from "./types";
 
+const WHITE = new Float32Array([1.0, 1.0, 1.0, 1.0]);
+
 export class GlEntity {
   private model: GlModel | null;
-  private modelViewMatrix: mat4;
+  private name: string | null;
   private children: GlEntity[];
+  private modelViewMatrix: mat4;
+  private color?: ReadonlyVec4;
 
-  constructor(model: GlModel | null) {
+  constructor(model: GlModel | null, name?: string) {
     this.model = model;
-    this.modelViewMatrix = mat4.create();
+    this.name = name ?? null;
     this.children = [];
+    this.modelViewMatrix = mat4.create();
   }
 
   addChild(child: GlEntity) {
@@ -19,24 +24,50 @@ export class GlEntity {
   }
 
   render(ctx: GlContext) {
-    this.renderChild(ctx, mat4.create());
+    this.renderChild(ctx, mat4.create(), this.color ?? WHITE);
   }
 
-  private renderChild(ctx: GlContext, relativeModelViewMatrix: mat4) {
-    mat4.mul(relativeModelViewMatrix, relativeModelViewMatrix, this.modelViewMatrix);
+  private renderChild(ctx: GlContext, relativeModelViewMatrix: mat4, parentColor: ReadonlyVec4) {
+    const localModelViewMatrix = mat4.create();
+    mat4.mul(localModelViewMatrix, relativeModelViewMatrix, this.modelViewMatrix);
+
+    const nextColor = this.color ?? parentColor; // use this entity's color or inherit from parent!
 
     if (this.model !== null) {
-      ctx.setUniform('model', relativeModelViewMatrix);
+      ctx.setUniformFloat4('baseColor', nextColor);
+      ctx.setUniformMatrix4('model', localModelViewMatrix);
+
       this.model.draw(ctx);
     }
 
     for (const child of this.children) {
-      child.renderChild(ctx, relativeModelViewMatrix);
+      child.renderChild(ctx, localModelViewMatrix, nextColor);
     }
+  }
+
+  findChild(name: string, recursive: boolean): GlEntity | undefined {
+    for (const child of this.children) {
+      if (child.name === name) {
+        return child;
+      }
+
+      if (recursive) {
+        const result = child.findChild(name, recursive);
+        if (result !== undefined) {
+          return result;
+        }
+      }
+    }
+
+    return undefined;
   }
 
   translate(x: number, y: number, z: number) {
     mat4.translate(this.modelViewMatrix, this.modelViewMatrix, [x, y, z]);
+  }
+
+  scale(x: number, y: number, z: number) {
+    mat4.scale(this.modelViewMatrix, this.modelViewMatrix, [x, y, z]);
   }
 
   rotate(rad: number, x: boolean, y: boolean, z: boolean) {
@@ -58,6 +89,15 @@ export class GlEntity {
 
   resetTransformations() {
     this.modelViewMatrix = mat4.create();
+  }
+
+  setColor(color: ReadonlyVec4) {
+    this.color = color;
+  }
+
+  /** Make this entity use its parent's color */
+  removeColor() {
+    this.color = undefined;
   }
 }
 

@@ -2,7 +2,11 @@ import { FunctionComponent, h } from 'preact';
 import { useCallback, useEffect } from "preact/hooks";
 
 const SAMPLES: Array<{ path: string; name: string }> = [
+  'aradrag.3do',
+  'tardrag.3do',
+  'verdrag.3do',
   'zondrag.3do',
+  'creaeri.3do',
 ].map((name) => ({
   name,
   path: '/assets/3do-samples/' + name,

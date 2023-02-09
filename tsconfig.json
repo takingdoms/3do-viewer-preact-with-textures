@@ -16,7 +16,8 @@
 			"react": ["./node_modules/preact/compat"],
 			"react-dom": ["./node_modules/preact/compat"]
 		},
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "strict": true
 	},
 	"include": ["src/**/*"],
   "ts-node": {

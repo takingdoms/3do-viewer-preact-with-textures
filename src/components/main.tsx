@@ -6,13 +6,13 @@ import { DEFAULT_MODEL_CONTROLS } from "../lib/types";
 import { Engine } from "../lib/engines/engine";
 import { UiDebugEngine } from "../lib/engines/ui-debug-engine";
 import { Object3doTree } from "@takingdoms/lib-3do";
-import { WebGlRenderer } from "../lib/engines/webgl-renderer";
+import { WebglEngine, WebglEngineShaderSources } from "../lib/engines/webgl-engine";
 
 const CONTENT_WIDTH = '1600px';
 
 const Main: FunctionComponent<{
   engineName: 'webgl' | 'ui-debug';
-  shaders: { vsSource: string; fsSource: string; };
+  shaders: WebglEngineShaderSources;
   object3doTree: Object3doTree;
 }> = ({ engineName, shaders, object3doTree }) => {
   console.log('Re-rendering App');
@@ -38,17 +38,22 @@ const Main: FunctionComponent<{
     let engine: Engine;
 
     if (engineName === 'webgl') {
-      engine = new WebGlRenderer(
-        canvas,
-        DEFAULT_MODEL_CONTROLS,
-        { onModelControlsChanged: setModelControls },
-        shaders.vsSource,
-        shaders.fsSource,
+      engine = new WebglEngine(
+        {
+          mode: 'continuous',
+          canvas: canvas,
+          modelControls: DEFAULT_MODEL_CONTROLS,
+          listener: { onModelControlsChanged: setModelControls },
+        },
+        shaders,
         object3doTree,
       );
     } else {
-      engine = new UiDebugEngine(canvas, DEFAULT_MODEL_CONTROLS, {
-        onModelControlsChanged: setModelControls,
+      engine = new UiDebugEngine({
+        mode: 'static',
+        canvas: canvas,
+        modelControls: DEFAULT_MODEL_CONTROLS,
+        listener: { onModelControlsChanged: setModelControls },
       });
     }
 

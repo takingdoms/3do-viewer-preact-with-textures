@@ -4,20 +4,28 @@ export type EngineListener = {
   onModelControlsChanged: (modelControls: ModelControls) => void;
 };
 
-export abstract class Engine {
-  private canvas: HTMLCanvasElement;
-  private _modelControls: ModelControls; // TODO maybe declare each inner var individually
-  private listener: EngineListener;
-  private resizeObserver: ResizeObserver | undefined;
-  private cleanupEvents: () => void;
+export type EngineConfig = {
+  mode:
+    | 'static'      // only re-renders when the camera or viewport is updated
+    | 'continuous'  // re-renders continuously (usually at 60 FPS)
+  ;
+  canvas: HTMLCanvasElement;
+  modelControls: ModelControls;
+  listener: EngineListener;
+};
 
-  constructor(canvas: HTMLCanvasElement, modelControls: ModelControls, listener: EngineListener) {
-    this.canvas = canvas;
-    this._modelControls = modelControls;
-    this.listener = listener;
+export abstract class Engine {
+  private config: EngineConfig;
+  private resizeObserver: ResizeObserver | undefined;
+  private cleanupEvents?: () => void;
+
+  constructor(config: EngineConfig) {
+    this.config = config;
   }
 
   protected setupEvents() {
+    const { listener, canvas, mode } = this.config;
+
     //:: Handle mouse events
 
     let mouseAction: 'rotate' | 'pan' | undefined;
@@ -50,12 +58,12 @@ export abstract class Engine {
       mouseStartY = ev.clientY;
 
       controlStartX = mouseAction === 'rotate'
-        ? this._modelControls.rotationX
-        : this._modelControls.translationX;
+        ? this.config.modelControls.rotationX
+        : this.config.modelControls.translationX;
 
       controlStartY = mouseAction === 'rotate'
-        ? this._modelControls.rotationY
-        : this._modelControls.translationY;
+        ? this.config.modelControls.rotationY
+        : this.config.modelControls.translationY;
     };
 
     const onMouseMove = (ev: MouseEvent) => {
@@ -74,28 +82,30 @@ export abstract class Engine {
 
       if (deltaX !== 0) {
         if (mouseAction === 'rotate') {
-          this._modelControls.rotationY = controlStartY + deltaX;
+          this.config.modelControls.rotationY = controlStartY + deltaX;
         } else {
-          this._modelControls.translationX = controlStartX + deltaX;
+          this.config.modelControls.translationX = controlStartX + deltaX;
         }
       }
 
       if (deltaY !== 0) {
         if (mouseAction === 'rotate') {
-          this._modelControls.rotationX = controlStartX + deltaY;
+          this.config.modelControls.rotationX = controlStartX + deltaY;
         } else {
-          this._modelControls.translationY = controlStartY + deltaY;
+          this.config.modelControls.translationY = controlStartY + deltaY;
         }
       }
 
-      this.render();
+      if (mode === 'static') {
+        this.render();
+      }
     };
 
     const onMouseUp = () => {
       mouseButton = mouseAction = mouseStartX = mouseStartY = controlStartX = controlStartY =
         undefined;
 
-      this.listener.onModelControlsChanged({ ...this._modelControls });
+      listener.onModelControlsChanged({ ...this.config.modelControls });
     };
 
     const onVisibilityChange = () => {
@@ -108,31 +118,35 @@ export abstract class Engine {
       if (ev.deltaY === 0)
         return;
 
-      this._modelControls.zoom += ev.deltaY;
-      this.render();
-      this.listener.onModelControlsChanged({ ...this._modelControls }); // TODO DEBOUNCE! (or not?)
+      this.config.modelControls.zoom += ev.deltaY;
+
+      if (this.config.mode === 'static') {
+        this.render();
+      }
+
+      listener.onModelControlsChanged({ ...this.config.modelControls }); // TODO DEBOUNCE! (or not?)
     };
 
-    this.canvas.addEventListener('mousedown', onMouseDown);
-    this.canvas.addEventListener('mousemove', onMouseMove);
+    canvas.addEventListener('mousedown', onMouseDown);
+    canvas.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
     document.addEventListener('visibilitychange', onVisibilityChange);
 
-    this.canvas.addEventListener('wheel', onWheel);
+    canvas.addEventListener('wheel', onWheel);
 
     this.cleanupEvents = () => {
-      this.canvas.removeEventListener('mousedown', onMouseDown);
-      this.canvas.removeEventListener('mousedown', onMouseMove);
+      canvas.removeEventListener('mousedown', onMouseDown);
+      canvas.removeEventListener('mousedown', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
       document.removeEventListener('visibilitychange', onVisibilityChange);
 
-      this.canvas.removeEventListener('wheel', onWheel);
+      canvas.removeEventListener('wheel', onWheel);
     };
 
     //:: Handle resizing
 
     const onResized = () => {
-      const canvasParent = this.canvas.parentElement;
+      const canvasParent = canvas.parentElement;
 
       if (!canvasParent) {
         throw new Error(`Canvas has no parent!!`);
@@ -143,13 +157,13 @@ export abstract class Engine {
 
       let didResize = false;
 
-      if (this.canvas.width !== newWidth) {
-        this.canvas.width = newWidth;
+      if (canvas.width !== newWidth) {
+        canvas.width = newWidth;
         didResize = true;
       }
 
-      if (this.canvas.height !== newHeight) {
-        this.canvas.height = newHeight;
+      if (canvas.height !== newHeight) {
+        canvas.height = newHeight;
         didResize = true;
       }
 
@@ -162,7 +176,7 @@ export abstract class Engine {
     };
 
     this.resizeObserver = new ResizeObserver(onResized);
-    const canvasParent = this.canvas.parentElement;
+    const canvasParent = canvas.parentElement;
 
     if (!canvasParent) {
       window.alert('Failed to create canvas');
@@ -178,8 +192,11 @@ export abstract class Engine {
   }
 
   setModelControls(modelControls: ModelControls) {
-    this._modelControls = modelControls;
-    this.render();
+    this.config.modelControls = modelControls;
+
+    if (this.config.mode === 'static') {
+      this.render();
+    }
   }
 
   destroy() {
@@ -187,23 +204,24 @@ export abstract class Engine {
       this.resizeObserver.disconnect();
     }
 
-    this.cleanupEvents();
+    this.cleanupEvents?.();
     // TODO
   }
 
   protected abstract onResized(): void;
 
-  protected abstract render(): void;
+  // delta is only used when this.config.mode === 'continuous'
+  protected abstract render(delta?: number): void;
 
   protected get width() {
-    return this.canvas.width;
+    return this.config.canvas.width;
   }
 
   protected get height() {
-    return this.canvas.height;
+    return this.config.canvas.height;
   }
 
-  protected get modelControls(): Readonly<ModelControls> {
-    return this._modelControls;
+  protected getConfig(): Readonly<EngineConfig> {
+    return this.config;
   }
 }

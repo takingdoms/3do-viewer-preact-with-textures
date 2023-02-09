@@ -2,6 +2,7 @@ import { Object3doTree, Parse3do } from "@takingdoms/lib-3do";
 import { h } from 'preact';
 import { FunctionComponent } from "preact";
 import { useEffect, useState } from "preact/hooks";
+import { WebglEngineShaderSources } from "../lib/engines/webgl-engine";
 import Main from "./main";
 
 async function loadModel(dataSource: File | string): Promise<Object3doTree> {
@@ -19,10 +20,20 @@ async function loadModel(dataSource: File | string): Promise<Object3doTree> {
   return Parse3do.fromBuffer(view);
 }
 
-async function loadShaders(): Promise<{ vsSource: string; fsSource: string; }> {
+async function loadShaders(): Promise<WebglEngineShaderSources> {
   return {
-    vsSource: await fetch('/assets/shaders/default.vs').then((res) => res.text()),
-    fsSource: await fetch('/assets/shaders/default.fs').then((res) => res.text()),
+    normal: {
+      fsSource: await fetch('/assets/shaders/wireframe.fs').then((res) => res.text()),
+      vsSource: await fetch('/assets/shaders/wireframe.vs').then((res) => res.text()),
+    },
+    solid: {
+      fsSource: await fetch('/assets/shaders/wireframe.fs').then((res) => res.text()),
+      vsSource: await fetch('/assets/shaders/wireframe.vs').then((res) => res.text()),
+    },
+    wireframe: {
+      fsSource: await fetch('/assets/shaders/wireframe.fs').then((res) => res.text()),
+      vsSource: await fetch('/assets/shaders/wireframe.vs').then((res) => res.text()),
+    },
   };
 }
 
@@ -30,7 +41,7 @@ const Loader: FunctionComponent<{
   dataSource: File | string; // string = url
 }> = ({ dataSource }) => {
   const [result, setResult] = useState<Object3doTree>();
-  const [shaders, setShaders] = useState<{ vsSource: string; fsSource: string; }>();
+  const [shaders, setShaders] = useState<WebglEngineShaderSources>();
   const [error, setError] = useState<any>();
 
   // TODO move this up in the component tree since shaders can be loaded BEFORE the user selects a

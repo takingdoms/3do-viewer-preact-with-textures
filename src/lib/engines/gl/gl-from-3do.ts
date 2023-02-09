@@ -1,40 +1,81 @@
-import { Object3do } from "@takingdoms/lib-3do";
-import { GlColorBuffer } from "./buffer/gl-color-buffer";
-import { GlIndexBuffer } from "./buffer/gl-index-buffer";
-import { GlPositionBuffer } from "./buffer/gl-position-buffer";
+import { Object3do, Primitive3do, Vertex3do } from "@takingdoms/lib-3do";
 import { GlContext } from "./gl-context";
 import { GlEntity } from "./gl-entity";
 import { GlModel } from "./gl-model";
 import { GlModelHelpers } from "./gl-model-helpers";
-import { ColorRGBA, Vector3 } from "./types";
 
-export function glEntityFrom3do(object3do: Object3do, ctx: GlContext): GlEntity {
-  const model = glModelFrom3do(object3do, ctx);
-  const entity = new GlEntity(model);
+export function addGlEntityFrom3do(
+  ctx: GlContext,
+  child: Object3do,
+  parent: GlEntity,
+  triangulateQuads: boolean,
+) {
+  // the wrapper exists to isolate the offsets transformations from "user" transformations
+  // so for example, if the user calls entity.resetTransformations() the offsets won't be lost
+  // provided that the entity being referenced isn't a wrapper (which it should never be)
+  // TODO find a better solution (maybe store two matrices? one for parent offset and one for user transforms)
+  const wrapper = new GlEntity(null, 'WRAPPER:' + child.name);
+  wrapper.translate(child.xOffset, child.yOffset, child.zOffset);
 
-  return entity;
+  const group = new GlEntity(null, child.name);
+  wrapper.addChild(group);
+
+  for (const primitive of child.primitives) {
+    const model = glModelFrom3do(ctx, child.vertices, primitive, triangulateQuads);
+
+    if (model === null) {
+      continue;
+    }
+
+    const entity = new GlEntity(model);
+    group.addChild(entity);
+  }
+
+  for (const subChild of child.children) {
+    addGlEntityFrom3do(ctx, subChild, group, triangulateQuads);
+  }
+
+  parent.addChild(wrapper);
 }
 
-function glModelFrom3do(object3do: Object3do, ctx: GlContext): GlModel {
-  const v0: Vector3 = [-1,  0, +1];
-  const v1: Vector3 = [-1,  0, -1];
-  const v2: Vector3 = [+1,  0, -1];
-  const v3: Vector3 = [+1,  0, +1];
-  const v4: Vector3 = [ 0, +1,  0];
+function glModelFrom3do(
+  ctx: GlContext,
+  vertices: Vertex3do[],
+  primitive: Primitive3do,
+  triangulateQuads: boolean,
+): GlModel | null {
+  if (primitive.vertexIndices.length === 3) {
+    return GlModelHelpers.createModelFromIndexedColoredVertices(ctx, {
+      vertices: vertices.map((vert) => {
+        return {
+          color: [1.0, 1.0, 1.0, 1.0],
+          vertex: [vert.x, vert.y, vert.z],
+        };
+      }),
+      indices: primitive.vertexIndices,
+    });
+  }
 
-  const wht: ColorRGBA = [1.0, 1.0, 1.0, 1.0];
-  const red: ColorRGBA = [1.0, 0.0, 0.0, 1.0];
-  const gre: ColorRGBA = [0.0, 1.0, 0.0, 1.0];
-  const blu: ColorRGBA = [0.0, 0.0, 1.0, 1.0];
-  const yel: ColorRGBA = [1.0, 1.0, 0.0, 1.0];
+  if (primitive.vertexIndices.length === 4) {
+    const indices = primitive.vertexIndices;
 
-  return GlModelHelpers.createModelFromSmartColoredVertices(ctx, [
-    { vertex: v0, color: blu }, { vertex: v1, color: red }, { vertex: v4, color: wht },
-    { vertex: v1, color: red }, { vertex: v2, color: gre }, { vertex: v4, color: wht },
-    { vertex: v2, color: gre }, { vertex: v3, color: yel }, { vertex: v4, color: wht },
-    { vertex: v0, color: blu }, { vertex: v3, color: yel }, { vertex: v4, color: wht },
+    return GlModelHelpers.createModelFromIndexedColoredVertices(ctx, {
+      vertices: vertices.map((vert) => {
+        return {
+          color: [1.0, 1.0, 1.0, 1.0],
+          vertex: [vert.x, vert.y, vert.z],
+        };
+      }),
+      indices: triangulateQuads
+        ? [
+          indices[0], indices[1], indices[2],
+          indices[0], indices[2], indices[3],
+        ]
+        : [
+          indices[0], indices[1], indices[2], indices[3],
+        ],
+    });
+  }
 
-    { vertex: v0, color: blu }, { vertex: v1, color: red }, { vertex: v2, color: gre },
-    { vertex: v0, color: blu }, { vertex: v2, color: gre }, { vertex: v3, color: yel },
-  ]);
+  return null;
 }
