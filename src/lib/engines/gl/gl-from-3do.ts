@@ -45,13 +45,8 @@ function glModelFrom3do(
   triangulateQuads: boolean,
 ): GlModel | null {
   if (primitive.vertexIndices.length === 3) {
-    return GlModelHelpers.createModelFromIndexedColoredVertices(ctx, {
-      vertices: vertices.map((vert) => {
-        return {
-          color: [1.0, 1.0, 1.0, 1.0],
-          vertex: [vert.x, vert.y, vert.z],
-        };
-      }),
+    return GlModelHelpers.createModelFromIndexedVertices(ctx, {
+      vertices: vertices.map((vert) => [vert.x, vert.y, vert.z]),
       indices: primitive.vertexIndices,
     });
   }
@@ -59,13 +54,8 @@ function glModelFrom3do(
   if (primitive.vertexIndices.length === 4) {
     const indices = primitive.vertexIndices;
 
-    return GlModelHelpers.createModelFromIndexedColoredVertices(ctx, {
-      vertices: vertices.map((vert) => {
-        return {
-          color: [1.0, 1.0, 1.0, 1.0],
-          vertex: [vert.x, vert.y, vert.z],
-        };
-      }),
+    return GlModelHelpers.createModelFromIndexedVertices(ctx, {
+      vertices: vertices.map((vert) => [vert.x, vert.y, vert.z]),
       indices: triangulateQuads
         ? [
           indices[0], indices[1], indices[2],

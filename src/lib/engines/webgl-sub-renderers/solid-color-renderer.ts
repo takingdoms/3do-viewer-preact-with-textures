@@ -19,7 +19,6 @@ export class SolidColorRenderer extends WebglSubRenderer {
       program: shaderProgram,
       attribLocations: {
         vertexPosition: this.gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
-        vertexColor: this.gl.getAttribLocation(shaderProgram, 'aVertexColor'),
       },
       uniformLocations: {
         modelViewMatrix: this.gl.getUniformLocation(shaderProgram, 'uModelViewMatrix')!,
