@@ -35,7 +35,14 @@ export class GlEntity {
 
     if (this.model !== null) {
       ctx.setUniformFloat4('entityColor', nextColor);
-      ctx.setUniformMatrix4('model', localModelViewMatrix);
+      ctx.setUniformMatrix4('modelViewMatrix', localModelViewMatrix);
+
+      if (this.model.usesNormals()) {
+        const normalMatrix = mat4.create();
+        mat4.invert(normalMatrix, localModelViewMatrix);
+        mat4.transpose(normalMatrix, normalMatrix);
+        ctx.setUniformMatrix4('normalMatrix', normalMatrix);
+      }
 
       this.model.draw(ctx);
     }

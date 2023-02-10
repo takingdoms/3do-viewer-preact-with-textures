@@ -10,7 +10,6 @@ import { WebglEngineShaderSources } from "../webgl-engine";
 
 // TODO make these configurable(?)
 const BASE_CAMERA_OFFSET = 8;
-const SCALE = 0.000001;
 const ZOOM_MODIFIER = 0.01;
 const TRANSLATION_MODIFIER = 0.01;
 const DEFAULT_BASE_COLOR: ViewColor = [1.0, 1.0, 1.0, 1.0];
@@ -44,9 +43,16 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
     const rootEntity = new GlEntity(null);
 
     for (const object3do of this.object3doTree.rootNodes) {
-      addGlEntityFrom3do(this.ctx, object3do, rootEntity, this.getViewMode() !== 'wireframe');
+      addGlEntityFrom3do(
+        this.ctx,
+        object3do,
+        rootEntity,
+        this.getViewMode() !== 'wireframe',
+        this.getViewMode() !== 'wireframe',
+      );
     }
 
+    // return GlModelHelpers.makeCube(this.gl, this.programInfo);
     return rootEntity;
   }
 
@@ -72,7 +78,7 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
     this.ctx.setUniformFloat4('baseColor', modelControls.viewColor ?? DEFAULT_BASE_COLOR);
 
     mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
-    this.ctx.setUniformMatrix4('projection', projectionMatrix);
+    this.ctx.setUniformMatrix4('projectionMatrix', projectionMatrix);
 
     const xOffset = modelControls.translationX * TRANSLATION_MODIFIER;
     const yOffset = modelControls.translationY * TRANSLATION_MODIFIER * -1;
@@ -83,7 +89,6 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
     this.rootEntity.rotateX(glMatrix.toRadian(modelControls.rotationX * .75));
     this.rootEntity.rotateY(glMatrix.toRadian(modelControls.rotationY * .75));
     this.rootEntity.rotateZ(glMatrix.toRadian(modelControls.rotationZ * .75));
-    this.rootEntity.scale(SCALE, SCALE, SCALE);
 
     this.rootEntity.render(this.ctx);
   }

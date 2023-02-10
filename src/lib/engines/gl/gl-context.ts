@@ -19,12 +19,12 @@ export class GlContext {
     return this.programInfo;
   }
 
-  setUniformMatrix4(uniform: 'projection' | 'model', matrix: mat4) {
-    const location = uniform === 'projection'
-      ? this.programInfo.uniformLocations.projectionMatrix
-      : this.programInfo.uniformLocations.modelViewMatrix;
+  setUniformMatrix4(uniform: string, matrix: mat4) {
+    const location = this.programInfo.uniformLocations[uniform];
 
-    this.gl.uniformMatrix4fv(location, false, matrix);
+    if (location) {
+      this.gl.uniformMatrix4fv(location, false, matrix);
+    }
   }
 
   setUniformFloat4(uniform: string, data: Readonly<Float32List>) {

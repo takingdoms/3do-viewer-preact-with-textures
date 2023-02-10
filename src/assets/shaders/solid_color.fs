@@ -4,6 +4,7 @@ uniform lowp vec4 entityColor;
 varying highp vec3 vLighting;
 
 void main(void) {
-  gl_FragColor = baseColor + entityColor;
-  // gl_FragColor = vec4(texelColor.rgb * vLighting, texelColor.a);
+  highp vec4 color = baseColor * entityColor;
+  // gl_FragColor = color;
+  gl_FragColor = vec4(color.rgb * vLighting, color.a);
 }
