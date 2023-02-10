@@ -21,6 +21,6 @@ export const DEFAULT_MODEL_CONTROLS: ModelControls = {
   translationX: 0,
   translationY: 0,
   zoom: 510,
-  viewMode: 'wireframe',
+  viewMode: 'solid_color',
   viewColor: [1.0, 1.0, 1.0, 1.0],
 };

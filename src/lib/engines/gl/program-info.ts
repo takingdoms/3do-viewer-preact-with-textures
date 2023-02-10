@@ -1,11 +1,5 @@
-export type ProgramInfo = {
+export type ProgramInfo<Attribs extends string, Uniforms extends string> = {
   program: WebGLProgram;
-  attribLocations: {
-    vertexPosition: number;
-  };
-  uniformLocations: {
-    modelViewMatrix: WebGLUniformLocation;
-    projectionMatrix: WebGLUniformLocation;
-    baseColor: WebGLUniformLocation;
-  };
+  attribLocations: Record<Attribs, number>;
+  uniformLocations: Record<Uniforms, WebGLUniformLocation>;
 };

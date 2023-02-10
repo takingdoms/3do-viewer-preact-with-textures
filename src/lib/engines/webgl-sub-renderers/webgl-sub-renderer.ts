@@ -15,8 +15,10 @@ const ZOOM_MODIFIER = 0.01;
 const TRANSLATION_MODIFIER = 0.01;
 const DEFAULT_BASE_COLOR: ViewColor = [1.0, 1.0, 1.0, 1.0];
 
-export abstract class WebglSubRenderer {
-  protected readonly programInfo: ProgramInfo;
+type AnyProgramInfo = ProgramInfo<string, string>;
+
+export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
+  protected readonly programInfo: TProgramInfo;
   protected readonly ctx: GlContext;
   protected readonly rootEntity: GlEntity;
 
@@ -32,7 +34,7 @@ export abstract class WebglSubRenderer {
 
   protected abstract getViewMode(): ViewMode;
 
-  protected abstract initProgram(): ProgramInfo;
+  protected abstract initProgram(): TProgramInfo;
 
   protected initContext(): GlContext {
     return new GlCustomContext(this.gl, this.programInfo, this.getViewMode());

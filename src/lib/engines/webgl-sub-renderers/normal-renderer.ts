@@ -3,12 +3,17 @@ import { ProgramInfo } from "../gl/program-info";
 import { WebGlHelper } from "../gl/webgl-helper";
 import { WebglSubRenderer } from "./webgl-sub-renderer";
 
-export class NormalRenderer extends WebglSubRenderer {
+type NormalProgramInfo = ProgramInfo<
+  'vertexPosition',
+  'modelViewMatrix' | 'projectionMatrix' | 'baseColor'
+>;
+
+export class NormalRenderer extends WebglSubRenderer<NormalProgramInfo> {
   protected getViewMode(): ViewMode {
     return 'normal';
   }
 
-  protected initProgram(): ProgramInfo {
+  protected initProgram(): NormalProgramInfo {
     const { vsSource, fsSource } = this.shaderSources.normal;
 
     const vsShader = WebGlHelper.compileShader(this.gl, vsSource, this.gl.VERTEX_SHADER);

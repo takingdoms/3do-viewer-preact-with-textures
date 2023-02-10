@@ -1,14 +1,19 @@
-import { ModelControls, ViewMode } from "src/lib/types";
+import { ViewMode } from "src/lib/types";
 import { ProgramInfo } from "../gl/program-info";
 import { WebGlHelper } from "../gl/webgl-helper";
 import { WebglSubRenderer } from "./webgl-sub-renderer";
 
-export class SolidColorRenderer extends WebglSubRenderer {
+type SolidColorProgramInfo = ProgramInfo<
+  'vertexPosition',
+  'modelViewMatrix' | 'projectionMatrix' | 'baseColor'
+>;
+
+export class SolidColorRenderer extends WebglSubRenderer<SolidColorProgramInfo> {
   protected getViewMode(): ViewMode {
     return 'solid_color';
   }
 
-  protected initProgram(): ProgramInfo {
+  protected initProgram(): SolidColorProgramInfo {
     const { vsSource, fsSource } = this.shaderSources.normal;
 
     const vsShader = WebGlHelper.compileShader(this.gl, vsSource, this.gl.VERTEX_SHADER);

@@ -1,14 +1,19 @@
-import { ModelControls, ViewMode } from "src/lib/types";
+import { ViewMode } from "src/lib/types";
 import { ProgramInfo } from "../gl/program-info";
 import { WebGlHelper } from "../gl/webgl-helper";
 import { WebglSubRenderer } from "./webgl-sub-renderer";
 
-export class WireframeRenderer extends WebglSubRenderer {
+export type WireframeProgramInfo = ProgramInfo<
+  'vertexPosition',
+  'modelViewMatrix' | 'projectionMatrix' | 'baseColor'
+>;
+
+export class WireframeRenderer extends WebglSubRenderer<WireframeProgramInfo> {
   protected getViewMode(): ViewMode {
     return 'wireframe';
   }
 
-  protected initProgram(): ProgramInfo {
+  protected initProgram(): WireframeProgramInfo {
     const { vsSource, fsSource } = this.shaderSources.normal;
 
     const vsShader = WebGlHelper.compileShader(this.gl, vsSource, this.gl.VERTEX_SHADER);
