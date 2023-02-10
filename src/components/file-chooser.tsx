@@ -16,7 +16,7 @@ const FileChooser: FunctionComponent<{
   onSubmit: (dataSource: File | string) => void;
 }> = ({ onSubmit }) => {
   useEffect(() => {
-    onSubmit(SAMPLES[0].path);
+    onSubmit(SAMPLES[3].path);
   }, []);
 
   const option1 = (

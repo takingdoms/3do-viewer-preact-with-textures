@@ -26,7 +26,7 @@ export type WebglEngineShaderSources = {
 
 export class WebglEngine extends Engine {
   private gl: WebGLRenderingContext;
-  private subRenderers: Record<ViewMode, WebglSubRenderer>;
+  private subRenderers: Record<ViewMode, WebglSubRenderer<any>>;
 
   constructor(
     config: EngineConfig,

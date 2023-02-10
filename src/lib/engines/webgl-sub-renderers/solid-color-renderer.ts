@@ -5,7 +5,7 @@ import { WebglSubRenderer } from "./webgl-sub-renderer";
 
 type SolidColorProgramInfo = ProgramInfo<
   'vertexPosition',
-  'modelViewMatrix' | 'projectionMatrix' | 'baseColor'
+  'modelViewMatrix' | 'projectionMatrix' | 'baseColor' | 'entityColor'
 >;
 
 export class SolidColorRenderer extends WebglSubRenderer<SolidColorProgramInfo> {
@@ -14,7 +14,7 @@ export class SolidColorRenderer extends WebglSubRenderer<SolidColorProgramInfo> 
   }
 
   protected initProgram(): SolidColorProgramInfo {
-    const { vsSource, fsSource } = this.shaderSources.normal;
+    const { vsSource, fsSource } = this.shaderSources.solid;
 
     const vsShader = WebGlHelper.compileShader(this.gl, vsSource, this.gl.VERTEX_SHADER);
     const fsShader = WebGlHelper.compileShader(this.gl, fsSource, this.gl.FRAGMENT_SHADER);
@@ -29,6 +29,7 @@ export class SolidColorRenderer extends WebglSubRenderer<SolidColorProgramInfo> 
         modelViewMatrix: this.gl.getUniformLocation(shaderProgram, 'uModelViewMatrix')!,
         projectionMatrix: this.gl.getUniformLocation(shaderProgram, 'uProjectionMatrix')!,
         baseColor: this.gl.getUniformLocation(shaderProgram, 'baseColor')!,
+        entityColor: this.gl.getUniformLocation(shaderProgram, 'entityColor')!,
       },
     };
   }

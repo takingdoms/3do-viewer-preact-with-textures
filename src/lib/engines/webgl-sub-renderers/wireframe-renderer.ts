@@ -5,7 +5,7 @@ import { WebglSubRenderer } from "./webgl-sub-renderer";
 
 export type WireframeProgramInfo = ProgramInfo<
   'vertexPosition',
-  'modelViewMatrix' | 'projectionMatrix' | 'baseColor'
+  'modelViewMatrix' | 'projectionMatrix' | 'baseColor' | 'entityColor'
 >;
 
 export class WireframeRenderer extends WebglSubRenderer<WireframeProgramInfo> {
@@ -14,7 +14,7 @@ export class WireframeRenderer extends WebglSubRenderer<WireframeProgramInfo> {
   }
 
   protected initProgram(): WireframeProgramInfo {
-    const { vsSource, fsSource } = this.shaderSources.normal;
+    const { vsSource, fsSource } = this.shaderSources.wireframe;
 
     const vsShader = WebGlHelper.compileShader(this.gl, vsSource, this.gl.VERTEX_SHADER);
     const fsShader = WebGlHelper.compileShader(this.gl, fsSource, this.gl.FRAGMENT_SHADER);
@@ -29,6 +29,7 @@ export class WireframeRenderer extends WebglSubRenderer<WireframeProgramInfo> {
         modelViewMatrix: this.gl.getUniformLocation(shaderProgram, 'uModelViewMatrix')!,
         projectionMatrix: this.gl.getUniformLocation(shaderProgram, 'uProjectionMatrix')!,
         baseColor: this.gl.getUniformLocation(shaderProgram, 'baseColor')!,
+        entityColor: this.gl.getUniformLocation(shaderProgram, 'entityColor')!,
       },
     };
   }

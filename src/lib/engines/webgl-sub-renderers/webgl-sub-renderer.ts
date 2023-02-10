@@ -54,9 +54,6 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
     const viewWidth = gl.drawingBufferWidth;
     const viewHeight = gl.drawingBufferHeight;
 
-    // console.log(`${viewWidth} x ${viewHeight}`);
-
-    // TODO replace all gl with this.ctx?
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clearDepth(1.0);
     gl.enable(gl.DEPTH_TEST);
@@ -65,7 +62,6 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     const fieldOfView = (45 * Math.PI) / 180;
-    // const aspect = this.canvas.clientWidth / this.canvas.clientHeight;
     const aspect = viewWidth / viewHeight;
     const zNear = 0.1;
     const zFar = 100.0;
@@ -93,7 +89,7 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
   }
 
   update(delta: number) {
-    /*const wing1a = this.rootEntity.findChild('wing1a', true)!;
+    const wing1a = this.rootEntity.findChild('wing1a', true)!;
     const wing2a = this.rootEntity.findChild('wing2a', true)!;
 
     const rotation = 0;
@@ -104,7 +100,7 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
     wing2a.resetTransformations();
     wing2a.rotateZ(glMatrix.toRadian(-rotation));
 
-    wing1a.setColor([1.0, 1.0, 0.0, 1.0]);
-    wing2a.setColor([0.0, 1.0, 1.0, 1.0]);*/
+    wing1a.setColor([1.0, 0.0, 0.0, 1.0]);
+    wing2a.setColor([0.0, 0.0, 1.0, 1.0]);
   }
 }

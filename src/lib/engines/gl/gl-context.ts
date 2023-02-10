@@ -3,9 +3,9 @@ import { ProgramInfo } from "./program-info";
 
 export class GlContext {
   protected gl: WebGLRenderingContext;
-  protected programInfo: ProgramInfo;
+  protected programInfo: ProgramInfo<any, any>;
 
-  constructor(gl: WebGLRenderingContext, programInfo: ProgramInfo) {
+  constructor(gl: WebGLRenderingContext, programInfo: ProgramInfo<any, any>) {
     this.gl = gl;
     this.programInfo = programInfo;
   }
@@ -15,7 +15,7 @@ export class GlContext {
     return this.gl;
   }
 
-  getProgramInfo(): Readonly<ProgramInfo> {
+  getProgramInfo(): Readonly<ProgramInfo<any, any>> {
     return this.programInfo;
   }
 
@@ -27,12 +27,16 @@ export class GlContext {
     this.gl.uniformMatrix4fv(location, false, matrix);
   }
 
-  setUniformFloat4(uniform: 'baseColor', data: Readonly<Float32List>) {
+  setUniformFloat4(uniform: string, data: Readonly<Float32List>) {
     if (data.length !== 4) {
       throw new Error(`data.length is not 4: ${data.length}`);
     }
 
-    this.gl.uniform4fv(this.programInfo.uniformLocations.baseColor, data);
+    const location = this.programInfo.uniformLocations[uniform];
+
+    if (location) {
+      this.gl.uniform4fv(location, data);
+    }
   }
 
   drawElements(length: number) {

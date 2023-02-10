@@ -5,7 +5,7 @@ import { ViewMode } from "../../types";
 export class GlCustomContext extends GlContext {
   private viewMode: ViewMode;
 
-  constructor(gl: WebGLRenderingContext, programInfo: ProgramInfo, viewMode: ViewMode) {
+  constructor(gl: WebGLRenderingContext, programInfo: ProgramInfo<any, any>, viewMode: ViewMode) {
     super(gl, programInfo);
     this.viewMode = viewMode;
   }

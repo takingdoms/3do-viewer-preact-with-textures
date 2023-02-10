@@ -34,7 +34,7 @@ export class GlEntity {
     const nextColor = this.color ?? parentColor; // use this entity's color or inherit from parent!
 
     if (this.model !== null) {
-      ctx.setUniformFloat4('baseColor', nextColor);
+      ctx.setUniformFloat4('entityColor', nextColor);
       ctx.setUniformMatrix4('model', localModelViewMatrix);
 
       this.model.draw(ctx);
