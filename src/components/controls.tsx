@@ -101,6 +101,7 @@ const SliderControl: FunctionComponent<{
           }}
         />
         <input
+          class="grow"
           type="range"
           min={min}
           max={max}

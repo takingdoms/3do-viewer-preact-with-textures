@@ -16,15 +16,7 @@ const CanvasWrapper: FunctionComponent<CanvasWrapperProps> = ({ canvasRef }) => 
   );
 
   return (
-    <div
-      class="w-full h-full max-w-full max-h-full relative"
-      style={{
-        // width: WIDTH,
-        // height: HEIGHT,
-        background: 'white',
-        border: '1px solid red',
-      }}
-    >
+    <div class="w-full h-full max-w-full max-h-full relative">
       {canvas}
     </div>
   );
