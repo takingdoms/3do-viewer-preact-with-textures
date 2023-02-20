@@ -1,13 +1,13 @@
 import { FunctionComponent, h } from 'preact';
 import { useState, useRef, useMemo, useEffect } from "preact/hooks";
-import CanvasWrapper from "./canvas-wrapper";
-import Controls from "./controls";
+import CanvasWrapper from "./canvas/CanvasWrapper";
+import Controls from "./controls/Controls";
 import { DEFAULT_MODEL_CONTROLS } from "../lib/types";
 import { Engine, EngineListener } from "../lib/engines/engine";
 import { UiDebugEngine } from "../lib/engines/ui-debug-engine";
 import { Object3doTree } from "@takingdoms/lib-3do";
 import { WebglEngine, WebglEngineShaderSources } from "../lib/engines/webgl-engine";
-import ObjectTree from "./object-tree";
+import ObjectTree from "./object-tree/ObjectTree";
 
 const CONTENT_WIDTH = '1600px';
 

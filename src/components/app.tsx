@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useState } from "preact/hooks";
-import FileChooser from "./file-chooser";
-import Loader from "./loader";
+import FileChooser from "./loader/FileChooser";
+import Loader from "./loader/Loader";
 
 const App = () => {
   const [dataSource, setDataSource] = useState<File | string>(); // string = url

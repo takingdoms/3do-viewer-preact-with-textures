@@ -2,8 +2,8 @@ import { Object3doTree, Parse3do } from "@takingdoms/lib-3do";
 import { h } from 'preact';
 import { FunctionComponent } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { WebglEngineShaderSources } from "../lib/engines/webgl-engine";
-import Main from "./main";
+import { WebglEngineShaderSources } from "../../lib/engines/webgl-engine";
+import Main from "../Main";
 
 async function loadModel(dataSource: File | string): Promise<Object3doTree> {
   let data: ArrayBuffer;

@@ -1,7 +1,7 @@
 import { Object3do, Object3doTree } from "@takingdoms/lib-3do";
 import { FunctionComponent, h } from 'preact';
 import { useState } from "preact/hooks";
-import Styles from './object-tree.module.css';
+import Styles from './ObjectTree.module.css';
 
 type ObjectTreeProps = {
   object3doTree: Object3doTree;
