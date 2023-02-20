@@ -7,6 +7,7 @@ import { Engine, EngineListener } from "../lib/engines/engine";
 import { UiDebugEngine } from "../lib/engines/ui-debug-engine";
 import { Object3doTree } from "@takingdoms/lib-3do";
 import { WebglEngine, WebglEngineShaderSources } from "../lib/engines/webgl-engine";
+import ObjectTree from "./object-tree";
 
 const CONTENT_WIDTH = '1600px';
 
@@ -20,7 +21,7 @@ const Main: FunctionComponent<{
   console.log('Re-rendering App');
 
   const [expandContent, setExpandContent] = useState(false);
-  const [sidebarTab, setSidebarTab] = useState<SidebarTab>('controls');
+  const [sidebarTab, setSidebarTab] = useState<SidebarTab>('tree');
   const [modelControls, setModelControls] = useState(DEFAULT_MODEL_CONTROLS);
   const [engine, setEngine] = useState<Engine>();
 
@@ -110,9 +111,9 @@ const Main: FunctionComponent<{
 
   const treePanel = useMemo(() => {
     return (
-      <div>OI</div>
+      <ObjectTree object3doTree={object3doTree} />
     );
-  }, []);
+  }, [object3doTree]);
 
   const sidebar = useMemo(() => {
     return (
@@ -131,6 +132,7 @@ const Main: FunctionComponent<{
 
             return (
               <div
+                key={index}
                 class={`grow basis-0 px-2 py-4 text-center ${seletedCss} ${borderCss}`}
                 onClick={() => {
                   if (!isSelected) {
@@ -145,17 +147,19 @@ const Main: FunctionComponent<{
         </div>
 
         <div
-          class="grow max-h-full overflow-auto"
+          class="grow max-h-full overflow-hidden py-6"
           style={{ width: 300, overflowX: 'auto' }}
         >
-          {sidebarTab === 'controls' ? controlPanel : treePanel}
+          <div class="max-h-full overflow-auto px-6">
+            {sidebarTab === 'controls' ? controlPanel : treePanel}
+          </div>
         </div>
       </div>
     );
   }, [sidebarTab, controlPanel]);
 
   return (
-    <div class="flex justify-center items-stretch min-h-screen bg-gray-900">
+    <div class="flex justify-center items-stretch h-screen overflow-hidden bg-gray-900">
       <div
         class={'grow flex bg-gray-800 border '
           + (expandContent ? 'border-gray-800' : 'border-gray-700')}

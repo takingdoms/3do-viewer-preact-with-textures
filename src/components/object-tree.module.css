@@ -1,0 +1,23 @@
+.NameWrapper {
+  border: 1px solid var(--color-cyan-600);
+}
+
+.LeftBorder {
+  border-left: 1px solid var(--color-cyan-600);
+}
+
+.MiddleBorder {
+  border-bottom: 1px solid var(--color-cyan-600);
+}
+
+.Root:hover > .NameWrapper {
+  border-color: var(--color-orange-600);
+}
+
+.Root:hover > div > div > .LeftBorder {
+  /* border-color: var(--color-orange-600); */
+}
+
+.Root:hover > div > div > .MiddleBorder {
+  /* border-color: var(--color-orange-600); */
+}
