@@ -1,42 +1,26 @@
-import { Object3do, Object3doTree } from "@takingdoms/lib-3do";
+import { Object3do } from "@takingdoms/lib-3do";
 import { FunctionComponent, h } from 'preact';
 import { useState } from "preact/hooks";
-import Styles from './ObjectTree.module.css';
-
-type ObjectTreeProps = {
-  object3doTree: Object3doTree;
-};
-
-const ObjectTree: FunctionComponent<ObjectTreeProps> = ({
-  object3doTree,
-}) => {
-  return (
-    <div class="text-sm">
-      {object3doTree.rootNodes.map((node, index) => (
-        <SubTree key={index} node={node} />
-      ))}
-    </div>
-  );
-};
+import Styles from './ObjectListTree.module.css';
 
 const INDENT = '1.50rem';
 const ROW_HEIGHT = '34px';
 const SPACING_Y = '0.50rem';
 
-const SubTree: FunctionComponent<{ node: Object3do }> = ({
+const ObjectListTree: FunctionComponent<{ node: Object3do }> = ({
   node,
 }) => {
   const [showChildren, setShowChildren] = useState(true);
 
   return (
-    <div class={Styles.Root + ' w-full overflow-hidden'}>
+    <div class={Styles.Root + ' w-full overflow-hidden text-xs'}>
       <div
         style={{ height: ROW_HEIGHT }}
         class={Styles.NameWrapper + ' flex py-1 bg-cyan-900 box-border'}
       >
         <div class="min-w-0 flex items-center grow">
           <div class="truncate px-2" title={node.name}>
-            {node.name}
+            {node.name ?? <span class="text-gray-300">{'<empty name>'}</span>}
           </div>
         </div>
 
@@ -80,7 +64,7 @@ const SubTree: FunctionComponent<{ node: Object3do }> = ({
                 class="grow max-w-full overflow-hidden"
                 style={{ paddingTop: SPACING_Y }}
               >
-                <SubTree node={subNode} />
+                <ObjectListTree node={subNode} />
               </div>
             </div>
           ))}
@@ -90,4 +74,4 @@ const SubTree: FunctionComponent<{ node: Object3do }> = ({
   );
 };
 
-export default ObjectTree;
+export default ObjectListTree;

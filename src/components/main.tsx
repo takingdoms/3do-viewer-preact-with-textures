@@ -7,7 +7,7 @@ import { Engine, EngineListener } from "../lib/engines/engine";
 import { UiDebugEngine } from "../lib/engines/ui-debug-engine";
 import { Object3doTree } from "@takingdoms/lib-3do";
 import { WebglEngine, WebglEngineShaderSources } from "../lib/engines/webgl-engine";
-import ObjectTree from "./object-tree/ObjectTree";
+import ObjectList from "./object-list/ObjectList";
 
 const CONTENT_WIDTH = '1600px';
 
@@ -109,9 +109,9 @@ const Main: FunctionComponent<{
     />
   ), [engine, modelControls]);
 
-  const treePanel = useMemo(() => {
+  const objectsPanel = useMemo(() => {
     return (
-      <ObjectTree object3doTree={object3doTree} />
+      <ObjectList object3doTree={object3doTree} />
     );
   }, [object3doTree]);
 
@@ -147,12 +147,10 @@ const Main: FunctionComponent<{
         </div>
 
         <div
-          class="grow max-h-full overflow-hidden py-6"
+          class="grow max-h-full overflow-hidden px-6 py-6"
           style={{ width: 300, overflowX: 'auto' }}
         >
-          <div class="max-h-full overflow-auto px-6">
-            {sidebarTab === 'controls' ? controlPanel : treePanel}
-          </div>
+          {sidebarTab === 'controls' ? controlPanel : objectsPanel}
         </div>
       </div>
     );

@@ -12,7 +12,7 @@ const Controls: FunctionComponent<ControlsProps> = ({
   setModelControls,
 }) => {
   return (
-    <div class="space-y-4">
+    <div class="max-h-full overflow-auto pr-6 space-y-4">
       <SliderControl
         id="zoom"
         label="Zoom"
