@@ -21,7 +21,7 @@ export class NormalRenderer extends WebglSubRenderer<NormalProgramInfo> {
   ) {
     super(gl, shaderSources, object3doTree);
 
-    this.texture = TextureUtils.loadFromUrl(gl, '/assets/icons/apple-touch-icon.png');
+    this.texture = TextureUtils.loadFromUrl(gl, '/assets/texture.png');
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
   }
 
