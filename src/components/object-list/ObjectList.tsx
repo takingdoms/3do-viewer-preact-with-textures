@@ -18,9 +18,6 @@ const ObjectList: FunctionComponent<{
     ? object3doTree.rootNodes
     : currentParent.children;
 
-  console.log(currentParent);
-  console.log(currentChildren.map((child) => child.name));
-
   const pathing = useMemo(() => {
     const sep = <div class="mx-1 text-pink-600">&raquo;</div>;
     const selCss = 'font-bold';
@@ -55,13 +52,13 @@ const ObjectList: FunctionComponent<{
     <div
       class={'flex py-1 bg-cyan-900 border border-yellow-500 text-sm'}
     >
-      <div class="min-w-0 grow px-2">
+      <div class="min-w-0 grow px-1 pl-2">
         {currentParent === null
           ? <span class="italic">(ROOT)</span>
           : (currentParent.name ?? <span class="text-gray-300">{'<empty name>'}</span>)}
       </div>
 
-      <div class="flex px-1">
+      <div class="flex pr-1">
         <div class="flex items-center px-1">•</div>
         <div class="flex items-center px-1">•</div>
       </div>

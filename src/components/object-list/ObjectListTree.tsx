@@ -20,6 +20,8 @@ const ObjectListTree: FunctionComponent<{
 }) => {
   const [showChildren, setShowChildren] = useState(true);
 
+  const hasChildren = nodes.length > 0;
+
   return (
     <div class={Styles.Root + ' w-full overflow-hidden text-sm'}>
       {current !== null && (
@@ -28,25 +30,24 @@ const ObjectListTree: FunctionComponent<{
           class={Styles.NameWrapper + ' flex py-1 bg-cyan-900 box-border'}
         >
           <div
+            onClick={hasChildren ? () => setShowChildren(!showChildren) : undefined}
+            class={`flex items-center px-1 pl-2 ${hasChildren ? 'cursor-pointer hover:text-yellow-400' : 'invisible'}`}
+          >
+            {showChildren ? '▲' : '▼'}
+          </div>
+
+          <div
             class="min-w-0 flex items-center grow hover:text-yellow-400 cursor-pointer"
             onClick={() => onChangeNodeStack(nodeStack)}
           >
-            <div class="truncate px-2" title={current.name}>
+            <div class="truncate px-1" title={current.name}>
               {current.name ?? <span class="text-gray-300">{'<empty name>'}</span>}
             </div>
           </div>
 
-          <div class="flex">
+          <div class="flex pr-1">
             <div class="flex items-center px-1">•</div>
             <div class="flex items-center px-1">•</div>
-            {nodes.length > 0 && (
-              <div
-                onClick={() => setShowChildren(!showChildren)}
-                class="flex items-center px-1 cursor-pointer"
-              >
-                {showChildren ? '▲' : '▼'}
-              </div>
-            )}
           </div>
         </div>
       )}
