@@ -4,8 +4,8 @@ import { WebGlHelper } from "../gl/webgl-helper";
 import { WebglSubRenderer } from "./webgl-sub-renderer";
 
 type NormalProgramInfo = ProgramInfo<
-  'vertexPosition',
-  'modelViewMatrix' | 'projectionMatrix' | 'baseColor'
+  'vertexPosition' | 'vertexNormal',
+  'modelViewMatrix' | 'projectionMatrix' | 'baseColor' | 'entityColor' | 'normalMatrix'
 >;
 
 export class NormalRenderer extends WebglSubRenderer<NormalProgramInfo> {
@@ -24,11 +24,14 @@ export class NormalRenderer extends WebglSubRenderer<NormalProgramInfo> {
       program: shaderProgram,
       attribLocations: {
         vertexPosition: this.gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
+        vertexNormal: this.gl.getAttribLocation(shaderProgram, 'aVertexNormal'),
       },
       uniformLocations: {
         modelViewMatrix: this.gl.getUniformLocation(shaderProgram, 'uModelViewMatrix')!,
         projectionMatrix: this.gl.getUniformLocation(shaderProgram, 'uProjectionMatrix')!,
         baseColor: this.gl.getUniformLocation(shaderProgram, 'baseColor')!,
+        entityColor: this.gl.getUniformLocation(shaderProgram, 'entityColor')!,
+        normalMatrix: this.gl.getUniformLocation(shaderProgram, 'uNormalMatrix')!,
       },
     };
   }
