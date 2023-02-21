@@ -23,8 +23,8 @@ async function loadModel(dataSource: File | string): Promise<Object3doTree> {
 async function loadShaders(): Promise<WebglEngineShaderSources> {
   return {
     normal: {
-      fsSource: await fetch('/assets/shaders/solid_color.fs').then((res) => res.text()),
-      vsSource: await fetch('/assets/shaders/solid_color.vs').then((res) => res.text()),
+      fsSource: await fetch('/assets/shaders/normal.fs').then((res) => res.text()),
+      vsSource: await fetch('/assets/shaders/normal.vs').then((res) => res.text()),
     },
     solid: {
       fsSource: await fetch('/assets/shaders/solid_color.fs').then((res) => res.text()),

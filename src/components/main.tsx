@@ -21,7 +21,7 @@ const Main: FunctionComponent<{
   console.log('Re-rendering App');
 
   const [expandContent, setExpandContent] = useState(false);
-  const [sidebarTab, setSidebarTab] = useState<SidebarTab>('tree');
+  const [sidebarTab, setSidebarTab] = useState<SidebarTab>('controls');
   const [modelControls, setModelControls] = useState(DEFAULT_MODEL_CONTROLS);
   const [engine, setEngine] = useState<Engine>();
 

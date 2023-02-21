@@ -12,6 +12,7 @@ export function addGlEntityFrom3do(
   parent: GlEntity,
   triangulateQuads: boolean,
   computeNormals: boolean,
+  useTextures: boolean,
 ) {
   // the wrapper exists to isolate the offsets transformations from "user" transformations
   // so for example, if the user calls entity.resetTransformations() the offsets won't be lost
@@ -24,7 +25,14 @@ export function addGlEntityFrom3do(
   wrapper.addChild(group);
 
   for (const primitive of child.primitives) {
-    const model = glModelFrom3do(ctx, child.vertices, primitive, triangulateQuads, computeNormals);
+    const model = glModelFrom3do(
+      ctx,
+      child.vertices,
+      primitive,
+      triangulateQuads,
+      computeNormals,
+      useTextures,
+    );
 
     if (model === null) {
       continue;
@@ -35,7 +43,14 @@ export function addGlEntityFrom3do(
   }
 
   for (const subChild of child.children) {
-    addGlEntityFrom3do(ctx, subChild, group, triangulateQuads, computeNormals);
+    addGlEntityFrom3do(
+      ctx,
+      subChild,
+      group,
+      triangulateQuads,
+      computeNormals,
+      useTextures,
+    );
   }
 
   parent.addChild(wrapper);
@@ -47,16 +62,38 @@ function glModelFrom3do(
   primitive: Primitive3do,
   triangulateQuads: boolean,
   computeNormals: boolean,
+  useTextures: boolean,
 ): GlModel | null {
   if (primitive.vertexIndices.length === 3) {
+    const texCoords = useTextures
+      ? [
+        0, 0,
+        0, 1,
+        1, 1,
+      ]
+      : null;
+
     return GlModelHelpers.createModelFromIndexedVertices(ctx, {
       vertices: vertices.map((vert) => [vert.x * SCALE, vert.y * SCALE, vert.z * SCALE]),
       indices: primitive.vertexIndices,
+      texCoords,
     }, computeNormals);
   }
 
   if (primitive.vertexIndices.length === 4) {
     const indices = primitive.vertexIndices;
+
+    // when using textures the quads should be triangulated
+    const texCoords = useTextures && triangulateQuads
+      ? [
+        0, 1,
+        1, 1,
+        1, 0,
+        0, 1,
+        1, 0,
+        0, 0,
+      ]
+      : null;
 
     return GlModelHelpers.createModelFromIndexedVertices(ctx, {
       vertices: vertices.map((vert) => [vert.x * SCALE, vert.y * SCALE, vert.z * SCALE]),
@@ -68,6 +105,7 @@ function glModelFrom3do(
         : [
           indices[0], indices[1], indices[2], indices[3],
         ],
+      texCoords,
     }, computeNormals);
   }
 

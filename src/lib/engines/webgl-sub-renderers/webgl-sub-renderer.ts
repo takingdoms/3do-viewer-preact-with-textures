@@ -5,6 +5,7 @@ import { GlContext } from "../gl/gl-context";
 import { GlCustomContext } from "../gl/gl-custom-context";
 import { GlEntity } from "../gl/gl-entity";
 import { addGlEntityFrom3do } from "../gl/gl-from-3do";
+import { GlModelHelpers } from "../gl/gl-model-helpers";
 import { ProgramInfo } from "../gl/program-info";
 import { WebglEngineShaderSources } from "../webgl-engine";
 
@@ -49,11 +50,17 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
         rootEntity,
         this.getViewMode() !== 'wireframe',
         this.getViewMode() !== 'wireframe',
+        this.getViewMode() === 'normal',
       );
     }
+    // const cube = GlModelHelpers.makeCube(this.gl, this.programInfo);
+    // rootEntity.addChild(cube);
 
-    // return GlModelHelpers.makeCube(this.gl, this.programInfo);
     return rootEntity;
+  }
+
+  protected inBeforeTheRootRender() {
+    // nothing
   }
 
   render(gl: WebGLRenderingContext, modelControls: ModelControls, delta?: number) {
@@ -90,11 +97,13 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
     this.rootEntity.rotateY(glMatrix.toRadian(modelControls.rotationY * .75));
     this.rootEntity.rotateZ(glMatrix.toRadian(modelControls.rotationZ * .75));
 
+    this.inBeforeTheRootRender();
+
     this.rootEntity.render(this.ctx);
   }
 
   update(delta: number) {
-    const wing1a = this.rootEntity.findChild('wing1a', true)!;
+    /*const wing1a = this.rootEntity.findChild('wing1a', true)!;
     const wing2a = this.rootEntity.findChild('wing2a', true)!;
 
     const rotation = 0;
@@ -106,6 +115,6 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
     wing2a.rotateZ(glMatrix.toRadian(-rotation));
 
     wing1a.setColor([1.0, 0.0, 0.0, 1.0]);
-    wing2a.setColor([0.0, 0.0, 1.0, 1.0]);
+    wing2a.setColor([0.0, 0.0, 1.0, 1.0]);*/
   }
 }
