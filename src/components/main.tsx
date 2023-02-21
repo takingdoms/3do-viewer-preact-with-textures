@@ -147,7 +147,7 @@ const Main: FunctionComponent<{
         </div>
 
         <div
-          class="grow max-h-full overflow-hidden px-6 py-6"
+          class="grow max-h-full overflow-hidden py-6"
           style={{ width: 300, overflowX: 'auto' }}
         >
           {sidebarTab === 'controls' ? controlPanel : objectsPanel}

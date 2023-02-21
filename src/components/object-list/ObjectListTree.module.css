@@ -11,13 +11,13 @@
 }
 
 .Root:hover > .NameWrapper {
-  border-color: var(--color-orange-600);
+  border-color: var(--color-yellow-600);
 }
 
 .Root:hover > div > div > .LeftBorder {
-  /* border-color: var(--color-orange-600); */
+  /* border-color: var(--color-orange-500); */
 }
 
 .Root:hover > div > div > .MiddleBorder {
-  /* border-color: var(--color-orange-600); */
+  /* border-color: var(--color-orange-500); */
 }
