@@ -1,8 +1,8 @@
-import { FunctionComponent, h } from 'preact';
+import { FunctionComponent, h, Fragment } from 'preact';
 import { useState, useRef, useMemo, useEffect } from "preact/hooks";
 import CanvasWrapper from "./canvas/CanvasWrapper";
-import Controls from "./controls/Controls";
-import { DEFAULT_MODEL_CONTROLS } from "../lib/types";
+import Options from "./options/Options";
+import { DEFAULT_MODEL_CONTROLS, DEFAULT_USER_SETTINGS } from "../lib/types";
 import { Engine, EngineListener } from "../lib/engines/engine";
 import { UiDebugEngine } from "../lib/engines/ui-debug-engine";
 import { Object3doTree } from "@takingdoms/lib-3do";
@@ -11,7 +11,8 @@ import ObjectList from "./object-list/ObjectList";
 
 const CONTENT_WIDTH = '1600px';
 
-type SidebarTab = 'controls' | 'tree';
+type SidebarTab = 'options' | 'objects' | 'textures';
+const SIDEBAR_TABS = ['options', 'objects', 'textures'] as const;
 
 const Main: FunctionComponent<{
   engineName: 'webgl' | 'ui-debug';
@@ -21,8 +22,9 @@ const Main: FunctionComponent<{
   console.log('Re-rendering App');
 
   const [expandContent, setExpandContent] = useState(false);
-  const [sidebarTab, setSidebarTab] = useState<SidebarTab>('controls');
+  const [sidebarTab, setSidebarTab] = useState<SidebarTab>('options');
   const [modelControls, setModelControls] = useState(DEFAULT_MODEL_CONTROLS);
+  const [userSettings, setUserSettings] = useState(DEFAULT_USER_SETTINGS); // TODO load & save from localStorage
   const [engine, setEngine] = useState<Engine>();
 
   const canvasRef = useRef<HTMLCanvasElement>();
@@ -97,8 +99,8 @@ const Main: FunctionComponent<{
     </div>
   ), [canvasWrapper, expandContent]);
 
-  const controlPanel = useMemo(() => (
-    <Controls
+  const optionsPanel = useMemo(() => (
+    <Options
       modelControls={modelControls}
       setModelControls={(modelControls) => {
         setModelControls(modelControls);
@@ -106,8 +108,10 @@ const Main: FunctionComponent<{
           engine.setModelControls(modelControls);
         }
       }}
+      userSettings={userSettings}
+      setUserSettings={setUserSettings}
     />
-  ), [engine, modelControls]);
+  ), [engine, modelControls, userSettings]);
 
   const objectsPanel = useMemo(() => {
     return (
@@ -115,11 +119,17 @@ const Main: FunctionComponent<{
     );
   }, [object3doTree]);
 
+  const texturesPanel = useMemo(() => {
+    return (
+      <div>TODO</div>
+    );
+  }, []);
+
   const sidebar = useMemo(() => {
     return (
       <div class="h-full flex flex-col">
         <div class="flex text-white border-b border-gray-700">
-          {['controls', 'tree'].map((tab, index, arr) => {
+          {SIDEBAR_TABS.map((tab, index, arr) => {
             const isSelected = tab === sidebarTab;
 
             const seletedCss = isSelected
@@ -140,7 +150,9 @@ const Main: FunctionComponent<{
                   }
                 }}
               >
-                {tab === 'controls' ? 'Controls' : 'Objects'}
+                {tab === 'options' ? 'Options'
+                  : tab === 'objects' ? 'Objects'
+                  : 'Textures'}
               </div>
             )
           })}
@@ -148,27 +160,32 @@ const Main: FunctionComponent<{
 
         <div
           class="grow max-h-full overflow-hidden py-6"
-          style={{ width: 300, overflowX: 'auto' }}
+          style={{ width: userSettings.sidebarWidth, overflowX: 'auto' }}
         >
-          {sidebarTab === 'controls' ? controlPanel : objectsPanel}
+          {sidebarTab === 'options' ? optionsPanel
+            : sidebarTab === 'objects' ? objectsPanel
+            : texturesPanel}
         </div>
       </div>
     );
-  }, [sidebarTab, controlPanel]);
+  }, [sidebarTab, optionsPanel, userSettings]);
 
   return (
     <div class="flex justify-center items-stretch h-screen overflow-hidden bg-gray-900">
       <div
-        class={'grow flex bg-gray-800 border '
-          + (expandContent ? 'border-gray-800' : 'border-gray-700')}
+        class={'grow flex bg-gray-800 border'
+          + (expandContent ? ' border-gray-800' : ' border-gray-700')
+          + (userSettings.sidebarPosition === 'left' ? '' : ' flex-row-reverse')}
         style={{ "max-width": expandContent ? '100%' : CONTENT_WIDTH }}
       >
+        <div
+          class={'hidden lg:block border-gray-700'
+            + (userSettings.sidebarPosition === 'left' ? ' border-r' : ' border-l')}
+        >
+          {sidebar}
+        </div>
         <div class="grow">
           {canvasPanel}
-        </div>
-
-        <div class="hidden lg:block border-l border-gray-700">
-          {sidebar}
         </div>
       </div>
     </div>

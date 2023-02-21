@@ -1,18 +1,16 @@
-import { FunctionComponent, h } from 'preact';
+import { FunctionComponent, h, Fragment } from 'preact';
 import { ModelControls, VIEW_MODES } from "../../lib/types";
 import SliderControl from "./SliderControl";
 
-type ControlsProps = {
+const OptionsControls: FunctionComponent<{
   modelControls: ModelControls;
   setModelControls: (m: ModelControls) => void;
-};
-
-const Controls: FunctionComponent<ControlsProps> = ({
+}> = ({
   modelControls,
   setModelControls,
 }) => {
   return (
-    <div class="max-h-full overflow-auto px-6 space-y-4">
+    <div class="space-y-4">
       <SliderControl
         id="zoom"
         label="Zoom"
@@ -72,6 +70,6 @@ const Controls: FunctionComponent<ControlsProps> = ({
       </div>
     </div>
   );
-};
+}
 
-export default Controls;
+export default OptionsControls;
