@@ -1,24 +1,10 @@
-import { Object3doTree, Parse3do } from "@takingdoms/lib-3do";
+import { Object3do, Object3doTree, Parse3do } from "@takingdoms/lib-3do";
 import { h } from 'preact';
 import { FunctionComponent } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { WebglEngineShaderSources } from "../../lib/engines/webgl-engine";
+import { TextureMapping } from "../../lib/texture-mapping";
 import Main from "../Main";
-
-async function loadModel(dataSource: File | string): Promise<Object3doTree> {
-  let data: ArrayBuffer;
-
-  if (typeof dataSource === 'string') {
-    const response = await fetch(dataSource);
-    data = await response.arrayBuffer();
-  }
-  else {
-    data = await dataSource.arrayBuffer();
-  }
-
-  const view = new DataView(data);
-  return Parse3do.fromBuffer(view);
-}
 
 async function loadShaders(): Promise<WebglEngineShaderSources> {
   return {
@@ -37,11 +23,54 @@ async function loadShaders(): Promise<WebglEngineShaderSources> {
   };
 }
 
+async function loadModel(dataSource: File | string): Promise<Object3doTree> {
+  let data: ArrayBuffer;
+
+  if (typeof dataSource === 'string') {
+    const response = await fetch(dataSource);
+    data = await response.arrayBuffer();
+  }
+  else {
+    data = await dataSource.arrayBuffer();
+  }
+
+  const view = new DataView(data);
+  return Parse3do.fromBuffer(view);
+}
+
+async function loadTextures(tree: Object3doTree): Promise<TextureMapping> {
+  const textureNames = new Set<string>();
+
+  const loadNext = (node: Object3do) => {
+    for (const primitive of node.primitives) {
+      textureNames.add(primitive.textureName);
+    }
+
+    for (const child of node.children) {
+      loadNext(child);
+    }
+  };
+
+  for (const rootNode of tree.rootNodes) {
+    loadNext(rootNode);
+  }
+
+  const result: TextureMapping = {};
+
+  // TODO this part:
+  for (const textureName of textureNames) {
+    result[textureName] = null;
+  }
+
+  return result;
+}
+
 const Loader: FunctionComponent<{
   dataSource: File | string; // string = url
 }> = ({ dataSource }) => {
   const [result, setResult] = useState<Object3doTree>();
   const [shaders, setShaders] = useState<WebglEngineShaderSources>();
+  const [textures, setTextures] = useState<TextureMapping>();
   const [error, setError] = useState<any>();
 
   // TODO move this up in the component tree since shaders can be loaded BEFORE the user selects a
@@ -53,7 +82,11 @@ const Loader: FunctionComponent<{
 
   useEffect(() => {
     loadModel(dataSource)
-      .then(setResult)
+      .then((res) => {
+        setResult(res);
+        return loadTextures(res);
+      })
+      .then(setTextures)
       .catch(setError);
   }, [dataSource]);
 
@@ -70,20 +103,20 @@ const Loader: FunctionComponent<{
     );
   }
 
-  if (result === undefined || shaders === undefined) {
+  if (result === undefined || shaders === undefined || textures === undefined) {
     return (
       <div class="min-w-screen min-h-screen flex justify-center items-center text-3xl bg-black">
-        <span class="text-gray-400">Loading</span>&nbsp;
-        {/* <span class="font-bold underline">{url}</span> */}
+        <span class="text-gray-400">Loading</span>
       </div>
     );
   }
 
   return (
     <Main
+      engineName="webgl"
       object3doTree={result}
       shaders={shaders}
-      engineName="webgl"
+      regularTextures={textures}
     />
   );
 }

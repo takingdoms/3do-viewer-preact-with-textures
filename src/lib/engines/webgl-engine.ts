@@ -1,16 +1,9 @@
 import { Object3doTree } from "@takingdoms/lib-3do";
-import { Engine, EngineConfig, EngineListener } from "./engine";
-import { ModelControls, ViewMode } from "../types";
-import { WebGlHelper } from "./gl/webgl-helper";
-import { ProgramInfo } from "./gl/program-info";
-import { GlContext } from "./gl/gl-context";
-import { GlEntity } from "./gl/gl-entity";
-import { glMatrix, mat4 } from "gl-matrix";
-import { addGlEntityFrom3do } from "./gl/gl-from-3do";
-import { GlCustomContext } from "./gl/gl-custom-context";
-import { WebglSubRenderer } from "./webgl-sub-renderers/webgl-sub-renderer";
+import { ViewMode } from "../types";
+import { Engine, EngineConfig } from "./engine";
 import { NormalRenderer } from "./webgl-sub-renderers/normal-renderer";
 import { SolidColorRenderer } from "./webgl-sub-renderers/solid-color-renderer";
+import { WebglSubRenderer } from "./webgl-sub-renderers/webgl-sub-renderer";
 import { WireframeRenderer } from "./webgl-sub-renderers/wireframe-renderer";
 
 export type ShaderSources = {
@@ -76,20 +69,20 @@ export class WebglEngine extends Engine {
   protected onResized(): void {
     console.log(`Resized! (${this.width} x ${this.height})`);
     this.gl.viewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
-    if (this.getConfig().mode === 'static') {
+    if (this.config.mode === 'static') {
       this.render();
     }
   }
 
   protected render(delta?: number): void {
-    const currentViewMode = this.getConfig().modelControls.viewMode;
+    const currentViewMode = this.config.modelControls.viewMode;
     const currentSubRenderer = this.subRenderers[currentViewMode];
 
-    currentSubRenderer.render(this.gl, this.getConfig().modelControls, delta);
+    currentSubRenderer.render(this.gl, this.config.modelControls, delta);
   }
 
   private update(delta: number) {
-    const currentViewMode = this.getConfig().modelControls.viewMode;
+    const currentViewMode = this.config.modelControls.viewMode;
     const currentSubRenderer = this.subRenderers[currentViewMode];
 
     currentSubRenderer.update(delta);

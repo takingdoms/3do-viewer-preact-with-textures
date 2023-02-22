@@ -1,3 +1,4 @@
+import { TextureMapping } from "../texture-mapping";
 import { ModelControls } from "../types";
 
 export type EngineListener = {
@@ -10,12 +11,13 @@ export type EngineConfig = {
     | 'continuous'  // re-renders continuously (usually at 60 FPS)
   ;
   canvas: HTMLCanvasElement;
-  modelControls: ModelControls;
+  modelControls: ModelControls;   // initial
+  textureMapping: TextureMapping; // initial
   listener: EngineListener;
 };
 
 export abstract class Engine {
-  private config: EngineConfig;
+  protected readonly config: EngineConfig;
   private resizeObserver: ResizeObserver | undefined;
   private cleanupEvents?: () => void;
 
@@ -199,6 +201,14 @@ export abstract class Engine {
     }
   }
 
+  setTextureMapping(textureMapping: TextureMapping) {
+    this.config.textureMapping = textureMapping;
+
+    if (this.config.mode === 'static') {
+      this.render();
+    }
+  }
+
   destroy() {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
@@ -219,9 +229,5 @@ export abstract class Engine {
 
   protected get height() {
     return this.config.canvas.height;
-  }
-
-  protected getConfig(): Readonly<EngineConfig> {
-    return this.config;
   }
 }

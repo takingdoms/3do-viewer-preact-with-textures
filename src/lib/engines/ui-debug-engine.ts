@@ -24,7 +24,7 @@ export class UiDebugEngine extends Engine {
   }
 
   protected render(): void {
-    const { modelControls } = this.getConfig();
+    const { modelControls } = this.config;
 
     console.log(`Rendering next 🖼️ (#${this.renderCount})`);
     const startTime = performance.now();

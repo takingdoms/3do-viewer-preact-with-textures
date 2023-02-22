@@ -1,14 +1,16 @@
-import { FunctionComponent, h, Fragment } from 'preact';
-import { useState, useRef, useMemo, useEffect } from "preact/hooks";
-import CanvasWrapper from "./canvas/CanvasWrapper";
-import Options from "./options/Options";
-import { DEFAULT_MODEL_CONTROLS, DEFAULT_USER_SETTINGS, UserSettings } from "../lib/types";
+import { Object3doTree } from "@takingdoms/lib-3do";
+import { Fragment, FunctionComponent, h } from 'preact';
+import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { Engine, EngineListener } from "../lib/engines/engine";
 import { UiDebugEngine } from "../lib/engines/ui-debug-engine";
-import { Object3doTree } from "@takingdoms/lib-3do";
 import { WebglEngine, WebglEngineShaderSources } from "../lib/engines/webgl-engine";
-import ObjectList from "./object-list/ObjectList";
 import { localStorageUserService } from "../lib/services/user-service";
+import { TextureMapping } from "../lib/texture-mapping";
+import { DEFAULT_MODEL_CONTROLS, DEFAULT_USER_SETTINGS, UserSettings } from "../lib/types";
+import CanvasWrapper from "./canvas/CanvasWrapper";
+import ObjectList from "./object-list/ObjectList";
+import Options from "./options/Options";
+import TextureManager from "./textures/TextureManager";
 
 const CONTENT_WIDTH = '1600px';
 
@@ -19,11 +21,12 @@ const Main: FunctionComponent<{
   engineName: 'webgl' | 'ui-debug';
   shaders: WebglEngineShaderSources;
   object3doTree: Object3doTree;
-}> = ({ engineName, shaders, object3doTree }) => {
+  regularTextures: TextureMapping;
+}> = ({ engineName, shaders, object3doTree, regularTextures }) => {
   console.log('Re-rendering App');
 
   const [expandContent, setExpandContent] = useState(false);
-  const [sidebarTab, setSidebarTab] = useState<SidebarTab>('options');
+  const [sidebarTab, setSidebarTab] = useState<SidebarTab>('textures');
   const [modelControls, setModelControls] = useState(DEFAULT_MODEL_CONTROLS);
   const [engine, setEngine] = useState<Engine>();
 
@@ -33,6 +36,8 @@ const Main: FunctionComponent<{
     _setUserSettings(newUserSettings);
     userService.save(newUserSettings);
   };
+
+  const [customTextures, setCustomTextures] = useState<TextureMapping>({});
 
   const canvasRef = useRef<HTMLCanvasElement>();
 
@@ -61,6 +66,7 @@ const Main: FunctionComponent<{
           canvas: canvas,
           modelControls: DEFAULT_MODEL_CONTROLS,
           listener: engineListener,
+          textureMapping: regularTextures,
         },
         shaders,
         object3doTree,
@@ -71,6 +77,7 @@ const Main: FunctionComponent<{
         canvas: canvas,
         modelControls: DEFAULT_MODEL_CONTROLS,
         listener: engineListener,
+        textureMapping: regularTextures,
       });
     }
 
@@ -111,6 +118,7 @@ const Main: FunctionComponent<{
       modelControls={modelControls}
       setModelControls={(modelControls) => {
         setModelControls(modelControls);
+
         if (engine) {
           engine.setModelControls(modelControls);
         }
@@ -128,9 +136,19 @@ const Main: FunctionComponent<{
 
   const texturesPanel = useMemo(() => {
     return (
-      <div>TODO</div>
+      <TextureManager
+        regularTextures={regularTextures}
+        customTextures={customTextures}
+        setCustomTextures={(textures) => {
+          if (engine) {
+            engine.setTextureMapping({ ...regularTextures, ...customTextures });
+          }
+
+          setCustomTextures(textures);
+        }}
+      />
     );
-  }, []);
+  }, [object3doTree]);
 
   const sidebar = useMemo(() => {
     return (
