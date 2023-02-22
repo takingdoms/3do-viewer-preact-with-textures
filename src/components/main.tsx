@@ -2,12 +2,13 @@ import { FunctionComponent, h, Fragment } from 'preact';
 import { useState, useRef, useMemo, useEffect } from "preact/hooks";
 import CanvasWrapper from "./canvas/CanvasWrapper";
 import Options from "./options/Options";
-import { DEFAULT_MODEL_CONTROLS, DEFAULT_USER_SETTINGS } from "../lib/types";
+import { DEFAULT_MODEL_CONTROLS, DEFAULT_USER_SETTINGS, UserSettings } from "../lib/types";
 import { Engine, EngineListener } from "../lib/engines/engine";
 import { UiDebugEngine } from "../lib/engines/ui-debug-engine";
 import { Object3doTree } from "@takingdoms/lib-3do";
 import { WebglEngine, WebglEngineShaderSources } from "../lib/engines/webgl-engine";
 import ObjectList from "./object-list/ObjectList";
+import { localStorageUserService } from "../lib/services/user-service";
 
 const CONTENT_WIDTH = '1600px';
 
@@ -24,8 +25,14 @@ const Main: FunctionComponent<{
   const [expandContent, setExpandContent] = useState(false);
   const [sidebarTab, setSidebarTab] = useState<SidebarTab>('options');
   const [modelControls, setModelControls] = useState(DEFAULT_MODEL_CONTROLS);
-  const [userSettings, setUserSettings] = useState(DEFAULT_USER_SETTINGS); // TODO load & save from localStorage
   const [engine, setEngine] = useState<Engine>();
+
+  const [userService] = useState(localStorageUserService);
+  const [userSettings, _setUserSettings] = useState(userService.load() ?? DEFAULT_USER_SETTINGS);
+  const setUserSettings = (newUserSettings: UserSettings) => {
+    _setUserSettings(newUserSettings);
+    userService.save(newUserSettings);
+  };
 
   const canvasRef = useRef<HTMLCanvasElement>();
 
