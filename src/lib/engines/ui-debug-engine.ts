@@ -92,7 +92,7 @@ export class UiDebugEngine extends Engine {
       }
 
       this.ctx.fillText(
-        textLines[i],
+        textLines[i]!,
         viewWidth / 2 - totalWidth / 2,
         (viewHeight / 2) - (totalHeight / 2) + (i * lineHeight + lineHeight / 2),
       );

@@ -13,7 +13,13 @@ const TextureList: FunctionComponent<TextureListProps> = ({
   return (
     <div class="flex flex-col space-y-2">
       {Object.entries(textures).map(([key, value]) => {
-        const isOk = value !== null;
+        let isOk = value !== null;
+
+        if (value !== null && value.type === 'html') {
+          isOk = value.image.complete && value.image.naturalWidth !== 0;
+        }
+
+        const msg = isOk ? 'OK' : 'ERROR';
 
         return (
           <div
@@ -30,7 +36,11 @@ const TextureList: FunctionComponent<TextureListProps> = ({
               -
             </div>
 
-            <div>{isOk ? 'OK' : 'ERROR'}</div>
+            {value?.type === 'html' && isOk ? (
+              <a href={value.image.src} target="_blank">{msg}</a>
+            ) : (
+              <div>{msg}</div>
+            )}
           </div>
         );
       })}

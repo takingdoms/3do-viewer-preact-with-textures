@@ -12,7 +12,7 @@ const ObjectList: FunctionComponent<{
 
   const currentParent: Object3do | null = nodeStack.length === 0
     ? null // (aka root)
-    : nodeStack[nodeStack.length - 1]; // top of the stack
+    : nodeStack[nodeStack.length - 1]!; // top of the stack
 
   const currentChildren: Object3do[] = currentParent === null
     ? object3doTree.rootNodes

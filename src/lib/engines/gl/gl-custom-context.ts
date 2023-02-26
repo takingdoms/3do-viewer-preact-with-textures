@@ -18,4 +18,11 @@ export class GlCustomContext extends GlContext {
       this.gl.drawElements(this.gl.TRIANGLES, length, this.gl.UNSIGNED_SHORT, 0);
     }
   }
+
+  override useTexture(textureKey: string | null): boolean {
+    if (this.viewMode === 'normal')
+      return super.useTexture(textureKey);
+
+    return true;
+  }
 }

@@ -24,7 +24,7 @@ function createModelFromIndexedVertices(
     return vertex;
   });
 
-  const position = new GlPositionBuffer(ctx.getGl(), ctx.getProgramInfo().attribLocations.vertexPosition);
+  const position = new GlPositionBuffer(ctx.getGl(), ctx.getProgramInfo().attribLocations.vertexPosition!);
   position.bufferData(GlPositionBuffer.createBufferSourceFromPositions(positionData));
 
   const indicesData = data.indices.map((index) => {
@@ -47,29 +47,29 @@ function createModelFromIndexedVertices(
     }
 
     for (let i = 0; i < indicesData.length; i += 3) {
-      const indexA = indicesData[i + 0];
-      const indexB = indicesData[i + 1];
-      const indexC = indicesData[i + 2];
+      const indexA = indicesData[i + 0]!;
+      const indexB = indicesData[i + 1]!;
+      const indexC = indicesData[i + 2]!;
 
-      const posA = vec3.fromValues(...data.vertices[indexA]);
-      const posB = vec3.fromValues(...data.vertices[indexB]);
-      const posC = vec3.fromValues(...data.vertices[indexC]);
+      const posA = vec3.fromValues(...data.vertices[indexA]!);
+      const posB = vec3.fromValues(...data.vertices[indexB]!);
+      const posC = vec3.fromValues(...data.vertices[indexC]!);
 
       const edgeAB = vec3.sub(vec3.create(), posB, posA);
       const edgeAC = vec3.sub(vec3.create(), posC, posA);
 
       const areaWeightedNormal = vec3.cross(vec3.create(), edgeAB, edgeAC);
 
-      vec3.add(normalList[indexA], normalList[indexA], areaWeightedNormal);
-      vec3.add(normalList[indexB], normalList[indexB], areaWeightedNormal);
-      vec3.add(normalList[indexC], normalList[indexC], areaWeightedNormal);
+      vec3.add(normalList[indexA]!, normalList[indexA]!, areaWeightedNormal);
+      vec3.add(normalList[indexB]!, normalList[indexB]!, areaWeightedNormal);
+      vec3.add(normalList[indexC]!, normalList[indexC]!, areaWeightedNormal);
     }
 
     for (let i = 0; i < data.vertices.length; i++) {
-      vec3.normalize(normalList[i], normalList[i]);
+      vec3.normalize(normalList[i]!, normalList[i]!);
     }
 
-    normals = new GlNormalBuffer(ctx.getGl(), ctx.getProgramInfo().attribLocations.vertexNormal);
+    normals = new GlNormalBuffer(ctx.getGl(), ctx.getProgramInfo().attribLocations.vertexNormal!);
     normals.bufferData(GlNormalBuffer.createBufferSourceFromPositions(
       normalList.flatMap((normals) => [normals[0], normals[1], normals[2]]),
     ));
@@ -78,7 +78,7 @@ function createModelFromIndexedVertices(
   let texCoords: GlTextureCoordBuffer | undefined;
 
   if (data.texCoords) {
-    texCoords = new GlTextureCoordBuffer(ctx.getGl(), ctx.getProgramInfo().attribLocations.textureCoord);
+    texCoords = new GlTextureCoordBuffer(ctx.getGl(), ctx.getProgramInfo().attribLocations.textureCoord!);
     texCoords.bufferData(GlTextureCoordBuffer.createBufferSourceFromCoords(data.texCoords));
   }
 
@@ -99,10 +99,10 @@ function createModelFromSmartVertices(
   const uniqueDataIndices: number[] = []; // indexes data's items into the uniqueData items
 
   outer:for (let i = 0; i < data.length; i++) {
-    const item = data[i];
+    const item = data[i]!;
 
     for (let j = 0; j < uniqueData.length; j++) {
-      const normItem = uniqueData[j];
+      const normItem = uniqueData[j]!;
 
       if (isVertexEqual(item, normItem)) {
         uniqueDataIndices.push(j);
@@ -130,7 +130,7 @@ function isVertexEqual(v1: Vector3, v2: Vector3): boolean {
 function makeCube(gl: WebGLRenderingContext, programInfo: ProgramInfo<any, any>): GlEntity {
   const size = 1.0; // actually radius (because the real size will be * 2)
 
-  const positions = new GlPositionBuffer(gl, programInfo.attribLocations.vertexPosition);
+  const positions = new GlPositionBuffer(gl, programInfo.attribLocations.vertexPosition!);
     positions.bufferData(GlPositionBuffer.createBufferSourceFromPositions([
       // Front face
       -size, -size, size, size, -size, size, size, size, size, -size, size, size,
@@ -191,7 +191,7 @@ function makeCube(gl: WebGLRenderingContext, programInfo: ProgramInfo<any, any>)
       23, // left
     ]));
 
-    const normals = new GlNormalBuffer(gl, programInfo.attribLocations.vertexNormal);
+    const normals = new GlNormalBuffer(gl, programInfo.attribLocations.vertexNormal!);
     normals.bufferData(GlNormalBuffer.createBufferSourceFromPositions([
       // Front
       0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0,
@@ -210,9 +210,9 @@ function makeCube(gl: WebGLRenderingContext, programInfo: ProgramInfo<any, any>)
 
       // Left
       -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0,
-    ]))
+    ]));
 
-    const texCoords = new GlTextureCoordBuffer(gl, programInfo.attribLocations.textureCoord);
+    const texCoords = new GlTextureCoordBuffer(gl, programInfo.attribLocations.textureCoord!);
     texCoords.bufferData(GlTextureCoordBuffer.createBufferSourceFromCoords([
       // Front
       0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,
@@ -230,6 +230,8 @@ function makeCube(gl: WebGLRenderingContext, programInfo: ProgramInfo<any, any>)
 
     const rootModel = new GlModel(positions, indices, normals, texCoords);
     const rootEntity = new GlEntity(rootModel, 'cube');
+
+    rootEntity.setTextureKey('jugwingL');
 
     return rootEntity;
 }

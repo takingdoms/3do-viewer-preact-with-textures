@@ -16,6 +16,9 @@
 			"react-dom": ["./node_modules/preact/compat"]
 		},
     "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
     "strict": true
 	},
 	"include": ["src/**/*"],

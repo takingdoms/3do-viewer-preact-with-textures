@@ -1,6 +1,7 @@
 import { mat4, ReadonlyVec4 } from "gl-matrix";
 import { GlContext } from "./gl-context";
 import { GlModel } from "./gl-model";
+import { GlTexture } from "./gl-texture";
 import { Vector3 } from "./types";
 
 const WHITE = new Float32Array([1.0, 1.0, 1.0, 1.0]);
@@ -12,11 +13,14 @@ export class GlEntity {
   private modelViewMatrix: mat4;
   private color?: ReadonlyVec4;
 
+  private textureKey: string | null;
+
   constructor(model: GlModel | null, name?: string) {
     this.model = model;
     this.name = name ?? null;
     this.children = [];
     this.modelViewMatrix = mat4.create();
+    this.textureKey = null;
   }
 
   addChild(child: GlEntity) {
@@ -44,7 +48,11 @@ export class GlEntity {
         ctx.setUniformMatrix4('normalMatrix', normalMatrix);
       }
 
-      this.model.draw(ctx);
+      const textureOk = ctx.useTexture(this.textureKey);
+
+      if (textureOk) {
+        this.model.draw(ctx);
+      }
     }
 
     for (const child of this.children) {
@@ -106,43 +114,16 @@ export class GlEntity {
   removeColor() {
     this.color = undefined;
   }
+
+  setTextureKey(textureKey: string) {
+    this.textureKey = textureKey;
+  }
+
+  getTextureKey() {
+    return this.textureKey;
+  }
+
+  removeTexture() {
+    this.textureKey = null;
+  }
 }
-
-/*translate(x: number, y: number, z: number) {
-  this.translation = [
-    this.translation[0] + x,
-    this.translation[1] + y,
-    this.translation[2] + z,
-  ];
-
-  this.updateTransformations();
-}
-
-rotate(rad: number, rotateX: boolean, rotateY: boolean, rotateZ: boolean) {
-  this.rotation = [
-    rotateX ? (this.rotation[0] + rad) : this.rotation[0],
-    rotateY ? (this.rotation[1] + rad) : this.rotation[1],
-    rotateZ ? (this.rotation[2] + rad) : this.rotation[2],
-  ];
-
-  this.updateTransformations();
-}
-
-private updateTransformations() {
-  const modelViewMatrix = mat4.create();
-
-  const [translationX, translationY, translationZ] = this.translation;
-  const [rotationX, rotationY, rotationZ] = this.rotation;
-
-  mat4.translate(modelViewMatrix, modelViewMatrix, [
-    translationX,
-    translationY,
-    translationZ,
-  ]);
-
-  mat4.rotate(modelViewMatrix, modelViewMatrix, rotationX, [1, 0, 0]);
-  mat4.rotate(modelViewMatrix, modelViewMatrix, rotationY, [0, 1, 0]);
-  mat4.rotate(modelViewMatrix, modelViewMatrix, rotationZ, [0, 0, 1]);
-
-  this.modelViewMatrix = modelViewMatrix;
-}*/

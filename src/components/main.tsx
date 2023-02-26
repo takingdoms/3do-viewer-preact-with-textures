@@ -26,7 +26,7 @@ const Main: FunctionComponent<{
   console.log('Re-rendering App');
 
   const [expandContent, setExpandContent] = useState(false);
-  const [sidebarTab, setSidebarTab] = useState<SidebarTab>('textures');
+  const [sidebarTab, setSidebarTab] = useState<SidebarTab>('options');
   const [modelControls, setModelControls] = useState(DEFAULT_MODEL_CONTROLS);
   const [engine, setEngine] = useState<Engine>();
 
@@ -62,11 +62,11 @@ const Main: FunctionComponent<{
     if (engineName === 'webgl') {
       engine = new WebglEngine(
         {
-          mode: 'continuous',
+          mode: 'static',
           canvas: canvas,
           modelControls: DEFAULT_MODEL_CONTROLS,
           listener: engineListener,
-          textureMapping: regularTextures,
+          textureMapping: { ...regularTextures, ...customTextures },
         },
         shaders,
         object3doTree,
@@ -77,7 +77,7 @@ const Main: FunctionComponent<{
         canvas: canvas,
         modelControls: DEFAULT_MODEL_CONTROLS,
         listener: engineListener,
-        textureMapping: regularTextures,
+        textureMapping: { ...regularTextures, ...customTextures },
       });
     }
 
@@ -139,12 +139,12 @@ const Main: FunctionComponent<{
       <TextureManager
         regularTextures={regularTextures}
         customTextures={customTextures}
-        setCustomTextures={(textures) => {
+        setCustomTextures={(newCustomTextures) => {
           if (engine) {
-            engine.setTextureMapping({ ...regularTextures, ...customTextures });
+            engine.setTextureMapping({ ...regularTextures, ...newCustomTextures });
           }
 
-          setCustomTextures(textures);
+          setCustomTextures(newCustomTextures);
         }}
       />
     );

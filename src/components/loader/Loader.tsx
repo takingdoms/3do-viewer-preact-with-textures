@@ -57,9 +57,18 @@ async function loadTextures(tree: Object3doTree): Promise<TextureMapping> {
 
   const result: TextureMapping = {};
 
-  // TODO this part:
-  for (const textureName of textureNames) {
-    result[textureName] = null;
+  for (let textureName of textureNames) {
+    textureName = textureName.trim();
+
+    if (textureName === '') {
+      result[textureName] = null;
+      continue;
+    }
+
+    const image = new Image();
+    image.src = `/assets/custom/pngs/${textureName}.png`;
+
+    result[textureName] = { type: 'html', image };
   }
 
   return result;
@@ -104,9 +113,17 @@ const Loader: FunctionComponent<{
   }
 
   if (result === undefined || shaders === undefined || textures === undefined) {
+    let message = 'Loading...';
+
+    if (result && shaders) {
+      message = 'Loading textures...';
+    }
+
     return (
       <div class="min-w-screen min-h-screen flex justify-center items-center text-3xl bg-black">
-        <span class="text-gray-400">Loading</span>
+        <span class="text-gray-400">
+          {message}
+        </span>
       </div>
     );
   }

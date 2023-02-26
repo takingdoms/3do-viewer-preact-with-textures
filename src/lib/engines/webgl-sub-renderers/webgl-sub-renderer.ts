@@ -1,11 +1,11 @@
 import { Object3doTree } from "@takingdoms/lib-3do";
 import { glMatrix, mat4 } from "gl-matrix";
+import { TextureMapping } from "../../texture-mapping";
 import { ModelControls, ViewColor, ViewMode } from "../../types";
 import { GlContext } from "../gl/gl-context";
 import { GlCustomContext } from "../gl/gl-custom-context";
 import { GlEntity } from "../gl/gl-entity";
 import { addGlEntityFrom3do } from "../gl/gl-from-3do";
-import { GlModelHelpers } from "../gl/gl-model-helpers";
 import { ProgramInfo } from "../gl/program-info";
 import { WebglEngineShaderSources } from "../webgl-engine";
 
@@ -57,6 +57,10 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
     // rootEntity.addChild(cube);
 
     return rootEntity;
+  }
+
+  changeTextureMapping(textureMapping: TextureMapping) {
+    // nothing
   }
 
   protected inBeforeTheRootRender() {

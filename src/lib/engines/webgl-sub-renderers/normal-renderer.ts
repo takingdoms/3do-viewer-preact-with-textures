@@ -1,5 +1,7 @@
 import { Object3doTree } from "@takingdoms/lib-3do";
-import { ViewMode } from "src/lib/types";
+import { TextureMapping } from "../../texture-mapping";
+import { ViewMode } from "../../types";
+import { GlTexture } from "../gl/gl-texture";
 import { ProgramInfo } from "../gl/program-info";
 import { TextureUtils } from "../gl/texture-utils";
 import { WebGlHelper } from "../gl/webgl-helper";
@@ -9,20 +11,20 @@ import { WebglSubRenderer } from "./webgl-sub-renderer";
 type NormalProgramInfo = ProgramInfo<
   'vertexPosition' | 'vertexNormal' | 'textureCoord',
   'modelViewMatrix' | 'projectionMatrix' | 'baseColor' | 'entityColor' | 'normalMatrix' | 'sampler'
+    | 'useLights'
 >;
 
 export class NormalRenderer extends WebglSubRenderer<NormalProgramInfo> {
-  private texture: WebGLTexture;
-
   constructor(
     gl: WebGLRenderingContext,
     shaderSources: WebglEngineShaderSources,
     object3doTree: Object3doTree,
   ) {
     super(gl, shaderSources, object3doTree);
+  }
 
-    this.texture = TextureUtils.loadFromUrl(gl, '/assets/texture.png');
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+  override changeTextureMapping(textureMapping: TextureMapping) {
+    this.ctx.changeTextureMapping(textureMapping);
   }
 
   protected override getViewMode(): ViewMode {
@@ -50,13 +52,12 @@ export class NormalRenderer extends WebglSubRenderer<NormalProgramInfo> {
         entityColor: this.gl.getUniformLocation(shaderProgram, 'entityColor')!,
         normalMatrix: this.gl.getUniformLocation(shaderProgram, 'uNormalMatrix')!,
         sampler: this.gl.getUniformLocation(shaderProgram, 'uSampler')!,
+        useLights: this.gl.getUniformLocation(shaderProgram, 'useLights')!,
       },
     };
   }
 
   protected override inBeforeTheRootRender(): void {
-    this.gl.activeTexture(this.gl.TEXTURE0);
-    this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
-    this.gl.uniform1i(this.programInfo.uniformLocations.sampler, 0);
+    this.ctx.setUniformBool('useLights', false);
   }
 }

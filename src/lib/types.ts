@@ -15,13 +15,13 @@ export type ModelControls = {
 export const VIEW_MODES: ViewMode[] = ['normal', 'solid_color', 'wireframe'];
 
 export const DEFAULT_MODEL_CONTROLS: ModelControls = {
-  rotationX: 70,
-  rotationY: -45,
+  rotationX: 100,
+  rotationY: 0,
   rotationZ: 0,
   translationX: 0,
   translationY: 0,
-  zoom: 510,
-  viewMode: 'wireframe',
+  zoom: 900,
+  viewMode: 'normal',
   viewColor: [1.0, 1.0, 1.0, 1.0], // mixes multiplicatively
 };
 

@@ -3,6 +3,7 @@ import { GlContext } from "./gl-context";
 import { GlEntity } from "./gl-entity";
 import { GlModel } from "./gl-model";
 import { GlModelHelpers } from "./gl-model-helpers";
+import { Vector3 } from "./types";
 
 const SCALE = 0.000001;
 
@@ -39,6 +40,11 @@ export function addGlEntityFrom3do(
     }
 
     const entity = new GlEntity(model);
+
+    if (useTextures && validateTextureName(primitive.textureName)) {
+      entity.setTextureKey(primitive.textureName);
+    }
+
     group.addChild(entity);
   }
 
@@ -64,6 +70,16 @@ function glModelFrom3do(
   computeNormals: boolean,
   useTextures: boolean,
 ): GlModel | null {
+  // pre-ordered and pre-scaled
+  const preOrderedVertices: Vector3[] = primitive.vertexIndices.map((index) => {
+    const nextVertex = vertices[index]!;
+    return [
+      nextVertex.x * SCALE,
+      nextVertex.y * SCALE,
+      nextVertex.z * SCALE,
+    ];
+  });
+
   if (primitive.vertexIndices.length === 3) {
     const texCoords = useTextures
       ? [
@@ -74,40 +90,41 @@ function glModelFrom3do(
       : null;
 
     return GlModelHelpers.createModelFromIndexedVertices(ctx, {
-      vertices: vertices.map((vert) => [vert.x * SCALE, vert.y * SCALE, vert.z * SCALE]),
-      indices: primitive.vertexIndices,
+      vertices: preOrderedVertices,
+      indices: [0, 1, 2],
       texCoords,
     }, computeNormals);
   }
 
   if (primitive.vertexIndices.length === 4) {
-    const indices = primitive.vertexIndices;
-
     // when using textures the quads should be triangulated
     const texCoords = useTextures && triangulateQuads
       ? [
-        0, 1,
-        1, 1,
-        1, 0,
-        0, 1,
-        1, 0,
         0, 0,
+        1, 0,
+        1, 1,
+        0, 1,
       ]
       : null;
 
     return GlModelHelpers.createModelFromIndexedVertices(ctx, {
-      vertices: vertices.map((vert) => [vert.x * SCALE, vert.y * SCALE, vert.z * SCALE]),
+      vertices: preOrderedVertices,
       indices: triangulateQuads
         ? [
-          indices[0], indices[1], indices[2],
-          indices[0], indices[2], indices[3],
+          0, 1, 2,
+          0, 2, 3,
         ]
-        : [
-          indices[0], indices[1], indices[2], indices[3],
-        ],
+        : [0, 1, 2, 3],
       texCoords,
     }, computeNormals);
   }
 
   return null;
+}
+
+// TODO put this function somewhere else
+function validateTextureName(textureName: string) {
+  // return /^[a-zA-Z0-9]+$/.test(textureName);
+  return /^(?!^(?:COM|PRN|AUX|NUL|CON|CLOCK\$)(?:\..+)?$)[^\s\\/:\*\?\"<>\|\x00-\x1F\x7F]{1,254}$/
+    .test(textureName);
 }

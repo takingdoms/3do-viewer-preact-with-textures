@@ -1,4 +1,5 @@
 import { Object3doTree } from "@takingdoms/lib-3do";
+import { TextureMapping } from "../texture-mapping";
 import { ViewMode } from "../types";
 import { Engine, EngineConfig } from "./engine";
 import { NormalRenderer } from "./webgl-sub-renderers/normal-renderer";
@@ -44,6 +45,10 @@ export class WebglEngine extends Engine {
       wireframe: new WireframeRenderer(gl, shaderSources, object3doTree),
     };
 
+    for (const subRenderer of Object.values(this.subRenderers)) {
+      subRenderer.changeTextureMapping(config.textureMapping);
+    }
+
     //:: Setup resizing handler and then render
 
     this.setupEvents();
@@ -66,7 +71,7 @@ export class WebglEngine extends Engine {
     }
   }
 
-  protected onResized(): void {
+  protected override onResized(): void {
     console.log(`Resized! (${this.width} x ${this.height})`);
     this.gl.viewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
     if (this.config.mode === 'static') {
@@ -74,11 +79,19 @@ export class WebglEngine extends Engine {
     }
   }
 
-  protected render(delta?: number): void {
+  protected override render(delta?: number): void {
     const currentViewMode = this.config.modelControls.viewMode;
     const currentSubRenderer = this.subRenderers[currentViewMode];
 
     currentSubRenderer.render(this.gl, this.config.modelControls, delta);
+  }
+
+  override setTextureMapping(textureMapping: TextureMapping) {
+    for (const subRenderer of Object.values(this.subRenderers)) {
+      subRenderer.changeTextureMapping(textureMapping);
+    }
+
+    super.setTextureMapping(textureMapping);
   }
 
   private update(delta: number) {
