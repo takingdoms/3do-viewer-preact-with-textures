@@ -16,10 +16,16 @@
   [`enzyme-adapter-preact-pure`](https://github.com/preactjs/enzyme-adapter-preact-pure) for
   your tests
 
-For detailed explanation on how things work, checkout the [CLI Readme](https://github.com/developit/preact-cli/blob/master/README.md).
+# TODO (Soon):
 
-# TODO:
+- [ ] Fix the empty first texture error that shows up on every model and shouldn't even try to load
+- [ ] Texture replacing functionality (drag & drop files onto the app to load them into the texture list)
+- [ ] Ability to select background color, highlight color, solid color (when in solid_color mode), line color (when in wireframe mode)
+- [ ] Ability to select the race logo color (blue, red, etc)
+- [ ] Sort objects by depth (distance from camera) before rendering them to fix the transparency bug
+- [ ] Draw a silhouette for a highlight when in normal mode (instead of multiplying a color)
 
-- [ ] Remove `three` dependency (it's too large)
+# TODO (Later):
+
 - [ ] Make this an embeddable component (that can go into the new TAK website's units pages)
 - [ ] Also drop tailwindcss dependency (maybe)
