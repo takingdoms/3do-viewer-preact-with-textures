@@ -7,6 +7,13 @@ function compareObjectsShallow(obj1: any, obj2: any): boolean {
   });
 }
 
+function createUpdatedMap<K, V>(map: Map<K, V>, key: K, value: V): Map<K, V> {
+  const newMap = new Map(map);
+  newMap.set(key, value);
+  return newMap;
+}
+
 export const Utils = {
   compareObjectsShallow,
+  createUpdatedMap,
 };

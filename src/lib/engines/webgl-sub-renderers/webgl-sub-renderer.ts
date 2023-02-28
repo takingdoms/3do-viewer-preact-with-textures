@@ -1,5 +1,6 @@
-import { Object3doTree } from "@takingdoms/lib-3do";
+import { Object3do, Object3doTree } from "@takingdoms/lib-3do";
 import { glMatrix, mat4 } from "gl-matrix";
+import { ObjectStateMap } from "../../../components/Main";
 import { TextureMapping } from "../../texture-mapping";
 import { ModelControls, ViewColor, ViewMode } from "../../types";
 import { GlContext } from "../gl/gl-context";
@@ -17,10 +18,14 @@ const DEFAULT_BASE_COLOR: ViewColor = [1.0, 1.0, 1.0, 1.0];
 
 type AnyProgramInfo = ProgramInfo<string, string>;
 
+export type ObjectEntityMap = Map<Object3do, GlEntity>;
+
 export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
   protected readonly programInfo: TProgramInfo;
   protected readonly ctx: GlContext;
   protected readonly rootEntity: GlEntity;
+
+  protected objEntityMap: ObjectEntityMap = new Map();
 
   constructor(
     protected readonly gl: WebGLRenderingContext,
@@ -48,19 +53,33 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
         this.ctx,
         object3do,
         rootEntity,
+        this.objEntityMap,
         this.getViewMode() !== 'wireframe',
         this.getViewMode() !== 'wireframe',
         this.getViewMode() === 'normal',
       );
     }
-    // const cube = GlModelHelpers.makeCube(this.gl, this.programInfo);
-    // rootEntity.addChild(cube);
 
     return rootEntity;
   }
 
   changeTextureMapping(textureMapping: TextureMapping) {
     // nothing
+  }
+
+  changeObjectStateMap(objStateMap: ObjectStateMap) {
+    for (const [object, state] of objStateMap) {
+      const entity = this.objEntityMap.get(object);
+
+      if (entity === undefined) {
+        throw new Error(`Couldn't find an entity for the object: ${object}`);
+      }
+
+      entity.setStateOptions({
+        visibile: !state.hide,
+        highlighted: state.highlight,
+      });
+    }
   }
 
   protected inBeforeTheRootRender() {

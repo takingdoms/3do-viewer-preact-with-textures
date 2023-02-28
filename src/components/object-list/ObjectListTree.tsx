@@ -1,7 +1,10 @@
 import { Object3do } from "@takingdoms/lib-3do";
 import { FunctionComponent, h } from 'preact';
 import { useState } from "preact/hooks";
+import { Utils } from "../../lib/utils";
+import { ObjectStateMap } from "../Main";
 import Styles from './ObjectListTree.module.css';
+import ObjectSideControls from "./ObjectSideControls";
 
 const INDENT = '1.50rem';
 const ROW_HEIGHT = '34px';
@@ -12,15 +15,22 @@ const ObjectListTree: FunctionComponent<{
   nodes: Object3do[];
   onChangeNodeStack: (stack: Object3do[]) => void;
   nodeStack: Object3do[]; // used exclusively for the onChangeNodeStack callback
+
+  objStateMap: ObjectStateMap; // TODO: in the future, maybe combine the stateMap WITH The Tree... HELL YEAH and it should be called Stateful3doObjectTree and StatefulObject3do. now JUST DO IT
+  setObjStateMap: (newObjectStateMap: ObjectStateMap) => void;
 }> = ({
   current,
   nodes,
   onChangeNodeStack,
   nodeStack,
+  objStateMap,
+  setObjStateMap,
 }) => {
   const [showChildren, setShowChildren] = useState(true);
 
   const hasChildren = nodes.length > 0;
+
+  const objState = current && objStateMap.get(current);
 
   return (
     <div class={Styles.Root + ' w-full overflow-hidden text-sm'}>
@@ -45,10 +55,15 @@ const ObjectListTree: FunctionComponent<{
             </div>
           </div>
 
-          <div class="flex pr-1">
-            <div class="flex items-center px-1">•</div>
-            <div class="flex items-center px-1">•</div>
-          </div>
+          {objState && (
+            <ObjectSideControls
+              state={objState}
+              setState={(newObjState) => {
+                const newMap = Utils.createUpdatedMap(objStateMap, current, newObjState);
+                setObjStateMap(newMap);
+              }}
+            />
+          )}
         </div>
       )}
 
@@ -83,6 +98,8 @@ const ObjectListTree: FunctionComponent<{
                   nodes={subNode.children}
                   onChangeNodeStack={onChangeNodeStack}
                   nodeStack={[...nodeStack, subNode]}
+                  objStateMap={objStateMap}
+                  setObjStateMap={setObjStateMap}
                 />
               </div>
             </div>

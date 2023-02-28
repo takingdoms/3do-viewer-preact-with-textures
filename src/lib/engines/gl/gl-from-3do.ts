@@ -1,4 +1,5 @@
 import { Object3do, Primitive3do, Vertex3do } from "@takingdoms/lib-3do";
+import { ObjectEntityMap } from "../webgl-sub-renderers/webgl-sub-renderer";
 import { GlContext } from "./gl-context";
 import { GlEntity } from "./gl-entity";
 import { GlModel } from "./gl-model";
@@ -11,6 +12,7 @@ export function addGlEntityFrom3do(
   ctx: GlContext,
   child: Object3do,
   parent: GlEntity,
+  inputObjectEntityMap: ObjectEntityMap,
   triangulateQuads: boolean,
   computeNormals: boolean,
   useTextures: boolean,
@@ -22,8 +24,7 @@ export function addGlEntityFrom3do(
   const wrapper = new GlEntity(null, 'WRAPPER:' + child.name);
   wrapper.translate(child.xOffset * SCALE, child.yOffset * SCALE, child.zOffset * SCALE);
 
-  const group = new GlEntity(null, child.name);
-  wrapper.addChild(group);
+  const modelParts: GlModel[] = [];
 
   for (const primitive of child.primitives) {
     const model = glModelFrom3do(
@@ -39,20 +40,23 @@ export function addGlEntityFrom3do(
       continue;
     }
 
-    const entity = new GlEntity(model);
-
     if (useTextures && validateTextureName(primitive.textureName)) {
-      entity.setTextureKey(primitive.textureName);
+      model.setTextureKey(primitive.textureName);
     }
 
-    group.addChild(entity);
+    modelParts.push(model);
   }
+
+  const objectEntity = new GlEntity(modelParts, child.name);
+  wrapper.addChild(objectEntity);
+  inputObjectEntityMap.set(child, objectEntity);
 
   for (const subChild of child.children) {
     addGlEntityFrom3do(
       ctx,
       subChild,
-      group,
+      objectEntity,
+      inputObjectEntityMap,
       triangulateQuads,
       computeNormals,
       useTextures,

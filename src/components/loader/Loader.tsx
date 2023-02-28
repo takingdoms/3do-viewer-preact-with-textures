@@ -4,7 +4,7 @@ import { FunctionComponent } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { WebglEngineShaderSources } from "../../lib/engines/webgl-engine";
 import { TextureMapping } from "../../lib/texture-mapping";
-import Main from "../Main";
+import Main, { ObjectStateMap } from "../Main";
 
 async function loadShaders(): Promise<WebglEngineShaderSources> {
   return {
@@ -134,8 +134,30 @@ const Loader: FunctionComponent<{
       object3doTree={result}
       shaders={shaders}
       regularTextures={textures}
+      defaultObjStateMap={createStateMap(result)}
     />
   );
 }
 
 export default Loader;
+
+function createStateMap(object3doTree: Object3doTree): ObjectStateMap {
+  const result: ObjectStateMap = new Map();
+
+  const next = (node: Object3do) => {
+    result.set(node, {
+      highlight: false,
+      hide: false,
+    });
+
+    for (const child of node.children) {
+      next(child);
+    }
+  };
+
+  for (const rootChild of object3doTree.rootNodes) {
+    next(rootChild);
+  }
+
+  return result;
+}

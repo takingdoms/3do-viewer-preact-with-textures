@@ -231,7 +231,7 @@ function makeCube(gl: WebGLRenderingContext, programInfo: ProgramInfo<any, any>)
     const rootModel = new GlModel(positions, indices, normals, texCoords);
     const rootEntity = new GlEntity(rootModel, 'cube');
 
-    rootEntity.setTextureKey('jugwingL');
+    // rootEntity.setTextureKey('jugwingL');
 
     return rootEntity;
 }

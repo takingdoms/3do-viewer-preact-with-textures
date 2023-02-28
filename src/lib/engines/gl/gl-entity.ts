@@ -5,22 +5,34 @@ import { GlTexture } from "./gl-texture";
 import { Vector3 } from "./types";
 
 const WHITE = new Float32Array([1.0, 1.0, 1.0, 1.0]);
+const HIGHLIGHT = new Float32Array([1.0, 1.0, 0.0, 1.0]); // yellow
+
+type GlEntityStateOptions = Readonly<{
+  visibile: boolean;
+  highlighted: boolean;
+  // rotate... translate... etc...
+}>;
 
 export class GlEntity {
-  private model: GlModel | null;
+  private model: GlModel | GlModel[] | null;
   private name: string | null;
   private children: GlEntity[];
   private modelViewMatrix: mat4;
-  private color?: ReadonlyVec4;
 
-  private textureKey: string | null;
+  private stateOptions: GlEntityStateOptions;
+  // private textureKey: string | null;
 
-  constructor(model: GlModel | null, name?: string) {
+  constructor(model: GlModel | GlModel[] | null, name?: string) {
     this.model = model;
     this.name = name ?? null;
     this.children = [];
     this.modelViewMatrix = mat4.create();
-    this.textureKey = null;
+    // this.textureKey = null;
+
+    this.stateOptions = {
+      visibile: true,
+      highlighted: false,
+    };
   }
 
   addChild(child: GlEntity) {
@@ -28,35 +40,31 @@ export class GlEntity {
   }
 
   render(ctx: GlContext) {
-    this.renderChild(ctx, mat4.create(), this.color ?? WHITE);
+    this.renderChild(ctx, mat4.create());
   }
 
-  private renderChild(ctx: GlContext, relativeModelViewMatrix: mat4, parentColor: ReadonlyVec4) {
+  private renderChild(ctx: GlContext, relativeModelViewMatrix: mat4) {
     const localModelViewMatrix = mat4.create();
     mat4.mul(localModelViewMatrix, relativeModelViewMatrix, this.modelViewMatrix);
 
-    const nextColor = this.color ?? parentColor; // use this entity's color or inherit from parent!
+    const nextColor = this.color ?? WHITE;
 
-    if (this.model !== null) {
+    if (this.model !== null && this.stateOptions.visibile) {
       ctx.setUniformFloat4('entityColor', nextColor);
       ctx.setUniformMatrix4('modelViewMatrix', localModelViewMatrix);
 
-      if (this.model.usesNormals()) {
-        const normalMatrix = mat4.create();
-        mat4.invert(normalMatrix, localModelViewMatrix);
-        mat4.transpose(normalMatrix, normalMatrix);
-        ctx.setUniformMatrix4('normalMatrix', normalMatrix);
+      if (Array.isArray(this.model)) {
+        for (const subModel of this.model) {
+          this.renderModel(ctx, subModel, localModelViewMatrix);
+        }
       }
-
-      const textureOk = ctx.useTexture(this.textureKey);
-
-      if (textureOk) {
-        this.model.draw(ctx);
+      else {
+        this.renderModel(ctx, this.model, localModelViewMatrix);
       }
     }
 
     for (const child of this.children) {
-      child.renderChild(ctx, localModelViewMatrix, nextColor);
+      child.renderChild(ctx, localModelViewMatrix);
     }
   }
 
@@ -75,6 +83,17 @@ export class GlEntity {
     }
 
     return undefined;
+  }
+
+  private renderModel(ctx: GlContext, model: GlModel, modelViewMatrix: mat4) {
+    if (model.usesNormals()) {
+      const normalMatrix = mat4.create();
+      mat4.invert(normalMatrix, modelViewMatrix);
+      mat4.transpose(normalMatrix, normalMatrix);
+      ctx.setUniformMatrix4('normalMatrix', normalMatrix);
+    }
+
+    model.draw(ctx);
   }
 
   translate(x: number, y: number, z: number) {
@@ -106,16 +125,15 @@ export class GlEntity {
     this.modelViewMatrix = mat4.create();
   }
 
-  setColor(color: ReadonlyVec4) {
-    this.color = color;
+  private get color(): ReadonlyVec4 | undefined {
+    if (this.stateOptions.highlighted) {
+      return HIGHLIGHT;
+    }
+
+    return undefined;
   }
 
-  /** Make this entity use its parent's color */
-  removeColor() {
-    this.color = undefined;
-  }
-
-  setTextureKey(textureKey: string) {
+  /*setTextureKey(textureKey: string) {
     this.textureKey = textureKey;
   }
 
@@ -125,5 +143,13 @@ export class GlEntity {
 
   removeTexture() {
     this.textureKey = null;
+  }*/
+
+  getStateOptions() {
+    return this.stateOptions;
+  }
+
+  setStateOptions(stateOptions: GlEntityStateOptions) {
+    this.stateOptions = stateOptions;
   }
 }

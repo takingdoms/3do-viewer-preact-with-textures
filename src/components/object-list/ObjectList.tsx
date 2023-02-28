@@ -1,12 +1,19 @@
 import { Object3do, Object3doTree } from "@takingdoms/lib-3do";
 import { FunctionComponent, h, Fragment } from 'preact';
 import { useMemo, useState } from "preact/hooks";
+import { Utils } from "../../lib/utils";
+import { ObjectStateMap } from "../Main";
 import ObjectListTree from "./ObjectListTree";
+import ObjectSideControls from "./ObjectSideControls";
 
 const ObjectList: FunctionComponent<{
   object3doTree: Object3doTree;
+  objStateMap: ObjectStateMap; // TODO: in the future, maybe combine the stateMap WITH The Tree... HELL YEAH and it should be called Stateful3doObjectTree and StatefulObject3do. now JUST DO IT
+  setObjStateMap: (newObjectStateMap: ObjectStateMap) => void;
 }> = ({
   object3doTree,
+  objStateMap,
+  setObjStateMap,
 }) => {
   const [nodeStack, setNodeStack] = useState<Object3do[]>([]);
 
@@ -17,6 +24,8 @@ const ObjectList: FunctionComponent<{
   const currentChildren: Object3do[] = currentParent === null
     ? object3doTree.rootNodes
     : currentParent.children;
+
+  const currentObjState = currentParent && objStateMap.get(currentParent);
 
   const pathing = useMemo(() => {
     const sep = <div class="mx-1 text-pink-600">&raquo;</div>;
@@ -58,12 +67,17 @@ const ObjectList: FunctionComponent<{
           : (currentParent.name ?? <span class="text-gray-300">{'<empty name>'}</span>)}
       </div>
 
-      <div class="flex pr-1">
-        <div class="flex items-center px-1">•</div>
-        <div class="flex items-center px-1">•</div>
-      </div>
+      {currentObjState && (
+        <ObjectSideControls
+          state={currentObjState}
+          setState={(newObjState) => {
+            const newMap = Utils.createUpdatedMap(objStateMap, currentParent, newObjState);
+            setObjStateMap(newMap);
+          }}
+        />
+      )}
     </div>
-  ), [currentParent]);
+  ), [currentParent, currentObjState, objStateMap]);
 
   return (
     <div class="flex flex-col h-full overflow-hidden">
@@ -88,6 +102,8 @@ const ObjectList: FunctionComponent<{
           nodes={currentChildren}
           onChangeNodeStack={setNodeStack}
           nodeStack={nodeStack}
+          objStateMap={objStateMap}
+          setObjStateMap={setObjStateMap}
         />
       </div>
     </div>

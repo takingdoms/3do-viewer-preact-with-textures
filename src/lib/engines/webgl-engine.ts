@@ -1,4 +1,5 @@
 import { Object3doTree } from "@takingdoms/lib-3do";
+import { ObjectStateMap } from "../../components/Main";
 import { TextureMapping } from "../texture-mapping";
 import { ViewMode } from "../types";
 import { Engine, EngineConfig } from "./engine";
@@ -92,6 +93,14 @@ export class WebglEngine extends Engine {
     }
 
     super.setTextureMapping(textureMapping);
+  }
+
+  override setObjectStateMap(objStateMap: ObjectStateMap): void {
+    for (const subRenderer of Object.values(this.subRenderers)) {
+      subRenderer.changeObjectStateMap(objStateMap);
+    }
+
+    super.setObjectStateMap(objStateMap);
   }
 
   private update(delta: number) {

@@ -9,6 +9,7 @@ export class GlModel {
   private indexBuffer: GlIndexBuffer;
   private normalBuffer?: GlNormalBuffer;
   private textureCoordsBuffer?: GlTextureCoordBuffer;
+  private textureKey: string | null = null;
 
   constructor(
     positionBuffer: GlPositionBuffer,
@@ -22,11 +23,25 @@ export class GlModel {
     this.textureCoordsBuffer = textureCoordsBuffer;
   }
 
+  setTextureKey(textureKey: string) {
+    this.textureKey = textureKey;
+  }
+
+  getTextureKey() {
+    return this.textureKey;
+  }
+
   usesNormals() {
     return this.normalBuffer !== undefined;
   }
 
   draw(ctx: GlContext) {
+    const textureOk = ctx.useTexture(this.textureKey);
+
+    if (!textureOk) {
+      return;
+    }
+
     this.positionBuffer.use();
     this.indexBuffer.use();
 

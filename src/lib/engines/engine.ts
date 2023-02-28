@@ -1,3 +1,4 @@
+import { ObjectStateMap } from "../../components/Main";
 import { TextureMapping } from "../texture-mapping";
 import { ModelControls } from "../types";
 
@@ -11,8 +12,9 @@ export type EngineConfig = {
     | 'continuous'  // re-renders continuously (usually at 60 FPS)
   ;
   canvas: HTMLCanvasElement;
-  modelControls: ModelControls;   // initial
-  textureMapping: TextureMapping; // initial
+  modelControls: ModelControls;
+  textureMapping: TextureMapping;
+  objStateMap: ObjectStateMap;
   listener: EngineListener;
 };
 
@@ -203,6 +205,14 @@ export abstract class Engine {
 
   setTextureMapping(textureMapping: TextureMapping) {
     this.config.textureMapping = textureMapping;
+
+    if (this.config.mode === 'static') {
+      this.render();
+    }
+  }
+
+  setObjectStateMap(objStateMap: ObjectStateMap) {
+    this.config.objStateMap = objStateMap;
 
     if (this.config.mode === 'static') {
       this.render();

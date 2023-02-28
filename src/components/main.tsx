@@ -1,9 +1,10 @@
-import { Object3doTree } from "@takingdoms/lib-3do";
+import { Object3do, Object3doTree } from "@takingdoms/lib-3do";
 import { Fragment, FunctionComponent, h } from 'preact';
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
-import { Engine, EngineListener } from "../lib/engines/engine";
+import { Engine, EngineConfig, EngineListener } from "../lib/engines/engine";
 import { UiDebugEngine } from "../lib/engines/ui-debug-engine";
 import { WebglEngine, WebglEngineShaderSources } from "../lib/engines/webgl-engine";
+import { ObjectState } from "../lib/object-state";
 import { localStorageUserService } from "../lib/services/user-service";
 import { TextureMapping } from "../lib/texture-mapping";
 import { DEFAULT_MODEL_CONTROLS, DEFAULT_USER_SETTINGS, UserSettings } from "../lib/types";
@@ -17,17 +18,21 @@ const CONTENT_WIDTH = '1600px';
 type SidebarTab = 'options' | 'objects' | 'textures';
 const SIDEBAR_TABS = ['options', 'objects', 'textures'] as const;
 
+export type ObjectStateMap = Map<Object3do, ObjectState>;
+
 const Main: FunctionComponent<{
   engineName: 'webgl' | 'ui-debug';
   shaders: WebglEngineShaderSources;
   object3doTree: Object3doTree;
   regularTextures: TextureMapping;
-}> = ({ engineName, shaders, object3doTree, regularTextures }) => {
+  defaultObjStateMap: ObjectStateMap;
+}> = ({ engineName, shaders, object3doTree, regularTextures, defaultObjStateMap }) => {
   console.log('Re-rendering App');
 
   const [expandContent, setExpandContent] = useState(false);
-  const [sidebarTab, setSidebarTab] = useState<SidebarTab>('options');
+  const [sidebarTab, setSidebarTab] = useState<SidebarTab>('objects');
   const [modelControls, setModelControls] = useState(DEFAULT_MODEL_CONTROLS);
+  const [objStateMap, setObjStateMap] = useState<ObjectStateMap>(defaultObjStateMap);
   const [engine, setEngine] = useState<Engine>();
 
   const [userService] = useState(localStorageUserService);
@@ -57,29 +62,18 @@ const Main: FunctionComponent<{
       onModelControlsChanged: setModelControls,
     };
 
-    let engine: Engine;
+    const engineConfig: EngineConfig = {
+      mode: 'static',
+      canvas: canvas,
+      modelControls: DEFAULT_MODEL_CONTROLS,
+      listener: engineListener,
+      textureMapping: { ...regularTextures },
+      objStateMap: defaultObjStateMap,
+    };
 
-    if (engineName === 'webgl') {
-      engine = new WebglEngine(
-        {
-          mode: 'static',
-          canvas: canvas,
-          modelControls: DEFAULT_MODEL_CONTROLS,
-          listener: engineListener,
-          textureMapping: { ...regularTextures, ...customTextures },
-        },
-        shaders,
-        object3doTree,
-      );
-    } else {
-      engine = new UiDebugEngine({
-        mode: 'static',
-        canvas: canvas,
-        modelControls: DEFAULT_MODEL_CONTROLS,
-        listener: engineListener,
-        textureMapping: { ...regularTextures, ...customTextures },
-      });
-    }
+    const engine = engineName === 'webgl'
+      ? new WebglEngine(engineConfig, shaders, object3doTree)
+      : new UiDebugEngine(engineConfig);
 
     setEngine(engine);
 
@@ -116,11 +110,11 @@ const Main: FunctionComponent<{
   const optionsPanel = useMemo(() => (
     <Options
       modelControls={modelControls}
-      setModelControls={(modelControls) => {
-        setModelControls(modelControls);
+      setModelControls={(newModelControls) => {
+        setModelControls(newModelControls);
 
         if (engine) {
-          engine.setModelControls(modelControls);
+          engine.setModelControls(newModelControls);
         }
       }}
       userSettings={userSettings}
@@ -130,9 +124,19 @@ const Main: FunctionComponent<{
 
   const objectsPanel = useMemo(() => {
     return (
-      <ObjectList object3doTree={object3doTree} />
+      <ObjectList
+        object3doTree={object3doTree}
+        objStateMap={objStateMap}
+        setObjStateMap={(newObjStateMap) => {
+          setObjStateMap(newObjStateMap);
+
+          if (engine) {
+            engine.setObjectStateMap(newObjStateMap);
+          }
+        }}
+      />
     );
-  }, [object3doTree]);
+  }, [engine, object3doTree, objStateMap]);
 
   const texturesPanel = useMemo(() => {
     return (
@@ -148,7 +152,7 @@ const Main: FunctionComponent<{
         }}
       />
     );
-  }, [object3doTree]);
+  }, [engine, object3doTree]);
 
   const sidebar = useMemo(() => {
     return (
