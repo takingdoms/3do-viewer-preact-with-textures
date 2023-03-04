@@ -6,6 +6,7 @@ import { ModelControls, ViewColor, ViewMode } from "../../types";
 import { GlContext } from "../gl/gl-context";
 import { GlCustomContext } from "../gl/gl-custom-context";
 import { GlEntity } from "../gl/gl-entity";
+import { GlEntityRoot } from "../gl/gl-entity-root";
 import { addGlEntityFrom3do } from "../gl/gl-from-3do";
 import { ProgramInfo } from "../gl/program-info";
 import { WebglEngineShaderSources } from "../webgl-engine";
@@ -23,7 +24,7 @@ export type ObjectEntityMap = Map<Object3do, GlEntity>;
 export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
   protected readonly programInfo: TProgramInfo;
   protected readonly ctx: GlContext;
-  protected readonly rootEntity: GlEntity;
+  protected readonly rootEntity: GlEntityRoot;
 
   protected objEntityMap: ObjectEntityMap = new Map();
 
@@ -45,8 +46,8 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
     return new GlCustomContext(this.gl, this.programInfo, this.getViewMode());
   }
 
-  protected initRootEntity(): GlEntity {
-    const rootEntity = new GlEntity(null);
+  protected initRootEntity(): GlEntityRoot {
+    const rootEntity = new GlEntityRoot(null);
 
     for (const object3do of this.object3doTree.rootNodes) {
       addGlEntityFrom3do(
@@ -58,6 +59,12 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
         this.getViewMode() !== 'wireframe',
         this.getViewMode() === 'normal',
       );
+    }
+
+    const blkwingl1 = rootEntity.findChild('blkwingl1', true);
+    if (blkwingl1) {
+      blkwingl1.resetTransformations();
+      blkwingl1.rotateZ(glMatrix.toRadian(45));
     }
 
     return rootEntity;
@@ -114,6 +121,8 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
     const yOffset = modelControls.translationY * TRANSLATION_MODIFIER * -1;
     const zOffset = (BASE_CAMERA_OFFSET + modelControls.zoom * ZOOM_MODIFIER) * -1;
 
+    // TODO \/ stop reseting and recreating transformations for no reason. these should only happen
+    // when the user actually rotates/pans the camera
     this.rootEntity.resetTransformations();
     this.rootEntity.translate(xOffset, yOffset, zOffset);
     this.rootEntity.rotateX(glMatrix.toRadian(modelControls.rotationX * .75));

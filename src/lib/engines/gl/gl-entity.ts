@@ -17,17 +17,21 @@ export class GlEntity {
   private model: GlModel | GlModel[] | null;
   private name: string | null;
   private children: GlEntity[];
-  private modelViewMatrix: mat4;
+  protected parent: GlEntity | null;
+
+  private modelViewMatrix: mat4; // this is what receives transformation operations
+  private relativeModelViewMatrix: mat4; // this inherits transformations from the parent tree
 
   private stateOptions: GlEntityStateOptions;
-  // private textureKey: string | null;
 
   constructor(model: GlModel | GlModel[] | null, name?: string) {
     this.model = model;
     this.name = name ?? null;
+
     this.children = [];
+    this.parent = null;
     this.modelViewMatrix = mat4.create();
-    // this.textureKey = null;
+    this.relativeModelViewMatrix = mat4.create();
 
     this.stateOptions = {
       visibile: true,
@@ -36,35 +40,41 @@ export class GlEntity {
   }
 
   addChild(child: GlEntity) {
+    if (child.parent !== null) {
+      throw new Error(`Can't add a child that already has a parent.`);
+    }
+
     this.children.push(child);
+    child.parent = this;
   }
 
-  render(ctx: GlContext) {
-    this.renderChild(ctx, mat4.create());
+  protected recalculateMatrices(parentViewMatrix: mat4) {
+    this.relativeModelViewMatrix = mat4.mul(mat4.create(), parentViewMatrix, this.modelViewMatrix);
+
+    for (const child of this.children) {
+      child.recalculateMatrices(this.relativeModelViewMatrix);
+    }
   }
 
-  private renderChild(ctx: GlContext, relativeModelViewMatrix: mat4) {
-    const localModelViewMatrix = mat4.create();
-    mat4.mul(localModelViewMatrix, relativeModelViewMatrix, this.modelViewMatrix);
-
+  protected renderChild(ctx: GlContext) {
     const nextColor = this.color ?? WHITE;
 
     if (this.model !== null && this.stateOptions.visibile) {
       ctx.setUniformFloat4('entityColor', nextColor);
-      ctx.setUniformMatrix4('modelViewMatrix', localModelViewMatrix);
+      ctx.setUniformMatrix4('modelViewMatrix', this.relativeModelViewMatrix);
 
       if (Array.isArray(this.model)) {
         for (const subModel of this.model) {
-          this.renderModel(ctx, subModel, localModelViewMatrix);
+          this.renderModel(ctx, subModel);
         }
       }
       else {
-        this.renderModel(ctx, this.model, localModelViewMatrix);
+        this.renderModel(ctx, this.model);
       }
     }
 
     for (const child of this.children) {
-      child.renderChild(ctx, localModelViewMatrix);
+      child.renderChild(ctx);
     }
   }
 
@@ -85,10 +95,10 @@ export class GlEntity {
     return undefined;
   }
 
-  private renderModel(ctx: GlContext, model: GlModel, modelViewMatrix: mat4) {
+  private renderModel(ctx: GlContext, model: GlModel) {
     if (model.usesNormals()) {
       const normalMatrix = mat4.create();
-      mat4.invert(normalMatrix, modelViewMatrix);
+      mat4.invert(normalMatrix, this.relativeModelViewMatrix);
       mat4.transpose(normalMatrix, normalMatrix);
       ctx.setUniformMatrix4('normalMatrix', normalMatrix);
     }
@@ -132,18 +142,6 @@ export class GlEntity {
 
     return undefined;
   }
-
-  /*setTextureKey(textureKey: string) {
-    this.textureKey = textureKey;
-  }
-
-  getTextureKey() {
-    return this.textureKey;
-  }
-
-  removeTexture() {
-    this.textureKey = null;
-  }*/
 
   getStateOptions() {
     return this.stateOptions;

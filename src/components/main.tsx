@@ -30,7 +30,7 @@ const Main: FunctionComponent<{
   console.log('Re-rendering App');
 
   const [expandContent, setExpandContent] = useState(false);
-  const [sidebarTab, setSidebarTab] = useState<SidebarTab>('objects');
+  const [sidebarTab, setSidebarTab] = useState<SidebarTab>('options');
   const [modelControls, setModelControls] = useState(DEFAULT_MODEL_CONTROLS);
   const [objStateMap, setObjStateMap] = useState<ObjectStateMap>(defaultObjStateMap);
   const [engine, setEngine] = useState<Engine>();
