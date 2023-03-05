@@ -8,13 +8,13 @@ import { WebGlHelper } from "../gl/webgl-helper";
 import { WebglEngineShaderSources } from "../webgl-engine";
 import { WebglSubRenderer } from "./webgl-sub-renderer";
 
-type NormalProgramInfo = ProgramInfo<
+type RegularProgramInfo = ProgramInfo<
   'vertexPosition' | 'vertexNormal' | 'textureCoord',
   'modelViewMatrix' | 'projectionMatrix' | 'baseColor' | 'entityColor' | 'normalMatrix' | 'sampler'
     | 'useLights'
 >;
 
-export class NormalRenderer extends WebglSubRenderer<NormalProgramInfo> {
+export class RegularRenderer extends WebglSubRenderer<RegularProgramInfo> {
   constructor(
     gl: WebGLRenderingContext,
     shaderSources: WebglEngineShaderSources,
@@ -28,10 +28,10 @@ export class NormalRenderer extends WebglSubRenderer<NormalProgramInfo> {
   }
 
   protected override getViewMode(): ViewMode {
-    return 'normal';
+    return 'regular';
   }
 
-  protected override initProgram(): NormalProgramInfo {
+  protected override initProgram(): RegularProgramInfo {
     const { vsSource, fsSource } = this.shaderSources.normal;
 
     const vsShader = WebGlHelper.compileShader(this.gl, vsSource, this.gl.VERTEX_SHADER);

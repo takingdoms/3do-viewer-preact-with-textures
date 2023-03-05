@@ -3,7 +3,7 @@ import { ObjectStateMap } from "../../components/Main";
 import { TextureMapping } from "../texture-mapping";
 import { ViewMode } from "../types";
 import { Engine, EngineConfig } from "./engine";
-import { NormalRenderer } from "./webgl-sub-renderers/normal-renderer";
+import { RegularRenderer } from "./webgl-sub-renderers/regular-renderer";
 import { SolidColorRenderer } from "./webgl-sub-renderers/solid-color-renderer";
 import { WebglSubRenderer } from "./webgl-sub-renderers/webgl-sub-renderer";
 import { WireframeRenderer } from "./webgl-sub-renderers/wireframe-renderer";
@@ -41,7 +41,7 @@ export class WebglEngine extends Engine {
     //:: Setup subRenderers
 
     this.subRenderers = {
-      normal: new NormalRenderer(gl, shaderSources, object3doTree),
+      regular: new RegularRenderer(gl, shaderSources, object3doTree),
       solid_color: new SolidColorRenderer(gl, shaderSources, object3doTree),
       wireframe: new WireframeRenderer(gl, shaderSources, object3doTree),
     };

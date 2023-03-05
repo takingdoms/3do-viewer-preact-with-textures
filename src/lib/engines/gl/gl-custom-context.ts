@@ -20,7 +20,7 @@ export class GlCustomContext extends GlContext {
   }
 
   override useTexture(textureKey: string | null): boolean {
-    if (this.viewMode === 'normal')
+    if (this.viewMode === 'regular')
       return super.useTexture(textureKey);
 
     return true;

@@ -1,4 +1,4 @@
-export type ViewMode = 'normal' | 'solid_color' | 'wireframe';
+export type ViewMode = 'regular' | 'solid_color' | 'wireframe';
 export type ViewColor = [number, number, number, number];
 
 export type ModelControls = {
@@ -12,7 +12,7 @@ export type ModelControls = {
   viewColor?: ViewColor;
 };
 
-export const VIEW_MODES: ViewMode[] = ['normal', 'solid_color', 'wireframe'];
+export const VIEW_MODES: ViewMode[] = ['regular', 'solid_color', 'wireframe'];
 
 export const DEFAULT_MODEL_CONTROLS: ModelControls = {
   rotationX: 100,
@@ -21,7 +21,7 @@ export const DEFAULT_MODEL_CONTROLS: ModelControls = {
   translationX: 0,
   translationY: 0,
   zoom: 900,
-  viewMode: 'normal',
+  viewMode: 'regular',
   viewColor: [1.0, 1.0, 1.0, 1.0], // mixes multiplicatively
 };
 
