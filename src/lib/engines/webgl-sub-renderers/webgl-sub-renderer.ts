@@ -1,5 +1,5 @@
 import { Object3do, Object3doTree } from "@takingdoms/lib-3do";
-import { glMatrix, mat4 } from "gl-matrix";
+import { glMatrix, mat4, vec3 } from "gl-matrix";
 import { ObjectStateMap } from "../../../components/Main";
 import { TextureMapping } from "../../texture-mapping";
 import { ModelControls, ViewColor, ViewMode } from "../../types";
@@ -20,6 +20,8 @@ const DEFAULT_BASE_COLOR: ViewColor = [1.0, 1.0, 1.0, 1.0];
 type AnyProgramInfo = ProgramInfo<string, string>;
 
 export type ObjectEntityMap = Map<Object3do, GlEntity>;
+
+const cameraPosition = vec3.create();
 
 export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
   protected readonly programInfo: TProgramInfo;
@@ -62,11 +64,25 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
       );
     }
 
-    const blkwingl1 = rootEntity.findChild('blkwingl1', true);
+    /*const blkwingl1 = rootEntity.findChild('blkwingl1', true);
     if (blkwingl1) {
       blkwingl1.resetTransformations();
       blkwingl1.rotateZ(glMatrix.toRadian(45));
+    }*/
+
+    /*const armUR = rootEntity.findChild('ArmUR', true);
+    if (armUR) {
+      armUR.resetTransformations();
+      armUR.rotateX(glMatrix.toRadian(150));
     }
+
+    const armLR = rootEntity.findChild('ArmLR', true);
+    if (armLR) {
+      armLR.resetTransformations();
+      armLR.rotateY(glMatrix.toRadian(-45));
+    }*/
+
+    //
 
     return rootEntity;
   }
@@ -132,7 +148,7 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
 
     this.inBeforeTheRootRender();
 
-    this.rootEntity.render(this.ctx);
+    this.rootEntity.render(this.ctx, { position: cameraPosition, projectionMatrix });
   }
 
   update(delta: number) {
