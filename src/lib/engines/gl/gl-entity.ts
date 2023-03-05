@@ -14,15 +14,15 @@ type GlEntityStateOptions = Readonly<{
 }>;
 
 export class GlEntity {
-  private model: GlModel | GlModel[] | null;
-  private name: string | null;
-  private children: GlEntity[];
+  protected model: GlModel | GlModel[] | null;
+  protected name: string | null;
+  protected children: GlEntity[];
   protected parent: GlEntity | null;
 
-  private modelViewMatrix: mat4; // this is what receives transformation operations
-  private relativeModelViewMatrix: mat4; // this inherits transformations from the parent tree
+  protected modelViewMatrix: mat4; // this is what receives transformation operations
+  protected relativeModelViewMatrix: mat4; // this inherits transformations from the parent tree
 
-  private stateOptions: GlEntityStateOptions;
+  protected stateOptions: GlEntityStateOptions;
 
   constructor(model: GlModel | GlModel[] | null, name?: string) {
     this.model = model;
@@ -95,7 +95,7 @@ export class GlEntity {
     return undefined;
   }
 
-  private renderModel(ctx: GlContext, model: GlModel) {
+  renderModel(ctx: GlContext, model: GlModel) {
     if (model.usesNormals()) {
       const normalMatrix = mat4.create();
       mat4.invert(normalMatrix, this.relativeModelViewMatrix);
@@ -149,5 +149,21 @@ export class GlEntity {
 
   setStateOptions(stateOptions: GlEntityStateOptions) {
     this.stateOptions = stateOptions;
+  }
+
+  getModel() {
+    return this.model;
+  }
+
+  getChildren(): readonly GlEntity[] {
+    return this.children;
+  }
+
+  getColor() {
+    return this.color;
+  }
+
+  getRelativeModelViewMatrix() {
+    return this.relativeModelViewMatrix;
   }
 }
