@@ -47,7 +47,8 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
   }
 
   protected initRootEntity(): GlEntityRoot {
-    const rootEntity = new GlEntityRoot(null);
+    const viewMode = this.getViewMode();
+    const rootEntity = new GlEntityRoot(viewMode === 'normal');
 
     for (const object3do of this.object3doTree.rootNodes) {
       addGlEntityFrom3do(
@@ -55,9 +56,9 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
         object3do,
         rootEntity,
         this.objEntityMap,
-        this.getViewMode() !== 'wireframe',
-        this.getViewMode() !== 'wireframe',
-        this.getViewMode() === 'normal',
+        viewMode !== 'wireframe',
+        viewMode !== 'wireframe',
+        viewMode === 'normal',
       );
     }
 
