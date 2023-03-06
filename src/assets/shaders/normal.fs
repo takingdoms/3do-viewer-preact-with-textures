@@ -8,6 +8,11 @@ varying highp vec2 vTextureCoord;
 
 void main(void) {
   highp vec4 texColor = texture2D(uSampler, vTextureCoord);
+
+  if(texColor.a < 0.5) {
+    discard;
+  }
+
   highp vec4 color = baseColor * entityColor * texColor;
 
   if (useLights) {
