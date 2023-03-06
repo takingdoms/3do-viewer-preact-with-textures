@@ -63,7 +63,7 @@ const OptionsControls: FunctionComponent<{
             }
           }}
         >
-          <option value="normal">Normal</option>
+          <option value="regular">Regular</option>
           <option value="solid_color">Solid Color</option>
           <option value="wireframe">Wireframe</option>
         </select>
