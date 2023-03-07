@@ -1,11 +1,7 @@
-import { Object3doTree } from "@takingdoms/lib-3do";
 import { TextureMapping } from "../../texture-mapping";
 import { ViewMode } from "../../types";
-import { GlTexture } from "../gl/gl-texture";
 import { ProgramInfo } from "../gl/program-info";
-import { TextureUtils } from "../gl/texture-utils";
 import { WebGlHelper } from "../gl/webgl-helper";
-import { WebglEngineShaderSources } from "../webgl-engine";
 import { WebglSubRenderer } from "./webgl-sub-renderer";
 
 type RegularProgramInfo = ProgramInfo<
@@ -15,14 +11,6 @@ type RegularProgramInfo = ProgramInfo<
 >;
 
 export class RegularRenderer extends WebglSubRenderer<RegularProgramInfo> {
-  constructor(
-    gl: WebGLRenderingContext,
-    shaderSources: WebglEngineShaderSources,
-    object3doTree: Object3doTree,
-  ) {
-    super(gl, shaderSources, object3doTree);
-  }
-
   override changeTextureMapping(textureMapping: TextureMapping) {
     this.ctx.changeTextureMapping(textureMapping);
   }
@@ -32,7 +20,7 @@ export class RegularRenderer extends WebglSubRenderer<RegularProgramInfo> {
   }
 
   protected override initProgram(): RegularProgramInfo {
-    const { vsSource, fsSource } = this.shaderSources.normal;
+    const { vsSource, fsSource } = this.shaderSources.regular;
 
     const vsShader = WebGlHelper.compileShader(this.gl, vsSource, this.gl.VERTEX_SHADER);
     const fsShader = WebGlHelper.compileShader(this.gl, fsSource, this.gl.FRAGMENT_SHADER);

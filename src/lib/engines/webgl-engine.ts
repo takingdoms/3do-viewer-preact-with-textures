@@ -14,7 +14,7 @@ export type ShaderSources = {
 };
 
 export type WebglEngineShaderSources = {
-  normal: ShaderSources;
+  regular: ShaderSources;
   solid: ShaderSources;
   wireframe: ShaderSources;
 };

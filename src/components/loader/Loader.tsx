@@ -1,6 +1,5 @@
 import { Object3do, Object3doTree, Parse3do } from "@takingdoms/lib-3do";
-import { h } from 'preact';
-import { FunctionComponent } from "preact";
+import { FunctionComponent,h  } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { WebglEngineShaderSources } from "../../lib/engines/webgl-engine";
 import { TextureMapping } from "../../lib/texture-mapping";
@@ -96,9 +95,9 @@ function createStateMap(object3doTree: Object3doTree): ObjectStateMap {
 
 async function loadShaders(): Promise<WebglEngineShaderSources> {
   return {
-    normal: {
-      fsSource: await fetch('/assets/shaders/normal.fs').then((res) => res.text()),
-      vsSource: await fetch('/assets/shaders/normal.vs').then((res) => res.text()),
+    regular: {
+      fsSource: await fetch('/assets/shaders/regular.fs').then((res) => res.text()),
+      vsSource: await fetch('/assets/shaders/regular.vs').then((res) => res.text()),
     },
     solid: {
       fsSource: await fetch('/assets/shaders/solid_color.fs').then((res) => res.text()),
