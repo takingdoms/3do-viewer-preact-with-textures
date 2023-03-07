@@ -18,10 +18,6 @@ export class GlContext {
   constructor(gl: WebGLRenderingContext, programInfo: ProgramInfo<any, any>) {
     this.gl = gl;
     this.programInfo = programInfo;
-
-    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
   }
 
   /// Warning: Use this only when REALLY needed

@@ -38,6 +38,10 @@ export class WebglEngine extends Engine {
 
     this.gl = gl;
 
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
     //:: Setup subRenderers
 
     this.subRenderers = {
