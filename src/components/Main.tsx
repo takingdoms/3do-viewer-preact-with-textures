@@ -1,6 +1,6 @@
 import { Object3do, Object3doTree } from "@takingdoms/lib-3do";
 import { Fragment, FunctionComponent, h } from 'preact';
-import { useEffect, useMemo, useRef, useState } from "preact/hooks";
+import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { Engine, EngineConfig, EngineListener } from "../lib/engines/engine";
 import { UiDebugEngine } from "../lib/engines/ui-debug-engine";
 import { WebglEngine, WebglEngineShaderSources } from "../lib/engines/webgl-engine";
@@ -37,10 +37,10 @@ const Main: FunctionComponent<{
 
   const [userService] = useState(localStorageUserService);
   const [userSettings, _setUserSettings] = useState(userService.load() ?? DEFAULT_USER_SETTINGS);
-  const setUserSettings = (newUserSettings: UserSettings) => {
+  const setUserSettings = useCallback((newUserSettings: UserSettings) => {
     _setUserSettings(newUserSettings);
     userService.save(newUserSettings);
-  };
+  }, [userService]);
 
   const [customTextures, setCustomTextures] = useState<TextureMapping>({});
 
@@ -78,10 +78,12 @@ const Main: FunctionComponent<{
     setEngine(engine);
 
     return () => {
+      console.log(`Destroying engine. This should probably not be happening normally.`);
       engine.destroy();
       setEngine(undefined);
     };
-  }, [canvasRef]);
+    // \/ important: all dependencies should come from non-stateful values: AKA never change
+  }, [canvasRef, shaders, defaultObjStateMap, engineName, object3doTree, regularTextures]);
 
   const canvasWrapper = useMemo(() => (
     <CanvasWrapper canvasRef={canvasRef} />
@@ -120,7 +122,7 @@ const Main: FunctionComponent<{
       userSettings={userSettings}
       setUserSettings={setUserSettings}
     />
-  ), [engine, modelControls, userSettings]);
+  ), [engine, modelControls, userSettings, setUserSettings]);
 
   const objectsPanel = useMemo(() => {
     return (
@@ -152,7 +154,7 @@ const Main: FunctionComponent<{
         }}
       />
     );
-  }, [engine, object3doTree]);
+  }, [engine, customTextures, regularTextures]);
 
   const sidebar = useMemo(() => {
     return (
@@ -197,7 +199,7 @@ const Main: FunctionComponent<{
         </div>
       </div>
     );
-  }, [sidebarTab, optionsPanel, userSettings]);
+  }, [sidebarTab, optionsPanel, userSettings, objectsPanel, texturesPanel]);
 
   return (
     <div class="flex justify-center items-stretch h-screen overflow-hidden bg-gray-900">
