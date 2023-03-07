@@ -19,8 +19,6 @@
 # TODO (Soon):
 
 - [ ] Fix the empty first texture error that shows up on every model and shouldn't even try to load
-- [ ] Better use of generics in the ProgramInfo and WebglSubRenderer types
-- [ ] Sort objects by depth (distance from camera) before rendering them to fix the transparency bug
 - [ ] Texture replacing functionality (drag & drop files onto the app to load them into the texture list)
 - [ ] Ability to select background color, highlight color, solid color (when in solid_color mode), line color (when in wireframe mode)
 - [ ] Ability to select the race logo color (blue, red, etc)
