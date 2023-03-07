@@ -6,7 +6,6 @@ import { ModelControls, ViewColor, ViewMode } from "../../types";
 import { GlContext } from "../gl/gl-context";
 import { GlCustomContext } from "../gl/gl-custom-context";
 import { GlEntity } from "../gl/gl-entity";
-import { GlEntityRoot } from "../gl/gl-entity-root";
 import { addGlEntityFrom3do } from "../gl/gl-from-3do";
 import { ProgramInfo } from "../gl/program-info";
 import { WebglEngineShaderSources } from "../webgl-engine";
@@ -26,7 +25,7 @@ const cameraPosition = vec3.create();
 export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
   protected readonly programInfo: TProgramInfo;
   protected readonly ctx: GlContext;
-  protected readonly rootEntity: GlEntityRoot;
+  protected readonly rootEntity: GlEntity;
 
   protected objEntityMap: ObjectEntityMap = new Map();
 
@@ -48,9 +47,9 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
     return new GlCustomContext(this.gl, this.programInfo, this.getViewMode());
   }
 
-  protected initRootEntity(): GlEntityRoot {
+  protected initRootEntity(): GlEntity {
     const viewMode = this.getViewMode();
-    const rootEntity = new GlEntityRoot(viewMode === 'regular');
+    const rootEntity = new GlEntity(null);
 
     for (const object3do of this.object3doTree.rootNodes) {
       addGlEntityFrom3do(
@@ -63,26 +62,6 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
         viewMode === 'regular',
       );
     }
-
-    /*const blkwingl1 = rootEntity.findChild('blkwingl1', true);
-    if (blkwingl1) {
-      blkwingl1.resetTransformations();
-      blkwingl1.rotateZ(glMatrix.toRadian(45));
-    }*/
-
-    /*const armUR = rootEntity.findChild('ArmUR', true);
-    if (armUR) {
-      armUR.resetTransformations();
-      armUR.rotateX(glMatrix.toRadian(150));
-    }
-
-    const armLR = rootEntity.findChild('ArmLR', true);
-    if (armLR) {
-      armLR.resetTransformations();
-      armLR.rotateY(glMatrix.toRadian(-45));
-    }*/
-
-    //
 
     return rootEntity;
   }
@@ -148,7 +127,7 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
 
     this.inBeforeTheRootRender();
 
-    this.rootEntity.render(this.ctx, { position: cameraPosition, projectionMatrix });
+    this.rootEntity.render(this.ctx);
   }
 
   update(delta: number) {

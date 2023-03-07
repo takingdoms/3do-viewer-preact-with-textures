@@ -48,6 +48,12 @@ export class GlEntity {
     child.parent = this;
   }
 
+  render(ctx: GlContext) {
+    // TODO go back to passing the parentViewMatrix during the renderChild function!
+    this.recalculateMatrices(mat4.create());
+    this.renderChild(ctx);
+  }
+
   protected recalculateMatrices(parentViewMatrix: mat4) {
     this.relativeModelViewMatrix = mat4.mul(mat4.create(), parentViewMatrix, this.modelViewMatrix);
 

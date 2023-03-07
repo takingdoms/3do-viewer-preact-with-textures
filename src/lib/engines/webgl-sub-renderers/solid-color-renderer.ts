@@ -1,4 +1,4 @@
-import { ViewMode } from "src/lib/types";
+import { ViewMode } from "../../../lib/types";
 import { ProgramInfo } from "../gl/program-info";
 import { WebGlHelper } from "../gl/webgl-helper";
 import { WebglSubRenderer } from "./webgl-sub-renderer";
