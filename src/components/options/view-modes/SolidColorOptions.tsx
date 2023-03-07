@@ -29,7 +29,7 @@ const SolidColorOptions: FunctionComponent<{
       </div>
 
       <div>
-        <div class="text-center">
+        <div class="">
           Solid Color
         </div>
 

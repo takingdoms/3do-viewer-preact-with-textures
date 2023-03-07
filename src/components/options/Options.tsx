@@ -41,19 +41,19 @@ const Options: FunctionComponent<OptionsProps> = ({
       : null;
 
     return (<>
-      <div class="text-center font-bold mt-4 mb-1">View Mode Settings</div>
+      <div class="text-center font-bold border-b border-gray-700 mb-2 pb-1 mt-6">View Mode Settings</div>
       {sub}
     </>);
   }, [modelControls, setModelControls]);
 
   return (
     <div class="max-h-full overflow-auto px-6">
-      <div class="text-center font-bold mb-1">Controls</div>
+      <div class="text-center font-bold border-b border-gray-700 mb-2 pb-1">Controls</div>
       {controls}
 
       {viewModeOptions}
 
-      <div class="text-center font-bold mt-6 mb-1">User Settings</div>
+      <div class="text-center font-bold border-b border-gray-700 mb-2 pb-1 mt-6">User Settings</div>
       {user}
     </div>
   );

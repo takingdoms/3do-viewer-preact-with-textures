@@ -12,7 +12,7 @@ const WireframeOptions: FunctionComponent<{
   return (
     <div class="space-y-4">
       <div>
-        <div class="text-center">
+        <div class="">
           Wireframe Color
         </div>
 

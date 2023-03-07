@@ -32,7 +32,7 @@ const ColorControl: FunctionComponent<{
     }
 
     return (
-      <div class="self-stretch space-y-2">
+      <div class="space-y-2">
         <SliderControl
           id="red"
           label="Red"
@@ -71,7 +71,7 @@ const ColorControl: FunctionComponent<{
   }, [isCustom, color, setColor]);
 
   return (
-    <div class="flex flex-col items-center">
+    <div class="">
       <select
         value={currentOption}
         onChange={(ev) => {
