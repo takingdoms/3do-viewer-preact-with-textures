@@ -1,5 +1,5 @@
 import { TextureMapping } from "../../texture-mapping";
-import { ViewMode } from "../../types";
+import { ModelControls, ViewMode } from "../../types";
 import { ProgramInfo } from "../gl/program-info";
 import { WebGlHelper } from "../gl/webgl-helper";
 import { WebglSubRenderer } from "./webgl-sub-renderer";
@@ -45,7 +45,7 @@ export class RegularRenderer extends WebglSubRenderer<RegularProgramInfo> {
     };
   }
 
-  protected override inBeforeTheRootRender(): void {
-    this.ctx.setUniformBool('useLights', false);
+  protected override inBeforeTheRootRender(gl: WebGLRenderingContext, modelControls: ModelControls): void {
+    this.ctx.setUniformBool('useLights', modelControls.enableLightingRegular);
   }
 }

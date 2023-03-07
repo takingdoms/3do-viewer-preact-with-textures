@@ -10,6 +10,8 @@ export type ModelControls = {
   zoom: number;
   viewMode: ViewMode;
   viewColor?: ViewColor;
+  enableLightingSolidColor: boolean;
+  enableLightingRegular: boolean;
 };
 
 export const VIEW_MODES: ViewMode[] = ['regular', 'solid_color', 'wireframe'];
@@ -23,6 +25,8 @@ export const DEFAULT_MODEL_CONTROLS: ModelControls = {
   zoom: 900,
   viewMode: 'regular',
   viewColor: [1.0, 1.0, 1.0, 1.0], // mixes multiplicatively
+  enableLightingSolidColor: true,
+  enableLightingRegular: false,
 };
 
 export type UserSettings = {

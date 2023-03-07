@@ -1,11 +1,11 @@
-import { ViewMode } from "../../../lib/types";
+import { ModelControls, ViewMode } from "../../../lib/types";
 import { ProgramInfo } from "../gl/program-info";
 import { WebGlHelper } from "../gl/webgl-helper";
 import { WebglSubRenderer } from "./webgl-sub-renderer";
 
 type SolidColorProgramInfo = ProgramInfo<
   'vertexPosition' | 'vertexNormal',
-  'modelViewMatrix' | 'projectionMatrix' | 'baseColor' | 'entityColor' | 'normalMatrix'
+  'modelViewMatrix' | 'projectionMatrix' | 'baseColor' | 'entityColor' | 'normalMatrix' | 'useLights'
 >;
 
 export class SolidColorRenderer extends WebglSubRenderer<SolidColorProgramInfo> {
@@ -32,7 +32,12 @@ export class SolidColorRenderer extends WebglSubRenderer<SolidColorProgramInfo> 
         baseColor: this.gl.getUniformLocation(shaderProgram, 'baseColor')!,
         entityColor: this.gl.getUniformLocation(shaderProgram, 'entityColor')!,
         normalMatrix: this.gl.getUniformLocation(shaderProgram, 'uNormalMatrix')!,
+        useLights: this.gl.getUniformLocation(shaderProgram, 'useLights')!,
       },
     };
+  }
+
+  protected override inBeforeTheRootRender(gl: WebGLRenderingContext, modelControls: ModelControls): void {
+    this.ctx.setUniformBool('useLights', modelControls.enableLightingSolidColor);
   }
 }

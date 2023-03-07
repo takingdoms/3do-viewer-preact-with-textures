@@ -83,7 +83,7 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
     }
   }
 
-  protected inBeforeTheRootRender() {
+  protected inBeforeTheRootRender(gl: WebGLRenderingContext, modelControls: ModelControls) {
     // nothing
   }
 
@@ -123,7 +123,7 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
     this.rootEntity.rotateY(glMatrix.toRadian(modelControls.rotationY * .75));
     this.rootEntity.rotateZ(glMatrix.toRadian(modelControls.rotationZ * .75));
 
-    this.inBeforeTheRootRender();
+    this.inBeforeTheRootRender(gl, modelControls);
 
     this.rootEntity.render(this.ctx);
   }

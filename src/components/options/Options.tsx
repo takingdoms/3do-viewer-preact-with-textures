@@ -1,8 +1,11 @@
-import { FunctionComponent, h } from 'preact';
+import { FunctionComponent, h, Fragment } from 'preact';
 import { useMemo } from "preact/hooks";
 import { ModelControls, UserSettings } from "../../lib/types";
 import OptionsControls from "./OptionsControls";
 import OptionsUser from "./OptionsUser";
+import RegularOptions from "./view-modes/RegularOptions";
+import SolidColorOptions from "./view-modes/SolidColorOptions";
+import WireframeOptions from "./view-modes/WireframeOptions";
 
 type OptionsProps = {
   modelControls: ModelControls;
@@ -25,10 +28,30 @@ const Options: FunctionComponent<OptionsProps> = ({
     <OptionsUser userSettings={userSettings} setUserSettings={setUserSettings} />
   ), [userSettings, setUserSettings]);
 
+  const viewModeOptions = useMemo(() => {
+    const viewMode = modelControls.viewMode;
+
+    const sub
+      = viewMode === 'regular'
+        ? <RegularOptions modelControls={modelControls} setModelControls={setModelControls} />
+      : viewMode === 'solid_color'
+        ? <SolidColorOptions modelControls={modelControls} setModelControls={setModelControls} />
+      : viewMode === 'wireframe'
+        ? <WireframeOptions modelControls={modelControls} setModelControls={setModelControls} />
+      : null;
+
+    return (<>
+      <div class="text-center font-bold mt-4 mb-1">View Mode Settings</div>
+      {sub}
+    </>);
+  }, [modelControls, setModelControls]);
+
   return (
     <div class="max-h-full overflow-auto px-6">
       <div class="text-center font-bold mb-1">Controls</div>
       {controls}
+
+      {viewModeOptions}
 
       <div class="text-center font-bold mt-6 mb-1">User Settings</div>
       {user}
