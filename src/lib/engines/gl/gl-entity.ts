@@ -4,7 +4,6 @@ import { GlModel } from "./gl-model";
 import { GlTexture } from "./gl-texture";
 import { Vector3 } from "./types";
 
-const WHITE = new Float32Array([1.0, 1.0, 1.0, 1.0]);
 const HIGHLIGHT = new Float32Array([1.0, 1.0, 0.0, 1.0]); // yellow
 
 type GlEntityStateOptions = Readonly<{
@@ -63,7 +62,7 @@ export class GlEntity {
   }
 
   protected renderChild(ctx: GlContext) {
-    const nextColor = this.color ?? WHITE;
+    const nextColor = this.color ?? ctx.getBaseEntityColor();
 
     if (this.model !== null && this.stateOptions.visibile) {
       ctx.setUniformFloat4('entityColor', nextColor);
@@ -155,21 +154,5 @@ export class GlEntity {
 
   setStateOptions(stateOptions: GlEntityStateOptions) {
     this.stateOptions = stateOptions;
-  }
-
-  getModel() {
-    return this.model;
-  }
-
-  getChildren(): readonly GlEntity[] {
-    return this.children;
-  }
-
-  getColor() {
-    return this.color;
-  }
-
-  getRelativeModelViewMatrix() {
-    return this.relativeModelViewMatrix;
   }
 }

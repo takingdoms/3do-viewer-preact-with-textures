@@ -11,20 +11,17 @@ export class GlContext {
 
   // keys are the same as the keys in textureMapping
   private textureDatabase: Record<string, GlTexture | null> = {};
-
   private lastTexture?: GlTexture | null; // undefined = not initialized; null = no texture
+
+  private baseEntityColor: ReadonlyVec4 = new Float32Array([1.0, 1.0, 1.0, 1.0]); // WHITE
 
   constructor(gl: WebGLRenderingContext, programInfo: ProgramInfo<any, any>) {
     this.gl = gl;
     this.programInfo = programInfo;
 
-    // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-
-    // gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    // gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
   }
 
   /// Warning: Use this only when REALLY needed
@@ -34,6 +31,14 @@ export class GlContext {
 
   getProgramInfo(): Readonly<ProgramInfo<any, any>> {
     return this.programInfo;
+  }
+
+  getBaseEntityColor(): ReadonlyVec4 {
+    return this.baseEntityColor;
+  }
+
+  setBaseEntityColor(color: ReadonlyVec4) {
+    this.baseEntityColor = color;
   }
 
   setUniformMatrix4(uniform: string, matrix: mat4) {

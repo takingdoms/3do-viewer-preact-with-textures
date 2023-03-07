@@ -20,8 +20,6 @@ type AnyProgramInfo = ProgramInfo<string, string>;
 
 export type ObjectEntityMap = Map<Object3do, GlEntity>;
 
-const cameraPosition = vec3.create();
-
 export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
   protected readonly programInfo: TProgramInfo;
   protected readonly ctx: GlContext;
