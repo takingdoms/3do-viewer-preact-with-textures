@@ -60,8 +60,8 @@ const FileChooser: FunctionComponent<{
       <div className="flex items-stretch space-x-2">
         <select name="sample" class="grow border border-gray-700">
           <option value=""></option>
-          {SAMPLES.map((sample) => (
-            <option value={sample.path}>{sample.name}</option>
+          {SAMPLES.map((sample, idx) => (
+            <option value={sample.path} key={idx}>{sample.name}</option>
           ))}
         </select>
         <button type="submit">Go</button>

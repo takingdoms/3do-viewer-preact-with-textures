@@ -2,6 +2,7 @@ import { Object3do, Object3doTree, Parse3do } from "@takingdoms/lib-3do";
 import { FunctionComponent,h  } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { WebglEngineShaderSources } from "../../lib/engines/webgl-engine";
+import { defaultLogoColorsDefinitions, TakLogoColorsDefinitions } from "../../lib/logo-colors";
 import { TextureMapping } from "../../lib/texture-mapping";
 import Main, { ObjectStateMap } from "../Main";
 
@@ -12,6 +13,8 @@ const Loader: FunctionComponent<{
   const [shaders, setShaders] = useState<WebglEngineShaderSources>();
   const [textures, setTextures] = useState<TextureMapping>();
   const [error, setError] = useState<any>();
+
+  const logoDefs = defaultLogoColorsDefinitions;
 
   // TODO move this up in the component tree since shaders can be loaded BEFORE the user selects a
   // dataSource
@@ -24,7 +27,7 @@ const Loader: FunctionComponent<{
     loadModel(dataSource)
       .then((res) => {
         setResult(res);
-        return loadTextures(res);
+        return loadTextures(res, logoDefs, '/assets/custom/pngs/', 'png');
       })
       .then(setTextures)
       .catch(setError);
@@ -66,6 +69,7 @@ const Loader: FunctionComponent<{
       shaders={shaders}
       regularTextures={textures}
       defaultObjStateMap={createStateMap(result)}
+      logoDefs={logoDefs}
     />
   );
 }
@@ -125,7 +129,12 @@ async function loadModel(dataSource: File | string): Promise<Object3doTree> {
   return Parse3do.fromBuffer(view);
 }
 
-async function loadTextures(tree: Object3doTree): Promise<TextureMapping> {
+async function loadTextures(
+  tree: Object3doTree,
+  logoDefs: TakLogoColorsDefinitions,
+  basePath: string,
+  fileExtension: string,
+): Promise<TextureMapping> {
   const textureNames = new Set<string>();
 
   const loadNext = (node: Object3do) => {
@@ -154,19 +163,51 @@ async function loadTextures(tree: Object3doTree): Promise<TextureMapping> {
         return;
       }
 
-      const image = new Image();
-      image.src = `/assets/custom/pngs/${textureName}.png`;
+      const usesLogo = logoDefs.textureKeyUsesLogo(textureName);
 
-      image.onerror = () => {
-        console.error(`Failed to load image at: ${image.src}`);
-        result[textureName] = null;
-        resolve();
-      };
+      console.log(textureName, usesLogo);
 
-      image.onload = () => {
-        result[textureName] = { type: 'html', image };
-        resolve();
-      };
+      if (!usesLogo) {
+        const textureFilePath = `${textureName}.${fileExtension}`;
+
+        const image = new Image();
+        image.src = basePath + textureFilePath;
+
+        image.onerror = () => {
+          console.error(`Failed to load image at: ${image.src}`);
+          result[textureName] = null;
+          resolve();
+        };
+
+        image.onload = () => {
+          result[textureName] = { type: 'html', image };
+          resolve();
+        };
+
+        return;
+      }
+
+      Promise.all(logoDefs.idxList.map((nextIdx) => {
+        return new Promise<void>((resolveInner, _rejectInner) => {
+          const logoTextureName = logoDefs.idxToTextureKey(nextIdx, textureName);
+          const textureFileName = logoDefs.idxToTextureFilename(nextIdx, textureName);
+          const textureFilePath = `${textureFileName}.${fileExtension}`;
+
+          const image = new Image();
+          image.src = basePath + textureFilePath;
+
+          image.onerror = () => {
+            console.error(`Failed to load image at: ${image.src}`);
+            result[logoTextureName] = null;
+            resolveInner();
+          };
+
+          image.onload = () => {
+            result[logoTextureName] = { type: 'html', image };
+            resolveInner();
+          };
+        });
+      })).then(() => resolve(), reject);
     });
   }));
 

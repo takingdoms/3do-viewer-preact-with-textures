@@ -1,5 +1,6 @@
 import { Object3doTree } from "@takingdoms/lib-3do";
 import { ObjectStateMap } from "../../components/Main";
+import { TakLogoColorsDefinitions } from "../logo-colors";
 import { TextureMapping } from "../texture-mapping";
 import { ModelControls, ViewMode } from "../types";
 import { Engine, EngineConfig } from "./engine";
@@ -27,6 +28,7 @@ export class WebglEngine extends Engine {
     config: EngineConfig,
     shaderSources: WebglEngineShaderSources,
     object3doTree: Object3doTree,
+    logoDefs: TakLogoColorsDefinitions,
   ) {
     super(config);
 
@@ -45,9 +47,9 @@ export class WebglEngine extends Engine {
     //:: Setup subRenderers
 
     this.subRenderers = {
-      regular: new RegularRenderer(gl, shaderSources, object3doTree),
-      solid_color: new SolidColorRenderer(gl, shaderSources, object3doTree),
-      wireframe: new WireframeRenderer(gl, shaderSources, object3doTree),
+      regular: new RegularRenderer(gl, shaderSources, object3doTree, logoDefs),
+      solid_color: new SolidColorRenderer(gl, shaderSources, object3doTree, logoDefs),
+      wireframe: new WireframeRenderer(gl, shaderSources, object3doTree, logoDefs),
     };
 
     for (const subRenderer of Object.values(this.subRenderers)) {

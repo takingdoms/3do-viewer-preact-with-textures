@@ -15,6 +15,11 @@ export class RegularRenderer extends WebglSubRenderer<RegularProgramInfo> {
     this.ctx.changeTextureMapping(textureMapping);
   }
 
+  override changeModelControls(modelControls: ModelControls): void {
+    this.ctx.setCurrentLogoIdx(modelControls.logoColorIdx);
+    super.changeModelControls(modelControls);
+  }
+
   protected override getViewMode(): ViewMode {
     return 'regular';
   }

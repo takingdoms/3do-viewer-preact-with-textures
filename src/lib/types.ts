@@ -1,4 +1,5 @@
 import { ReadonlyVec4 } from "gl-matrix";
+import { TakLogoIndex } from "./logo-colors";
 
 export type ViewMode = 'regular' | 'solid_color' | 'wireframe';
 export type ViewColor = [number, number, number, number];
@@ -15,7 +16,7 @@ export type ModelControls = {
 
   //:: Regular mode options
   enableLightingRegular: boolean;
-  logoColorIdx: number;
+  logoColorIdx: TakLogoIndex;
 
   //:: Solid color mode options
   enableLightingSolidColor: boolean;

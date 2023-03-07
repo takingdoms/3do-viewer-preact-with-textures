@@ -42,16 +42,15 @@ const ObjectList: FunctionComponent<{
         </div>
         {currentParent !== null && sep}
         {nodeStack.map((node, index) => (
-          <>
+          <Fragment key={index}>
             <div
-              key={index}
               onClick={() => setNodeStack(nodeStack.slice(0, index + 1))}
               class={index === nodeStack.length - 1 ? selCss : unselCss}
             >
               {node.name}
             </div>
             {index < nodeStack.length - 1 && sep}
-          </>
+          </Fragment>
         ))}
       </div>
     );
@@ -77,7 +76,7 @@ const ObjectList: FunctionComponent<{
         />
       )}
     </div>
-  ), [currentParent, currentObjState, objStateMap]);
+  ), [currentParent, currentObjState, objStateMap, setObjStateMap]);
 
   return (
     <div class="flex flex-col h-full overflow-hidden">
@@ -89,6 +88,14 @@ const ObjectList: FunctionComponent<{
         <div class="mb-2">Current:</div>
 
         {currentParentInfo}
+
+        <ul>
+          {currentParent?.primitives.map((primitive, idx) => (
+            <li key={idx}>
+              {primitive.textureName}
+            </li>
+          ))}
+        </ul>
 
         {currentChildren.length > 0 && (
           <div class="mt-4 mb-2">Children ({currentChildren.length}):</div>

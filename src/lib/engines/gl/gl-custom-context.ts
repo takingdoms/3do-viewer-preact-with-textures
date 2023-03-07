@@ -1,12 +1,18 @@
 import { GlContext } from "./gl-context";
 import { ProgramInfo } from "./program-info";
 import { ViewMode } from "../../types";
+import { TakLogoColorsDefinitions } from "../../logo-colors";
 
 export class GlCustomContext extends GlContext {
   private viewMode: ViewMode;
 
-  constructor(gl: WebGLRenderingContext, programInfo: ProgramInfo<any, any>, viewMode: ViewMode) {
-    super(gl, programInfo);
+  constructor(
+    gl: WebGLRenderingContext,
+    programInfo: ProgramInfo<any, any>,
+    logoDefs: TakLogoColorsDefinitions,
+    viewMode: ViewMode,
+  ) {
+    super(gl, programInfo, logoDefs);
     this.viewMode = viewMode;
   }
 

@@ -1,6 +1,7 @@
 import { Object3do, Object3doTree } from "@takingdoms/lib-3do";
 import { glMatrix, mat4, vec3 } from "gl-matrix";
 import { ObjectStateMap } from "../../../components/Main";
+import { TakLogoColorsDefinitions } from "../../logo-colors";
 import { TextureMapping } from "../../texture-mapping";
 import { ModelControls, ViewColor, ViewMode } from "../../types";
 import { GlContext } from "../gl/gl-context";
@@ -31,6 +32,7 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
     protected readonly gl: WebGLRenderingContext,
     protected readonly shaderSources: WebglEngineShaderSources,
     protected readonly object3doTree: Object3doTree,
+    protected readonly logoDefs: TakLogoColorsDefinitions,
   ) {
     this.programInfo = this.initProgram();
     this.ctx = this.initContext();
@@ -42,7 +44,7 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
   protected abstract initProgram(): TProgramInfo;
 
   protected initContext(): GlContext {
-    return new GlCustomContext(this.gl, this.programInfo, this.getViewMode());
+    return new GlCustomContext(this.gl, this.programInfo, this.logoDefs, this.getViewMode());
   }
 
   protected initRootEntity(): GlEntity {

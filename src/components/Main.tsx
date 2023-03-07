@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks"
 import { Engine, EngineConfig, EngineListener } from "../lib/engines/engine";
 import { UiDebugEngine } from "../lib/engines/ui-debug-engine";
 import { WebglEngine, WebglEngineShaderSources } from "../lib/engines/webgl-engine";
-import { defaultLogoColorsDefinitions } from "../lib/logo-colors";
+import { defaultLogoColorsDefinitions, TakLogoColorsDefinitions } from "../lib/logo-colors";
 import { ObjectState } from "../lib/object-state";
 import { localStorageUserService } from "../lib/services/user-service";
 import { TextureMapping } from "../lib/texture-mapping";
@@ -27,7 +27,8 @@ const Main: FunctionComponent<{
   object3doTree: Object3doTree;
   regularTextures: TextureMapping;
   defaultObjStateMap: ObjectStateMap;
-}> = ({ engineName, shaders, object3doTree, regularTextures, defaultObjStateMap }) => {
+  logoDefs: TakLogoColorsDefinitions;
+}> = ({ engineName, shaders, object3doTree, regularTextures, defaultObjStateMap, logoDefs }) => {
   console.log('Re-rendering App');
 
   const [expandContent, setExpandContent] = useState(false);
@@ -73,7 +74,7 @@ const Main: FunctionComponent<{
     };
 
     const engine = engineName === 'webgl'
-      ? new WebglEngine(engineConfig, shaders, object3doTree)
+      ? new WebglEngine(engineConfig, shaders, object3doTree, logoDefs)
       : new UiDebugEngine(engineConfig);
 
     setEngine(engine);
@@ -84,7 +85,7 @@ const Main: FunctionComponent<{
       setEngine(undefined);
     };
     // \/ important: all dependencies should come from non-stateful values: AKA never change
-  }, [canvasRef, shaders, defaultObjStateMap, engineName, object3doTree, regularTextures]);
+  }, [canvasRef, shaders, defaultObjStateMap, engineName, object3doTree, regularTextures, logoDefs]);
 
   const canvasWrapper = useMemo(() => (
     <CanvasWrapper canvasRef={canvasRef} />
@@ -122,9 +123,9 @@ const Main: FunctionComponent<{
       }}
       userSettings={userSettings}
       setUserSettings={setUserSettings}
-      logoDefs={defaultLogoColorsDefinitions}
+      logoDefs={logoDefs}
     />
-  ), [engine, modelControls, userSettings, setUserSettings]);
+  ), [engine, modelControls, userSettings, setUserSettings, logoDefs]);
 
   const objectsPanel = useMemo(() => {
     return (

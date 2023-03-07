@@ -1,4 +1,5 @@
 import { mat4, ReadonlyVec4 } from "gl-matrix";
+import { TakLogoColorsDefinitions, TakLogoIndex } from "../../logo-colors";
 import { LoadableTexture, TextureMapping } from "../../texture-mapping";
 import { GlTexture } from "./gl-texture";
 import { ProgramInfo } from "./program-info";
@@ -6,18 +7,24 @@ import { ProgramInfo } from "./program-info";
 export class GlContext {
   protected gl: WebGLRenderingContext;
   protected programInfo: ProgramInfo<any, any>;
+  private logoDefs: TakLogoColorsDefinitions;
 
-  private textureMapping: Readonly<TextureMapping> | undefined = undefined;
-
-  // keys are the same as the keys in textureMapping
+  private currentLogoIdx: TakLogoIndex;
   private textureDatabase: Record<string, GlTexture | null> = {};
   private lastTexture?: GlTexture | null; // undefined = not initialized; null = no texture
 
   private baseEntityColor: ReadonlyVec4 = new Float32Array([1.0, 1.0, 1.0, 1.0]); // WHITE
 
-  constructor(gl: WebGLRenderingContext, programInfo: ProgramInfo<any, any>) {
+  constructor(
+    gl: WebGLRenderingContext,
+    programInfo: ProgramInfo<any, any>,
+    logoDefs: TakLogoColorsDefinitions,
+  ) {
     this.gl = gl;
     this.programInfo = programInfo;
+    this.logoDefs = logoDefs;
+
+    this.currentLogoIdx = logoDefs.defaultIdx;
   }
 
   /// Warning: Use this only when REALLY needed
@@ -76,10 +83,11 @@ export class GlContext {
       texture = null;
     }
     else {
-      const fromDb = this.textureDatabase[textureKey];
+      const logoTextureKey = this.logoDefs.idxToTextureKey(this.currentLogoIdx, textureKey);
+      const fromDb = this.textureDatabase[logoTextureKey];
 
       if (fromDb === undefined) {
-        console.error(`Missing texture for: ${textureKey}`);
+        console.error(`Missing texture for: ${logoTextureKey}`);
         texture = null;
       }
       else {
@@ -105,21 +113,12 @@ export class GlContext {
 
   changeTextureMapping(textureMapping: Readonly<TextureMapping>) {
     for (const [key, value] of Object.entries(textureMapping)) {
-      if (this.textureMapping === undefined) {
-        this.textureDatabase[key] = value === null
-          ? null
-          : this.setupTexture(value);
-
-        continue;
-      }
-
-      const didChange = this.textureMapping[key] !== value;
+      const existing = this.textureDatabase[key];
+      const didChange = existing !== value;
 
       if (!didChange) {
         continue;
       }
-
-      const existing = this.textureDatabase[key];
 
       if (existing !== undefined && existing !== null) {
         existing.delete();
@@ -129,8 +128,10 @@ export class GlContext {
         ? null
         : this.setupTexture(value);
     }
+  }
 
-    this.textureMapping = textureMapping;
+  setCurrentLogoIdx(idx: TakLogoIndex) {
+    this.currentLogoIdx = idx;
   }
 
   private setupTexture(loadableTexture: LoadableTexture): GlTexture {
