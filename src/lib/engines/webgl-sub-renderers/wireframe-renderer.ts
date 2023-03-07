@@ -1,4 +1,4 @@
-import { ViewMode } from "../../../lib/types";
+import { ModelControls, ViewMode } from "../../../lib/types";
 import { ProgramInfo } from "../gl/program-info";
 import { WebGlHelper } from "../gl/webgl-helper";
 import { WebglSubRenderer } from "./webgl-sub-renderer";
@@ -9,11 +9,15 @@ export type WireframeProgramInfo = ProgramInfo<
 >;
 
 export class WireframeRenderer extends WebglSubRenderer<WireframeProgramInfo> {
-  protected getViewMode(): ViewMode {
+  protected override getViewMode(): ViewMode {
     return 'wireframe';
   }
 
-  protected initProgram(): WireframeProgramInfo {
+  override changeModelControls(modelControls: ModelControls): void {
+    this.ctx.setBaseEntityColor(modelControls.wireframeColor);
+  }
+
+  protected override initProgram(): WireframeProgramInfo {
     const { vsSource, fsSource } = this.shaderSources.wireframe;
 
     const vsShader = WebGlHelper.compileShader(this.gl, vsSource, this.gl.VERTEX_SHADER);

@@ -68,6 +68,10 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
     // nothing
   }
 
+  changeModelControls(modelControls: ModelControls) {
+    // nothing
+  }
+
   changeObjectStateMap(objStateMap: ObjectStateMap) {
     for (const [object, state] of objStateMap) {
       const entity = this.objEntityMap.get(object);

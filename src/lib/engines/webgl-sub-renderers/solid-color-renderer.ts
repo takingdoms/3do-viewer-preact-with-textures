@@ -9,11 +9,15 @@ type SolidColorProgramInfo = ProgramInfo<
 >;
 
 export class SolidColorRenderer extends WebglSubRenderer<SolidColorProgramInfo> {
-  protected getViewMode(): ViewMode {
+  protected override getViewMode(): ViewMode {
     return 'solid_color';
   }
 
-  protected initProgram(): SolidColorProgramInfo {
+  override changeModelControls(modelControls: ModelControls): void {
+    this.ctx.setBaseEntityColor(modelControls.solidColor);
+  }
+
+  protected override initProgram(): SolidColorProgramInfo {
     const { vsSource, fsSource } = this.shaderSources.solid;
 
     const vsShader = WebGlHelper.compileShader(this.gl, vsSource, this.gl.VERTEX_SHADER);

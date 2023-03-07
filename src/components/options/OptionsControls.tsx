@@ -1,6 +1,6 @@
-import { FunctionComponent, h, Fragment } from 'preact';
+import { FunctionComponent, h } from 'preact';
 import { ModelControls, VIEW_MODES } from "../../lib/types";
-import SliderControl from "./SliderControl";
+import SliderControl from "../ui/SliderControl";
 
 const OptionsControls: FunctionComponent<{
   modelControls: ModelControls;

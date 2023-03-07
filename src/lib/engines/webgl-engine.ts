@@ -1,7 +1,7 @@
 import { Object3doTree } from "@takingdoms/lib-3do";
 import { ObjectStateMap } from "../../components/Main";
 import { TextureMapping } from "../texture-mapping";
-import { ViewMode } from "../types";
+import { ModelControls, ViewMode } from "../types";
 import { Engine, EngineConfig } from "./engine";
 import { RegularRenderer } from "./webgl-sub-renderers/regular-renderer";
 import { SolidColorRenderer } from "./webgl-sub-renderers/solid-color-renderer";
@@ -97,6 +97,14 @@ export class WebglEngine extends Engine {
     }
 
     super.setTextureMapping(textureMapping);
+  }
+
+  override setModelControls(modelControls: ModelControls): void {
+    for (const subRenderer of Object.values(this.subRenderers)) {
+      subRenderer.changeModelControls(modelControls);
+    }
+
+    super.setModelControls(modelControls);
   }
 
   override setObjectStateMap(objStateMap: ObjectStateMap): void {

@@ -1,3 +1,5 @@
+import { ReadonlyVec4 } from "gl-matrix";
+
 export type ViewMode = 'regular' | 'solid_color' | 'wireframe';
 export type ViewColor = [number, number, number, number];
 
@@ -10,8 +12,16 @@ export type ModelControls = {
   zoom: number;
   viewMode: ViewMode;
   viewColor?: ViewColor;
-  enableLightingSolidColor: boolean;
+
+  //:: Regular mode options
   enableLightingRegular: boolean;
+
+  //:: Solid color mode options
+  enableLightingSolidColor: boolean;
+  solidColor: ReadonlyVec4;
+
+  //:: Wireframe mode options
+  wireframeColor: ReadonlyVec4;
 };
 
 export const VIEW_MODES: ViewMode[] = ['regular', 'solid_color', 'wireframe'];
@@ -25,8 +35,13 @@ export const DEFAULT_MODEL_CONTROLS: ModelControls = {
   zoom: 900,
   viewMode: 'regular',
   viewColor: [1.0, 1.0, 1.0, 1.0], // mixes multiplicatively
-  enableLightingSolidColor: true,
+
   enableLightingRegular: false,
+
+  enableLightingSolidColor: true,
+  solidColor: [1.0, 1.0, 1.0, 1.0],
+
+  wireframeColor: [1.0, 1.0, 1.0, 1.0],
 };
 
 export type UserSettings = {

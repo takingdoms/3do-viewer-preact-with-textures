@@ -1,5 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 import { ModelControls } from "../../../lib/types";
+import ColorControl from "../../ui/ColorControl";
 
 const SolidColorOptions: FunctionComponent<{
   modelControls: ModelControls;
@@ -28,7 +29,14 @@ const SolidColorOptions: FunctionComponent<{
       </div>
 
       <div>
-        {/* TODO change solid color */}
+        <div class="text-center">
+          Solid Color
+        </div>
+
+        <ColorControl
+          color={modelControls.solidColor}
+          setColor={(solidColor) => setModelControls({ ...modelControls, solidColor })}
+        />
       </div>
 
     </div>
