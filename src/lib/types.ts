@@ -15,6 +15,7 @@ export type ModelControls = {
 
   //:: Regular mode options
   enableLightingRegular: boolean;
+  logoColorIdx: number;
 
   //:: Solid color mode options
   enableLightingSolidColor: boolean;
@@ -37,6 +38,7 @@ export const DEFAULT_MODEL_CONTROLS: ModelControls = {
   viewColor: [1.0, 1.0, 1.0, 1.0], // mixes multiplicatively
 
   enableLightingRegular: false,
+  logoColorIdx: 0,
 
   enableLightingSolidColor: true,
   solidColor: [1.0, 1.0, 1.0, 1.0],

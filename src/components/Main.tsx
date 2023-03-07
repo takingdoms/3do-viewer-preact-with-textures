@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks"
 import { Engine, EngineConfig, EngineListener } from "../lib/engines/engine";
 import { UiDebugEngine } from "../lib/engines/ui-debug-engine";
 import { WebglEngine, WebglEngineShaderSources } from "../lib/engines/webgl-engine";
+import { defaultLogoColorsDefinitions } from "../lib/logo-colors";
 import { ObjectState } from "../lib/object-state";
 import { localStorageUserService } from "../lib/services/user-service";
 import { TextureMapping } from "../lib/texture-mapping";
@@ -121,6 +122,7 @@ const Main: FunctionComponent<{
       }}
       userSettings={userSettings}
       setUserSettings={setUserSettings}
+      logoDefs={defaultLogoColorsDefinitions}
     />
   ), [engine, modelControls, userSettings, setUserSettings]);
 

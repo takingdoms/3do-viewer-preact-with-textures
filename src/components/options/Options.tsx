@@ -1,5 +1,6 @@
 import { FunctionComponent, h, Fragment } from 'preact';
 import { useMemo } from "preact/hooks";
+import { TakLogoColorsDefinitions } from "../../lib/logo-colors";
 import { ModelControls, UserSettings } from "../../lib/types";
 import OptionsControls from "./OptionsControls";
 import OptionsUser from "./OptionsUser";
@@ -12,6 +13,7 @@ type OptionsProps = {
   setModelControls: (m: ModelControls) => void;
   userSettings: UserSettings;
   setUserSettings: (s: UserSettings) => void;
+  logoDefs: TakLogoColorsDefinitions;
 };
 
 const Options: FunctionComponent<OptionsProps> = ({
@@ -19,6 +21,7 @@ const Options: FunctionComponent<OptionsProps> = ({
   setModelControls,
   userSettings,
   setUserSettings,
+  logoDefs,
 }) => {
   const controls = useMemo(() => (
     <OptionsControls modelControls={modelControls} setModelControls={setModelControls} />
@@ -33,7 +36,7 @@ const Options: FunctionComponent<OptionsProps> = ({
 
     const sub
       = viewMode === 'regular'
-        ? <RegularOptions modelControls={modelControls} setModelControls={setModelControls} />
+        ? <RegularOptions modelControls={modelControls} setModelControls={setModelControls} logoDefs={logoDefs} />
       : viewMode === 'solid_color'
         ? <SolidColorOptions modelControls={modelControls} setModelControls={setModelControls} />
       : viewMode === 'wireframe'
