@@ -83,11 +83,14 @@ export class GlContext {
       texture = null;
     }
     else {
-      const logoTextureKey = this.logoDefs.idxToTextureKey(this.currentLogoIdx, textureKey);
-      const fromDb = this.textureDatabase[logoTextureKey];
+      const actualTextureKey = this.logoDefs.textureKeyUsesLogo(textureKey)
+        ? this.logoDefs.idxToTextureKey(this.currentLogoIdx, textureKey)
+        : textureKey;
+
+      const fromDb = this.textureDatabase[actualTextureKey];
 
       if (fromDb === undefined) {
-        console.error(`Missing texture for: ${logoTextureKey}`);
+        console.error(`Missing texture for: ${actualTextureKey}`);
         texture = null;
       }
       else {

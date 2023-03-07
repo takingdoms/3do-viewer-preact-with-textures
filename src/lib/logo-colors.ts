@@ -21,7 +21,7 @@ export const defaultLogoColorsDefinitions: Readonly<TakLogoColorsDefinitions> = 
   idxCount: 10,
   idxToName: (idx) => idx.toString(),
   idxToHtmlColor: (idx) => htmlColors[idx],
-  textureKeyUsesLogo: (textureKey) => textureKey.toLowerCase().endsWith('logo'),
+  textureKeyUsesLogo: (textureKey) => textureKey.toLowerCase().includes('logo'),
   idxToTextureKey: (idx, textureKey) => {
     if (idx === 0)
       return textureKey;
