@@ -1,4 +1,5 @@
 import { Object3do, Primitive3do, Vertex3do } from "@takingdoms/lib-3do";
+import { Utils } from "../../utils";
 import { ObjectEntityMap } from "../webgl-sub-renderers/webgl-sub-renderer";
 import { GlContext } from "./gl-context";
 import { GlEntity } from "./gl-entity";
@@ -40,7 +41,7 @@ export function addGlEntityFrom3do(
       continue;
     }
 
-    if (useTextures && validateTextureName(primitive.textureName)) {
+    if (useTextures && Utils.validateTextureName(primitive.textureName)) {
       model.setTextureKey(primitive.textureName);
     }
 
@@ -124,11 +125,4 @@ function glModelFrom3do(
   }
 
   return null;
-}
-
-// TODO put this function somewhere else
-function validateTextureName(textureName: string) {
-  // return /^[a-zA-Z0-9]+$/.test(textureName);
-  return /^(?!^(?:COM|PRN|AUX|NUL|CON|CLOCK\$)(?:\..+)?$)[^\s\\/:\*\?\"<>\|\x00-\x1F\x7F]{1,254}$/
-    .test(textureName);
 }

@@ -7,6 +7,7 @@ import { UserService } from "../../lib/services/user-service";
 import { TextureMapping } from "../../lib/texture-mapping";
 import { ModelControls } from "../../lib/types/model-controls";
 import { UserSettings } from "../../lib/types/user-settings";
+import { Utils } from "../../lib/utils";
 import Main, { ObjectStateMap } from "../Main";
 
 const Loader: FunctionComponent<{
@@ -148,7 +149,11 @@ async function loadTextures(
 
   const loadNext = (node: Object3do) => {
     for (const primitive of node.primitives) {
-      textureNames.add(primitive.textureName);
+      const textureName = primitive.textureName;
+
+      if (Utils.validateTextureName(textureName)) {
+        textureNames.add(textureName);
+      }
     }
 
     for (const child of node.children) {

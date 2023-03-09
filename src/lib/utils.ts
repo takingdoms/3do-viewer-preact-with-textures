@@ -13,7 +13,14 @@ function createUpdatedMap<K, V>(map: Map<K, V>, key: K, value: V): Map<K, V> {
   return newMap;
 }
 
+function validateTextureName(textureName: string) {
+  // return /^[a-zA-Z0-9]+$/.test(textureName);
+  return /^(?!^(?:COM|PRN|AUX|NUL|CON|CLOCK\$)(?:\..+)?$)[^\s\\/:\*\?\"<>\|\x00-\x1F\x7F]{1,254}$/
+    .test(textureName);
+}
+
 export const Utils = {
   compareObjectsShallow,
   createUpdatedMap,
+  validateTextureName,
 };
