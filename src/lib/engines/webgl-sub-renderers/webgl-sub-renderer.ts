@@ -15,7 +15,7 @@ import { WebglEngineShaderSources } from "../webgl-engine";
 // TODO make these configurable(?)
 const BASE_CAMERA_OFFSET = 8;
 const ZOOM_MODIFIER = 0.01;
-const TRANSLATION_MODIFIER = 0.01;
+const TRANSLATION_MODIFIER = 0.02;
 const DEFAULT_BASE_COLOR: ViewColor = [1.0, 1.0, 1.0, 1.0];
 
 type AnyProgramInfo = ProgramInfo<string, string>;
@@ -126,9 +126,9 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
     // when the user actually rotates/pans the camera
     this.rootEntity.resetTransformations();
     this.rootEntity.translate(xOffset, yOffset, zOffset);
-    this.rootEntity.rotateX(glMatrix.toRadian(modelControls.rotationX * .75));
-    this.rootEntity.rotateY(glMatrix.toRadian(modelControls.rotationY * .75));
-    this.rootEntity.rotateZ(glMatrix.toRadian(modelControls.rotationZ * .75));
+    this.rootEntity.rotateX(glMatrix.toRadian(modelControls.rotationX));
+    this.rootEntity.rotateY(glMatrix.toRadian(modelControls.rotationY));
+    this.rootEntity.rotateZ(glMatrix.toRadian(modelControls.rotationZ));
 
     this.inBeforeTheRootRender(gl, modelControls);
 

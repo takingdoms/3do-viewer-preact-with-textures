@@ -22,21 +22,24 @@ const OptionsControls: FunctionComponent<{
       <SliderControl
         id="rotationX"
         label="Rotation X"
-        max={360}
+        min={-180}
+        max={180}
         value={modelControls.rotationX}
         setValue={(rotationX) =>  setModelControls({ ...modelControls, rotationX })}
       />
       <SliderControl
         id="rotationY"
         label="Rotation Y"
-        max={360}
+        min={-180}
+        max={180}
         value={modelControls.rotationY}
         setValue={(rotationY) => setModelControls({ ...modelControls, rotationY })}
       />
       <SliderControl
         id="rotationZ"
         label="Rotation Z"
-        max={360}
+        min={-180}
+        max={180}
         value={modelControls.rotationZ}
         setValue={(rotationZ) => setModelControls({ ...modelControls, rotationZ })}
       />

@@ -75,8 +75,8 @@ export abstract class Engine {
         return;
       }
 
-      const deltaX = ev.clientX - mouseStartX;
-      const deltaY = ev.clientY - mouseStartY;
+      const deltaX = Math.round((ev.clientX - mouseStartX) * 0.75);
+      const deltaY = Math.round((ev.clientY - mouseStartY) * 0.75);
 
       if (deltaX === 0 && deltaY === 0) {
         return;
@@ -84,7 +84,15 @@ export abstract class Engine {
 
       if (deltaX !== 0) {
         if (mouseAction === 'rotate') {
-          this.config.modelControls.rotationY = controlStartY + deltaX;
+          let newRotation = controlStartY + deltaX;
+          while (newRotation > 180) {
+            newRotation -= 360;
+          }
+          while (newRotation < -180) {
+            newRotation += 360;
+          }
+
+          this.config.modelControls.rotationY = newRotation;
         } else {
           this.config.modelControls.translationX = controlStartX + deltaX;
         }
@@ -92,7 +100,15 @@ export abstract class Engine {
 
       if (deltaY !== 0) {
         if (mouseAction === 'rotate') {
-          this.config.modelControls.rotationX = controlStartX + deltaY;
+          let newRotation = controlStartX + deltaY;
+          while (newRotation > 180) {
+            newRotation -= 360;
+          }
+          while (newRotation < -180) {
+            newRotation += 360;
+          }
+
+          this.config.modelControls.rotationX = newRotation;
         } else {
           this.config.modelControls.translationY = controlStartY + deltaY;
         }
