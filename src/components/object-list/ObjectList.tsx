@@ -3,8 +3,10 @@ import { FunctionComponent, h, Fragment } from 'preact';
 import { useMemo, useState } from "preact/hooks";
 import { Utils } from "../../lib/utils";
 import { ObjectStateMap } from "../Main";
+import Spoiler from "../ui/Spoiler";
 import ObjectListTree from "./ObjectListTree";
 import ObjectSideControls from "./ObjectSideControls";
+import PrimitivesTable from "./PrimitivesTable";
 
 const ObjectList: FunctionComponent<{
   object3doTree: Object3doTree;
@@ -78,6 +80,40 @@ const ObjectList: FunctionComponent<{
     </div>
   ), [currentParent, currentObjState, objStateMap, setObjStateMap]);
 
+  const currentParentPositions = useMemo(() => {
+    if (currentParent === null || currentParent.primitives.length === 0) {
+      return null;
+    }
+
+    return (
+      <div class="border border-dashed border-gray-500 px-2 py-1 mt-2 mb-1 text-sm text-gray-300">
+        <Spoiler title="Vertices">
+          <div class="border-t border-gray-700 mt-1 pt-1 text-xs">
+            <span class="break-all">
+              [{currentParent.vertices.map((v) => `[${v.x}, ${v.y}, ${v.z}]`).join(', ')}]
+            </span>
+          </div>
+        </Spoiler>
+      </div>
+    );
+  }, [currentParent]);
+
+  const currentParentPrimitives = useMemo(() => {
+    if (currentParent === null || currentParent.primitives.length === 0) {
+      return null;
+    }
+
+    return (
+      <div class="border border-dashed border-gray-500 px-2 py-1 mt-2 mb-1 text-sm text-gray-300">
+        <Spoiler title="Primitives">
+          <div class="border-t border-gray-700 mt-1 pt-1 text-xs">
+            <PrimitivesTable primitives={currentParent.primitives} />
+          </div>
+        </Spoiler>
+      </div>
+    );
+  }, [currentParent]);
+
   return (
     <div class="flex flex-col h-full overflow-hidden">
       <div className="px-6">
@@ -85,20 +121,19 @@ const ObjectList: FunctionComponent<{
           {pathing}
         </div>
 
-        <div class="mb-2">Current:</div>
+        <div class="mb-2 font-bold">Current:</div>
 
         {currentParentInfo}
-
-        <ul>
-          {currentParent?.primitives.map((primitive, idx) => (
-            <li key={idx}>
-              {primitive.textureName}
-            </li>
-          ))}
-        </ul>
+        <div class="pl-4">
+          {currentParentPositions}
+          {currentParentPrimitives}
+        </div>
 
         {currentChildren.length > 0 && (
-          <div class="mt-4 mb-2">Children ({currentChildren.length}):</div>
+          <div class="mt-6 mb-2 font-bold flex justify-between">
+            <span>Children:</span>
+            <span>({currentChildren.length})</span>
+          </div>
         )}
       </div>
 
