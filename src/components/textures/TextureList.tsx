@@ -37,7 +37,7 @@ const TextureList: FunctionComponent<TextureListProps> = ({
               -
             </div>
 
-            {value?.type === 'html' && isOk ? (
+            {value?.type === 'html' ? (
               <a href={value.image.src} target="_blank" rel="noreferrer">{msg}</a>
             ) : (
               <div>{msg}</div>
