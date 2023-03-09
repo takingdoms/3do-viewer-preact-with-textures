@@ -18,10 +18,10 @@
 
 # TODO (Soon):
 
-- [ ] Fix the empty first texture error that shows up on every model and shouldn't even try to load
-- [ ] Texture replacing functionality (drag & drop files onto the app to load them into the texture list)
+- [x] Fix the empty first texture error that shows up on every model and shouldn't even try to load
+- [x] Texture replacing functionality (drag & drop files onto the app to load them into the texture list)
 - [ ] Ability to select background color, highlight color, ~~solid color (when in solid_color mode)~~, ~~line color (when in wireframe mode)~~
-- [ ] Ability to select the race logo color (blue, red, etc)
+- [x] Ability to select the race logo color (blue, red, etc)
 - [ ] Draw a silhouette for a highlight when in normal mode (instead of multiplying a color)
 
 # TODO (Later):
