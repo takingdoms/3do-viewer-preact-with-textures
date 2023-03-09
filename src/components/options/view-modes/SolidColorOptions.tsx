@@ -1,5 +1,5 @@
 import { FunctionComponent, h } from 'preact';
-import { ModelControls } from "../../../lib/types";
+import { ModelControls } from "../../../lib/types/model-controls";
 import ColorControl from "../../ui/ColorControl";
 
 const SolidColorOptions: FunctionComponent<{

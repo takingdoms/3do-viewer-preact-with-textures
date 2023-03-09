@@ -12,7 +12,7 @@ const TextureList: FunctionComponent<TextureListProps> = ({
 }) => {
   return (
     <div class="flex flex-col space-y-2">
-      {Object.entries(textures).map(([key, value]) => {
+      {Object.entries(textures).map(([key, value], index) => {
         let isOk = value !== null;
 
         if (value !== null && value.type === 'html') {
@@ -23,6 +23,7 @@ const TextureList: FunctionComponent<TextureListProps> = ({
 
         return (
           <div
+            key={index}
             class={'flex items-center group'
               + (isOk ? ' text-green-600 hover:text-green-500' : ' text-red-600 hover:text-red-500')}
           >
@@ -37,7 +38,7 @@ const TextureList: FunctionComponent<TextureListProps> = ({
             </div>
 
             {value?.type === 'html' && isOk ? (
-              <a href={value.image.src} target="_blank">{msg}</a>
+              <a href={value.image.src} target="_blank" rel="noreferrer">{msg}</a>
             ) : (
               <div>{msg}</div>
             )}

@@ -1,4 +1,5 @@
-import { ModelControls, ViewMode } from "../../../lib/types";
+import { ModelControls } from "../../types/model-controls";
+import { ViewMode } from "../../types/view";
 import { ProgramInfo } from "../gl/program-info";
 import { WebGlHelper } from "../gl/webgl-helper";
 import { WebglSubRenderer } from "./webgl-sub-renderer";

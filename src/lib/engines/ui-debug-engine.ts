@@ -1,5 +1,4 @@
-import { Engine, EngineConfig, EngineListener } from "./engine";
-import { ModelControls } from "../types";
+import { Engine, EngineConfig } from "./engine";
 
 export class UiDebugEngine extends Engine {
   private ctx: CanvasRenderingContext2D;

@@ -1,6 +1,6 @@
 import { ObjectStateMap } from "../../components/Main";
 import { TextureMapping } from "../texture-mapping";
-import { ModelControls } from "../types";
+import { ModelControls } from "../types/model-controls";
 
 export type EngineListener = {
   onModelControlsChanged: (modelControls: ModelControls) => void;

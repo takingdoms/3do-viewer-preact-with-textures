@@ -1,5 +1,5 @@
 import { FunctionComponent, h } from 'preact';
-import { UserSettings } from "../../lib/types";
+import { UserSettings } from "../../lib/types/user-settings";
 
 const OptionsUser: FunctionComponent<{
   userSettings: UserSettings;

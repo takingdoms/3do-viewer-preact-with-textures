@@ -1,8 +1,7 @@
 import { ReadonlyVec4 } from "gl-matrix";
-import { TakLogoIndex } from "./logo-colors";
-
-export type ViewMode = 'regular' | 'solid_color' | 'wireframe';
-export type ViewColor = [number, number, number, number];
+import { TakLogoIndex } from "../logo-colors";
+import { UserSettings } from "./user-settings";
+import { ViewMode, ViewColor } from "./view";
 
 export type ModelControls = {
   rotationX: number;
@@ -28,9 +27,7 @@ export type ModelControls = {
   wireframeColor: ReadonlyVec4;
 };
 
-export const VIEW_MODES: ViewMode[] = ['regular', 'solid_color', 'wireframe'];
-
-const DEFAULT_MODEL_CONTROLS: ModelControls = {
+export const DEFAULT_MODEL_CONTROLS: ModelControls = {
   rotationX: 100,
   rotationY: 0,
   rotationZ: 0,
@@ -49,30 +46,4 @@ const DEFAULT_MODEL_CONTROLS: ModelControls = {
   solidColor: [1.0, 1.0, 1.0, 1.0],
 
   wireframeColor: [1.0, 1.0, 1.0, 1.0],
-};
-
-export function loadDefaultModelControls(userSettings?: UserSettings): ModelControls {
-  if (userSettings === undefined) {
-    return DEFAULT_MODEL_CONTROLS;
-  }
-
-  return {
-    ...DEFAULT_MODEL_CONTROLS,
-    textureFilterMin: userSettings.defaultTextureFilterMin,
-    textureFilterMag: userSettings.defaultTextureFilterMag,
-  };
-}
-
-export type UserSettings = {
-  sidebarPosition: 'left' | 'right';
-  sidebarWidth: number;
-  defaultTextureFilterMin: 'linear' | 'nearest';
-  defaultTextureFilterMag: 'linear' | 'nearest';
-};
-
-export const DEFAULT_USER_SETTINGS: UserSettings = {
-  sidebarPosition: 'right',
-  sidebarWidth: 300,
-  defaultTextureFilterMin: 'nearest',
-  defaultTextureFilterMag: 'nearest',
 };

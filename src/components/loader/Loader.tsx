@@ -5,7 +5,8 @@ import { WebglEngineShaderSources } from "../../lib/engines/webgl-engine";
 import { defaultLogoColorsDefinitions, TakLogoColorsDefinitions } from "../../lib/logo-colors";
 import { UserService } from "../../lib/services/user-service";
 import { TextureMapping } from "../../lib/texture-mapping";
-import { UserSettings, ModelControls } from "../../lib/types";
+import { ModelControls } from "../../lib/types/model-controls";
+import { UserSettings } from "../../lib/types/user-settings";
 import Main, { ObjectStateMap } from "../Main";
 
 const Loader: FunctionComponent<{

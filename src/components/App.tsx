@@ -1,7 +1,8 @@
 import { h } from 'preact';
 import { useEffect, useState } from "preact/hooks";
 import { localStorageUserService } from "../lib/services/user-service";
-import { DEFAULT_USER_SETTINGS, loadDefaultModelControls, ModelControls, UserSettings } from "../lib/types";
+import { DEFAULT_MODEL_CONTROLS, ModelControls } from "../lib/types/model-controls";
+import { UserSettings, DEFAULT_USER_SETTINGS } from "../lib/types/user-settings";
 import FileChooser from "./loader/FileChooser";
 import Loader from "./loader/Loader";
 
@@ -13,7 +14,7 @@ const App = () => {
   const [defaultModelControls, setDefaultModelControls] = useState<ModelControls>();
 
   useEffect(() => {
-    let userSettings;
+    let userSettings: UserSettings;
 
     try {
       userSettings = userService.load() ?? DEFAULT_USER_SETTINGS;
@@ -24,7 +25,12 @@ const App = () => {
     }
 
     setDefaultUserSettings(userSettings);
-    setDefaultModelControls(loadDefaultModelControls(userSettings));
+
+    setDefaultModelControls({
+      ...DEFAULT_MODEL_CONTROLS,
+      textureFilterMin: userSettings.defaultTextureFilterMin,
+      textureFilterMag: userSettings.defaultTextureFilterMag,
+    });
   }, [userService]);
 
   if (defaultUserSettings === undefined || defaultModelControls === undefined) {

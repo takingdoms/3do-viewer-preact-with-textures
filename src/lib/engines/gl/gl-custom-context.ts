@@ -1,7 +1,7 @@
 import { GlContext } from "./gl-context";
 import { ProgramInfo } from "./program-info";
-import { ViewMode } from "../../types";
 import { TakLogoColorsDefinitions } from "../../logo-colors";
+import { ViewMode } from "../../types/view";
 
 export class GlCustomContext extends GlContext {
   private viewMode: ViewMode;

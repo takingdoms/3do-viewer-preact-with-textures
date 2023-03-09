@@ -1,7 +1,8 @@
 import { FunctionComponent, h, Fragment } from 'preact';
 import { useMemo } from "preact/hooks";
 import { TakLogoColorsDefinitions } from "../../lib/logo-colors";
-import { ModelControls, UserSettings } from "../../lib/types";
+import { ModelControls } from "../../lib/types/model-controls";
+import { UserSettings } from "../../lib/types/user-settings";
 import OptionsControls from "./OptionsControls";
 import OptionsUser from "./OptionsUser";
 import RegularOptions from "./view-modes/RegularOptions";

@@ -1,4 +1,4 @@
-import { UserSettings } from "../types";
+import { UserSettings } from "../types/user-settings";
 
 export type UserService = {
   save: (userSettings: UserSettings) => void;

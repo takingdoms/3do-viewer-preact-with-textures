@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 import { TakLogoColorsDefinitions } from "../../../lib/logo-colors";
-import { ModelControls } from "../../../lib/types";
+import { ModelControls } from "../../../lib/types/model-controls";
 
 const RegularOptions: FunctionComponent<{
   modelControls: ModelControls;
