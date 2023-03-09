@@ -45,6 +45,8 @@ const Main: FunctionComponent<{
 }) => {
   console.log('Re-rendering App');
 
+  //:: States & Refs
+
   const [expandContent, setExpandContent] = useState(false);
   const [sidebarTab, setSidebarTab] = useState<SidebarTab>('options');
   const [modelControls, setModelControls] = useState(defaultModelControls);
@@ -60,6 +62,8 @@ const Main: FunctionComponent<{
   const [customTextures, setCustomTextures] = useState<TextureMapping>({});
 
   const canvasRef = useRef<HTMLCanvasElement>();
+
+  //:: Effects
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -100,6 +104,8 @@ const Main: FunctionComponent<{
     // \/ important: all dependencies should come from non-stateful values: AKA never change
   }, [canvasRef, shaders, defaultObjStateMap, engineName, object3doTree, regularTextures, logoDefs,
       defaultModelControls]);
+
+  //:: Memos
 
   const canvasWrapper = useMemo(() => (
     <CanvasWrapper canvasRef={canvasRef} />
@@ -228,18 +234,20 @@ const Main: FunctionComponent<{
     );
   }, [sidebarTab, optionsPanel, userSettings, objectsPanel, texturesPanel]);
 
+  //:: Final result
+
+  const contentBorderCss = expandContent ? ' border-gray-800' : ' border-gray-700';
+  const flexDirCss = userSettings.sidebarPosition === 'left' ? '' : ' flex-row-reverse';
+
+  const sidebarBorderCss = userSettings.sidebarPosition === 'left' ? ' border-r' : ' border-l';
+
   return (
     <div class="flex justify-center items-stretch h-screen overflow-hidden bg-gray-900">
       <div
-        class={'grow flex bg-gray-800 border'
-          + (expandContent ? ' border-gray-800' : ' border-gray-700')
-          + (userSettings.sidebarPosition === 'left' ? '' : ' flex-row-reverse')}
+        class={`grow flex bg-gray-800 border ${contentBorderCss} ${flexDirCss}`}
         style={{ "max-width": expandContent ? '100%' : CONTENT_WIDTH }}
       >
-        <div
-          class={'hidden lg:block border-gray-700'
-            + (userSettings.sidebarPosition === 'left' ? ' border-r' : ' border-l')}
-        >
+        <div class={`hidden lg:block border-gray-700 ${sidebarBorderCss}`}>
           {sidebar}
         </div>
         <div class="grow">
