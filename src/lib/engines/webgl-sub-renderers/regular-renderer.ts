@@ -57,7 +57,7 @@ export class RegularRenderer extends WebglSubRenderer<RegularProgramInfo> {
     const minFilter = modelControls.textureFilterMin === 'linear' ? gl.LINEAR : gl.NEAREST;
     const magFilter = modelControls.textureFilterMag === 'linear' ? gl.LINEAR : gl.NEAREST;
 
-    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, minFilter);
-    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, magFilter);
+    this.ctx.setTextureMinFilter(minFilter);
+    this.ctx.setTextureMagFilter(magFilter);
   }
 }

@@ -15,6 +15,9 @@ export class GlContext {
 
   private baseEntityColor: ReadonlyVec4 = new Float32Array([1.0, 1.0, 1.0, 1.0]); // WHITE
 
+  private textureMinFilter: number;
+  private textureMagFilter: number;
+
   constructor(
     gl: WebGLRenderingContext,
     programInfo: ProgramInfo<any, any>,
@@ -25,6 +28,9 @@ export class GlContext {
     this.logoDefs = logoDefs;
 
     this.currentLogoIdx = logoDefs.defaultIdx;
+
+    this.textureMinFilter = gl.NEAREST;
+    this.textureMagFilter = gl.NEAREST;
   }
 
   /// Warning: Use this only when REALLY needed
@@ -72,6 +78,14 @@ export class GlContext {
     }
   }
 
+  setTextureMinFilter(filter: number) {
+    this.textureMinFilter = filter;
+  }
+
+  setTextureMagFilter(filter: number) {
+    this.textureMagFilter = filter;
+  }
+
   drawElements(length: number) {
     this.gl.drawElements(this.gl.TRIANGLES, length, this.gl.UNSIGNED_SHORT, 0);
   }
@@ -110,7 +124,7 @@ export class GlContext {
       return false;
     }
 
-    texture.use(this.programInfo.uniformLocations['sampler']!);
+    texture.use(this.programInfo.uniformLocations['sampler']!, this.textureMinFilter, this.textureMagFilter);
     return true;
   }
 

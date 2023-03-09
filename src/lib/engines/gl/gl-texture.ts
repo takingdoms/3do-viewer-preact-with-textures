@@ -15,7 +15,7 @@ export class GlTexture {
     this.handle = handle;
   }
 
-  use(sampler: WebGLUniformLocation): boolean {
+  use(sampler: WebGLUniformLocation, minFilter: number, maxFilter: number): boolean {
     if (this.deleted) {
       throw `Trying to use a texture that has already been deleted.`;
     }
@@ -27,6 +27,10 @@ export class GlTexture {
     this.gl.activeTexture(this.gl.TEXTURE0);
     this.gl.bindTexture(this.gl.TEXTURE_2D, this.handle);
     this.gl.uniform1i(sampler, 0);
+
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, minFilter);
+    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, maxFilter);
+
     return true;
   }
 
@@ -98,9 +102,6 @@ export class GlTexture {
 
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
     this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
-
-    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.NEAREST);
-    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
 
     this.ok = true;
   }

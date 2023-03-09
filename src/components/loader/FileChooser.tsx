@@ -16,9 +16,9 @@ const SAMPLES: Array<{ path: string; name: string }> = [
 const FileChooser: FunctionComponent<{
   onSubmit: (dataSource: File | string) => void;
 }> = ({ onSubmit }) => {
-  useEffect(() => {
+  /*useEffect(() => {
     onSubmit(SAMPLES[5]!.path);
-  }, []);
+  }, []);*/
 
   const option1 = (
     <form
