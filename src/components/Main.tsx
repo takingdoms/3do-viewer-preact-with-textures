@@ -1,14 +1,14 @@
 import { Object3do, Object3doTree } from "@takingdoms/lib-3do";
-import { Fragment, FunctionComponent, h } from 'preact';
+import { FunctionComponent, h } from 'preact';
 import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { Engine, EngineConfig, EngineListener } from "../lib/engines/engine";
 import { UiDebugEngine } from "../lib/engines/ui-debug-engine";
 import { WebglEngine, WebglEngineShaderSources } from "../lib/engines/webgl-engine";
-import { defaultLogoColorsDefinitions, TakLogoColorsDefinitions } from "../lib/logo-colors";
+import { TakLogoColorsDefinitions } from "../lib/logo-colors";
 import { ObjectState } from "../lib/object-state";
-import { localStorageUserService } from "../lib/services/user-service";
+import { UserService } from "../lib/services/user-service";
 import { TextureMapping } from "../lib/texture-mapping";
-import { DEFAULT_MODEL_CONTROLS, DEFAULT_USER_SETTINGS, UserSettings } from "../lib/types";
+import { loadDefaultModelControls, ModelControls, UserSettings } from "../lib/types";
 import CanvasWrapper from "./canvas/CanvasWrapper";
 import ObjectList from "./object-list/ObjectList";
 import Options from "./options/Options";
@@ -28,17 +28,29 @@ const Main: FunctionComponent<{
   regularTextures: TextureMapping;
   defaultObjStateMap: ObjectStateMap;
   logoDefs: TakLogoColorsDefinitions;
-}> = ({ engineName, shaders, object3doTree, regularTextures, defaultObjStateMap, logoDefs }) => {
+  userService: UserService;
+  defaultUserSettings: UserSettings;
+  defaultModelControls: ModelControls;
+}> = ({
+  engineName,
+  shaders,
+  object3doTree,
+  regularTextures,
+  defaultObjStateMap,
+  logoDefs,
+  userService,
+  defaultUserSettings,
+  defaultModelControls,
+}) => {
   console.log('Re-rendering App');
 
   const [expandContent, setExpandContent] = useState(false);
   const [sidebarTab, setSidebarTab] = useState<SidebarTab>('options');
-  const [modelControls, setModelControls] = useState(DEFAULT_MODEL_CONTROLS);
+  const [modelControls, setModelControls] = useState(defaultModelControls);
   const [objStateMap, setObjStateMap] = useState<ObjectStateMap>(defaultObjStateMap);
   const [engine, setEngine] = useState<Engine>();
 
-  const [userService] = useState(localStorageUserService);
-  const [userSettings, _setUserSettings] = useState(userService.load() ?? DEFAULT_USER_SETTINGS);
+  const [userSettings, _setUserSettings] = useState(defaultUserSettings);
   const setUserSettings = useCallback((newUserSettings: UserSettings) => {
     _setUserSettings(newUserSettings);
     userService.save(newUserSettings);
@@ -67,7 +79,7 @@ const Main: FunctionComponent<{
     const engineConfig: EngineConfig = {
       mode: 'static',
       canvas: canvas,
-      modelControls: DEFAULT_MODEL_CONTROLS,
+      modelControls: defaultModelControls,
       listener: engineListener,
       textureMapping: { ...regularTextures },
       objStateMap: defaultObjStateMap,
@@ -80,12 +92,13 @@ const Main: FunctionComponent<{
     setEngine(engine);
 
     return () => {
-      console.log(`Destroying engine. This should probably not be happening normally.`);
+      alert(`Unmounting the engine. This should probably not be happening normally!!!`);
       engine.destroy();
       setEngine(undefined);
     };
     // \/ important: all dependencies should come from non-stateful values: AKA never change
-  }, [canvasRef, shaders, defaultObjStateMap, engineName, object3doTree, regularTextures, logoDefs]);
+  }, [canvasRef, shaders, defaultObjStateMap, engineName, object3doTree, regularTextures, logoDefs,
+      defaultModelControls]);
 
   const canvasWrapper = useMemo(() => (
     <CanvasWrapper canvasRef={canvasRef} />
@@ -116,6 +129,16 @@ const Main: FunctionComponent<{
       modelControls={modelControls}
       setModelControls={(newModelControls) => {
         setModelControls(newModelControls);
+
+        if (newModelControls.textureFilterMin !== modelControls.textureFilterMin ||
+            newModelControls.textureFilterMag !== modelControls.textureFilterMag)
+        {
+          setUserSettings({
+            ...userSettings,
+            defaultTextureFilterMin: newModelControls.textureFilterMin,
+            defaultTextureFilterMag: newModelControls.textureFilterMag,
+          });
+        }
 
         if (engine) {
           engine.setModelControls(newModelControls);

@@ -36,9 +36,23 @@ export const localStorageUserService: UserService = {
         throw new Error(`Invalid sidebarWidth`);
       }
 
+      const defaultTextureFilterMin = obj['defaultTextureFilterMin'];
+
+      if (defaultTextureFilterMin !== 'nearest' && defaultTextureFilterMin !== 'linear') {
+        throw new Error(`Invalid defaultTextureFilterMin`);
+      }
+
+      const defaultTextureFilterMag = obj['defaultTextureFilterMag'];
+
+      if (defaultTextureFilterMag !== 'nearest' && defaultTextureFilterMag !== 'linear') {
+        throw new Error(`Invalid defaultTextureFilterMag`);
+      }
+
       return {
         sidebarPosition,
         sidebarWidth,
+        defaultTextureFilterMin,
+        defaultTextureFilterMag,
       };
     }
     catch (err) {

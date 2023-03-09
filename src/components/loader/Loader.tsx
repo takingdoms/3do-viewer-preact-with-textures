@@ -3,12 +3,17 @@ import { FunctionComponent,h  } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { WebglEngineShaderSources } from "../../lib/engines/webgl-engine";
 import { defaultLogoColorsDefinitions, TakLogoColorsDefinitions } from "../../lib/logo-colors";
+import { UserService } from "../../lib/services/user-service";
 import { TextureMapping } from "../../lib/texture-mapping";
+import { UserSettings, ModelControls } from "../../lib/types";
 import Main, { ObjectStateMap } from "../Main";
 
 const Loader: FunctionComponent<{
   dataSource: File | string; // string = url
-}> = ({ dataSource }) => {
+  userService: UserService;
+  defaultUserSettings: UserSettings;
+  defaultModelControls: ModelControls;
+}> = ({ dataSource, userService, defaultUserSettings, defaultModelControls }) => {
   const [result, setResult] = useState<Object3doTree>();
   const [shaders, setShaders] = useState<WebglEngineShaderSources>();
   const [textures, setTextures] = useState<TextureMapping>();
@@ -70,6 +75,9 @@ const Loader: FunctionComponent<{
       regularTextures={textures}
       defaultObjStateMap={createStateMap(result)}
       logoDefs={logoDefs}
+      userService={userService}
+      defaultUserSettings={defaultUserSettings}
+      defaultModelControls={defaultModelControls}
     />
   );
 }
@@ -164,8 +172,6 @@ async function loadTextures(
       }
 
       const usesLogo = logoDefs.textureKeyUsesLogo(textureName);
-
-      console.log(textureName, usesLogo);
 
       if (!usesLogo) {
         const textureFilePath = `${textureName}.${fileExtension}`;

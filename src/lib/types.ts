@@ -30,7 +30,7 @@ export type ModelControls = {
 
 export const VIEW_MODES: ViewMode[] = ['regular', 'solid_color', 'wireframe'];
 
-export const DEFAULT_MODEL_CONTROLS: ModelControls = {
+const DEFAULT_MODEL_CONTROLS: ModelControls = {
   rotationX: 100,
   rotationY: 0,
   rotationZ: 0,
@@ -51,12 +51,28 @@ export const DEFAULT_MODEL_CONTROLS: ModelControls = {
   wireframeColor: [1.0, 1.0, 1.0, 1.0],
 };
 
+export function loadDefaultModelControls(userSettings?: UserSettings): ModelControls {
+  if (userSettings === undefined) {
+    return DEFAULT_MODEL_CONTROLS;
+  }
+
+  return {
+    ...DEFAULT_MODEL_CONTROLS,
+    textureFilterMin: userSettings.defaultTextureFilterMin,
+    textureFilterMag: userSettings.defaultTextureFilterMag,
+  };
+}
+
 export type UserSettings = {
   sidebarPosition: 'left' | 'right';
   sidebarWidth: number;
+  defaultTextureFilterMin: 'linear' | 'nearest';
+  defaultTextureFilterMag: 'linear' | 'nearest';
 };
 
 export const DEFAULT_USER_SETTINGS: UserSettings = {
   sidebarPosition: 'left',
   sidebarWidth: 300,
+  defaultTextureFilterMin: 'nearest',
+  defaultTextureFilterMag: 'nearest',
 };
