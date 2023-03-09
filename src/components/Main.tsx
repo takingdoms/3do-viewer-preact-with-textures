@@ -92,9 +92,9 @@ const Main: FunctionComponent<{
     setEngine(engine);
 
     return () => {
-      alert(`Unmounting the engine. This should probably not be happening normally!!!`);
       engine.destroy();
       setEngine(undefined);
+      alert(`Unmounting the engine. This should probably not be happening normally!!!`);
     };
     // \/ important: all dependencies should come from non-stateful values: AKA never change
   }, [canvasRef, shaders, defaultObjStateMap, engineName, object3doTree, regularTextures, logoDefs,

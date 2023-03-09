@@ -71,7 +71,7 @@ export type UserSettings = {
 };
 
 export const DEFAULT_USER_SETTINGS: UserSettings = {
-  sidebarPosition: 'left',
+  sidebarPosition: 'right',
   sidebarWidth: 300,
   defaultTextureFilterMin: 'nearest',
   defaultTextureFilterMag: 'nearest',
