@@ -33,25 +33,23 @@ export abstract class Engine {
     //:: Handle mouse events
 
     let mouseAction: 'rotate' | 'pan' | undefined;
-    let mouseButton: number | undefined;
     let mouseStartX: number | undefined;
     let mouseStartY: number | undefined;
     let controlStartX: number | undefined;
     let controlStartY: number | undefined;
+    let didChange = false;
 
     const onMouseDown = (ev: MouseEvent) => {
-      if (mouseButton !== undefined && mouseButton !== ev.button) {
+      if (mouseAction !== undefined) {
         // stop if another button was already being processed
         return;
       }
 
       if (ev.button === 0) {
         mouseAction = 'rotate';
-        mouseButton = 0;
       }
       else if (ev.button === 1) {
         mouseAction = 'pan';
-        mouseButton = 1;
       }
       else {
         // only button 0 (left-click) and button 1 (middle-click) are used
@@ -100,16 +98,20 @@ export abstract class Engine {
         }
       }
 
+      didChange = true;
+
       if (mode === 'static') {
         this.render();
       }
     };
 
     const onMouseUp = () => {
-      mouseButton = mouseAction = mouseStartX = mouseStartY = controlStartX = controlStartY =
-        undefined;
+      mouseAction = mouseStartX = mouseStartY = controlStartX = controlStartY = undefined;
 
-      listener.onModelControlsChanged({ ...this.config.modelControls });
+      if (didChange) {
+        listener.onModelControlsChanged({ ...this.config.modelControls });
+        didChange = false;
+      }
     };
 
     const onVisibilityChange = () => {
@@ -135,7 +137,6 @@ export abstract class Engine {
     canvas.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
     document.addEventListener('visibilitychange', onVisibilityChange);
-
     canvas.addEventListener('wheel', onWheel);
 
     this.cleanupEvents = () => {
@@ -143,7 +144,6 @@ export abstract class Engine {
       canvas.removeEventListener('mousedown', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
       document.removeEventListener('visibilitychange', onVisibilityChange);
-
       canvas.removeEventListener('wheel', onWheel);
     };
 
