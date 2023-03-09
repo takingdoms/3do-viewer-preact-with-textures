@@ -17,6 +17,8 @@ export type ModelControls = {
   //:: Regular mode options
   enableLightingRegular: boolean;
   logoColorIdx: TakLogoIndex;
+  textureFilterMin: 'linear' | 'nearest';
+  textureFilterMag: 'linear' | 'nearest';
 
   //:: Solid color mode options
   enableLightingSolidColor: boolean;
@@ -40,6 +42,8 @@ export const DEFAULT_MODEL_CONTROLS: ModelControls = {
 
   enableLightingRegular: false,
   logoColorIdx: 0,
+  textureFilterMin: 'nearest',
+  textureFilterMag: 'nearest',
 
   enableLightingSolidColor: true,
   solidColor: [1.0, 1.0, 1.0, 1.0],

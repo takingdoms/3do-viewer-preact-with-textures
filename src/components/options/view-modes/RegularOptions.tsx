@@ -15,22 +15,6 @@ const RegularOptions: FunctionComponent<{
     <div class="space-y-4">
 
       <div>
-        <label class="flex items-center">
-          <input
-            type="checkbox"
-            checked={modelControls.enableLightingRegular}
-            onChange={(ev) => {
-              setModelControls({
-                ...modelControls,
-                enableLightingRegular: ev.currentTarget.checked,
-              });
-            }}
-          />
-          <span class="pl-1">Enable Lighting</span>
-        </label>
-      </div>
-
-      <div>
         <div>Team Color</div>
         <div
           class="flex flex-wrap -m-1 p-1"
@@ -46,6 +30,52 @@ const RegularOptions: FunctionComponent<{
             </div>
           ))}
         </div>
+      </div>
+
+      <div class="space-y-2">
+        <div>
+          <div>Texture Filter (Min.)</div>
+          <select
+            value={modelControls.textureFilterMin}
+            onChange={(ev) => {
+              const value = ev.currentTarget.value as 'linear' | 'nearest';
+              setModelControls({ ...modelControls, textureFilterMin: value });
+            }}
+          >
+            <option value="nearest">Nearest</option>
+            <option value="linear">Linear</option>
+          </select>
+        </div>
+
+        <div>
+          <div>Texture Filter (Mag.)</div>
+          <select
+            value={modelControls.textureFilterMag}
+            onChange={(ev) => {
+              const value = ev.currentTarget.value as 'linear' | 'nearest';
+              setModelControls({ ...modelControls, textureFilterMag: value });
+            }}
+          >
+            <option value="nearest">Nearest</option>
+            <option value="linear">Linear</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label class="flex items-center">
+          <input
+            type="checkbox"
+            checked={modelControls.enableLightingRegular}
+            onChange={(ev) => {
+              setModelControls({
+                ...modelControls,
+                enableLightingRegular: ev.currentTarget.checked,
+              });
+            }}
+          />
+          <span class="pl-1">Enable Lighting</span>
+        </label>
       </div>
 
     </div>
