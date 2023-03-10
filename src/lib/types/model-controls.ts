@@ -1,6 +1,5 @@
 import { ReadonlyVec4 } from "gl-matrix";
 import { TakLogoIndex } from "../logo-colors";
-import { UserSettings } from "./user-settings";
 import { ViewMode, ViewColor } from "./view";
 
 export type ModelControls = {
@@ -28,8 +27,8 @@ export type ModelControls = {
 };
 
 export const DEFAULT_MODEL_CONTROLS: ModelControls = {
-  rotationX: 100,
-  rotationY: 0,
+  rotationX: 50,
+  rotationY: -150,
   rotationZ: 0,
   translationX: 0,
   translationY: 0,
@@ -39,8 +38,8 @@ export const DEFAULT_MODEL_CONTROLS: ModelControls = {
 
   enableLightingRegular: false,
   logoColorIdx: 0,
-  textureFilterMin: 'nearest',
-  textureFilterMag: 'nearest',
+  textureFilterMin: 'linear',
+  textureFilterMag: 'linear',
 
   enableLightingSolidColor: true,
   solidColor: [1.0, 1.0, 1.0, 1.0],
