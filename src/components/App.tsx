@@ -34,7 +34,11 @@ const App = () => {
   }, [userService]);
 
   if (defaultUserSettings === undefined || defaultModelControls === undefined) {
-    return 'Loading...';
+    return (
+      <div class="min-h-screen flex justify-center items-center">
+        <span>Loading...</span>
+      </div>
+    );
   }
 
   if (dataSource === undefined) {
