@@ -34,7 +34,7 @@ const Loader: FunctionComponent<{
     loadModel(dataSource)
       .then((res) => {
         setResult(res);
-        return loadTextures(res, logoDefs, '/assets/custom/pngs/', 'png');
+        return loadTextures(res, logoDefs, 'assets/custom/pngs/', 'png');
       })
       .then(setTextures)
       .catch(setError);
@@ -110,16 +110,16 @@ function createStateMap(object3doTree: Object3doTree): ObjectStateMap {
 async function loadShaders(): Promise<WebglEngineShaderSources> {
   return {
     regular: {
-      fsSource: await fetch('/assets/shaders/regular.fs').then((res) => res.text()),
-      vsSource: await fetch('/assets/shaders/regular.vs').then((res) => res.text()),
+      fsSource: await fetch('assets/shaders/regular.fs').then((res) => res.text()),
+      vsSource: await fetch('assets/shaders/regular.vs').then((res) => res.text()),
     },
     solid: {
-      fsSource: await fetch('/assets/shaders/solid_color.fs').then((res) => res.text()),
-      vsSource: await fetch('/assets/shaders/solid_color.vs').then((res) => res.text()),
+      fsSource: await fetch('assets/shaders/solid_color.fs').then((res) => res.text()),
+      vsSource: await fetch('assets/shaders/solid_color.vs').then((res) => res.text()),
     },
     wireframe: {
-      fsSource: await fetch('/assets/shaders/wireframe.fs').then((res) => res.text()),
-      vsSource: await fetch('/assets/shaders/wireframe.vs').then((res) => res.text()),
+      fsSource: await fetch('assets/shaders/wireframe.fs').then((res) => res.text()),
+      vsSource: await fetch('assets/shaders/wireframe.vs').then((res) => res.text()),
     },
   };
 }

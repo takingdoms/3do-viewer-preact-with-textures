@@ -1,25 +1,25 @@
 import { FunctionComponent, h } from 'preact';
-import { useCallback, useEffect } from "preact/hooks";
 
 const SAMPLES: Array<{ path: string; name: string }> = [
-  'aradrag.3do', // 0
-  'tardrag.3do', // 1
-  'verdrag.3do', // 2
-  'zondrag.3do', // 3
-  'creaeri.3do', // 4
-  'aralode.3do', // 5
+  'aradrag.3do',
+  'tardrag.3do',
+  'verdrag.3do',
+  'zondrag.3do',
+  'creaeri.3do',
+  'aralode.3do',
+  'araking.3do',
+  'cresage.3do',
+  'tarnecro.3do',
+  'vermage.3do',
+  'zonhunt.3do',
 ].map((name) => ({
   name,
-  path: '/assets/3do-samples/' + name,
+  path: 'assets/3do-samples/' + name,
 }));
 
 const FileChooser: FunctionComponent<{
   onSubmit: (dataSource: File | string) => void;
 }> = ({ onSubmit }) => {
-  /*useEffect(() => {
-    onSubmit(SAMPLES[5]!.path);
-  }, []);*/
-
   const option1 = (
     <form
       class="px-4 py-2 border border-4 border-gray-600 rounded"
