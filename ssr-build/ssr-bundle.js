@@ -7103,7 +7103,9 @@ var App_App = function App() {
     }));
   }, [userService]);
   if (defaultUserSettings === undefined || defaultModelControls === undefined) {
-    return 'Loading...';
+    return Object(external_preact_["h"])("div", {
+      class: "min-h-screen flex justify-center items-center"
+    }, Object(external_preact_["h"])("span", null, "Loading..."));
   }
   if (dataSource === undefined) {
     return Object(external_preact_["h"])(loader_FileChooser, {
