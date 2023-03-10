@@ -3,6 +3,7 @@
   "name": "3do-viewer-preact",
   "version": "0.0.0",
   "license": "MIT",
+  "homepage": "https://takingdoms.github.io/3do-viewer-preact-with-textures/",
   "scripts": {
     "build": "preact build",
     "serve": "sirv build --cors --single",
