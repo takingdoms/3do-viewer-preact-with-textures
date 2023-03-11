@@ -91,8 +91,13 @@ const Main: FunctionComponent<{
       preserveDrawingBuffer: defaultUserSettings.preserveDrawingBuffer,
     };
 
+    const actualLogoDefs: TakLogoColorsDefinitions = {
+      ...logoDefs,
+      defaultIdx: defaultModelControls.logoColorIdx,
+    };
+
     const engine = engineName === 'webgl'
-      ? new WebglEngine(engineConfig, shaders, object3doTree, logoDefs)
+      ? new WebglEngine(engineConfig, shaders, object3doTree, actualLogoDefs)
       : new UiDebugEngine(engineConfig);
 
     setEngine(engine);
