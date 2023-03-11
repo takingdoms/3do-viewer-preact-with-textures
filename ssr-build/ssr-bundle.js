@@ -1211,7 +1211,7 @@ var DEFAULT_USER_SETTINGS = {
   sidebarWidth: 300,
   defaultTextureFilterMin: 'nearest',
   defaultTextureFilterMag: 'nearest',
-  preserveDrawingBuffer: false
+  preserveDrawingBuffer: true
 };
 // CONCATENATED MODULE: ./lib/services/user-service.ts
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
@@ -1281,7 +1281,43 @@ var DEFAULT_MODEL_CONTROLS = {
   solidColor: [1.0, 1.0, 1.0, 1.0],
   wireframeColor: [1.0, 1.0, 1.0, 1.0]
 };
+// CONCATENATED MODULE: ./components/ui/Spoiler.tsx
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+var Spoiler_Spoiler = function Spoiler(_ref) {
+  var title = _ref.title,
+    children = _ref.children,
+    showByDefault = _ref.showByDefault;
+  var _useState = Object(hooks_module["e" /* useState */])(showByDefault !== null && showByDefault !== void 0 ? showByDefault : false),
+    _useState2 = _slicedToArray(_useState, 2),
+    show = _useState2[0],
+    setShow = _useState2[1];
+  var content = show ? Object(external_preact_["h"])("div", null, children) : null;
+  var showHide = Object(external_preact_["h"])("button", {
+    onClick: function onClick() {
+      return setShow(!show);
+    }
+  }, show ? '[Hide]' : '[Show]');
+  return Object(external_preact_["h"])("div", null, Object(external_preact_["h"])("div", {
+    class: "flex justify-between space-x-2"
+  }, Object(external_preact_["h"])("span", null, title), showHide), content);
+};
+/* harmony default export */ var ui_Spoiler = (Spoiler_Spoiler);
 // CONCATENATED MODULE: ./components/loader/FileChooser.tsx
+function FileChooser_typeof(obj) { "@babel/helpers - typeof"; return FileChooser_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, FileChooser_typeof(obj); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return FileChooser_typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (FileChooser_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (FileChooser_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+
+
 
 var SAMPLES = ['aradrag.3do', 'tardrag.3do', 'verdrag.3do', 'zondrag.3do', 'creaeri.3do', 'aralode.3do', 'araking.3do', 'cresage.3do', 'tarnecro.3do', 'vermage.3do', 'zonhunt.3do'].map(function (name) {
   return {
@@ -1289,66 +1325,139 @@ var SAMPLES = ['aradrag.3do', 'tardrag.3do', 'verdrag.3do', 'zondrag.3do', 'crea
     path: 'assets/3do-samples/' + name
   };
 });
+var ISSUES_URL = 'https://github.com/takingdoms/3do-viewer-preact/issues';
+var submitButtonCss = 'border border-gray-700 px-2 py-0.5 hover:text-yellow-500 ' + 'focus:text-yellow-500';
+var anchorCss = 'text-sky-500 hover:text-sky-700 focus:text-sky-700 hover:underline focus:underline';
 var FileChooser_FileChooser = function FileChooser(_ref) {
-  var _onSubmit = _ref.onSubmit;
-  var option1 = Object(external_preact_["h"])("form", {
-    class: "px-4 py-2 border border-4 border-gray-600 rounded",
-    onSubmit: function onSubmit(ev) {
-      ev.preventDefault();
-      var formData = new FormData(ev.currentTarget);
-      var file = formData.get('file');
-      if (file && file.size && file.name) {
-        _onSubmit(file);
+  var _onSubmit = _ref.onSubmit,
+    defaultUserSettings = _ref.defaultUserSettings,
+    setDefaultUserSettings = _ref.setDefaultUserSettings;
+  var controlsInfo = Object(hooks_module["c" /* useMemo */])(function () {
+    return Object(external_preact_["h"])("div", {
+      class: "text-sm"
+    }, Object(external_preact_["h"])("h3", {
+      class: "text-base font-bold"
+    }, "Controls:"), Object(external_preact_["h"])("p", null, Object(external_preact_["h"])("u", null, "Left mouse button:"), " hold and drag to rotate the model."), Object(external_preact_["h"])("p", null, Object(external_preact_["h"])("u", null, "Middle mouse button:"), " hold and drag to move the model."), Object(external_preact_["h"])("p", null, Object(external_preact_["h"])("u", null, "Mouse wheel:"), " zoom in or out."));
+  }, []);
+  var miscInfo = Object(hooks_module["c" /* useMemo */])(function () {
+    return Object(external_preact_["h"])("div", {
+      class: "text-sm"
+    }, Object(external_preact_["h"])("h3", {
+      class: "text-base font-bold"
+    }, "About:"), Object(external_preact_["h"])("p", null, "Submit suggestions or problems at: ", Object(external_preact_["h"])("a", {
+      class: anchorCss,
+      href: ISSUES_URL,
+      target: "_blank"
+    }, ISSUES_URL)), Object(external_preact_["h"])("p", null, "...or message spagg#2962 on Discord."));
+  }, []);
+  var option1 = Object(hooks_module["c" /* useMemo */])(function () {
+    return Object(external_preact_["h"])("form", {
+      class: "px-4 py-2 border border-4 border-gray-600 rounded h-full",
+      onSubmit: function onSubmit(ev) {
+        ev.preventDefault();
+        var formData = new FormData(ev.currentTarget);
+        var file = formData.get('file');
+        if (file && file.size && file.name) {
+          _onSubmit(file);
+        }
       }
-    }
-  }, Object(external_preact_["h"])("div", {
-    class: "text-3xl text-center mb-4"
-  }, "Option 1"), Object(external_preact_["h"])("div", {
-    class: "text-xl text-gray-400 mb-2"
-  }, "Load your own file"), Object(external_preact_["h"])("div", {
-    className: "flex items-stretch space-x-2"
-  }, Object(external_preact_["h"])("input", {
-    name: "file",
-    type: "file",
-    class: "grow border border-gray-700"
-  }), Object(external_preact_["h"])("button", {
-    type: "submit"
-  }, "Go")));
-  var option2 = Object(external_preact_["h"])("form", {
-    class: "px-4 py-2 border border-4 border-gray-600 rounded",
-    onSubmit: function onSubmit(ev) {
-      var _formData$get;
-      ev.preventDefault();
-      var formData = new FormData(ev.currentTarget);
-      var sample = (_formData$get = formData.get('sample')) === null || _formData$get === void 0 ? void 0 : _formData$get.toString().trim();
-      if (sample) {
-        _onSubmit(sample);
+    }, Object(external_preact_["h"])("div", {
+      class: "text-3xl text-center mb-4"
+    }, "Option 1"), Object(external_preact_["h"])("div", {
+      class: "text-xl text-gray-400 mb-2"
+    }, "Load your own file"), Object(external_preact_["h"])("div", {
+      className: "flex items-stretch space-x-2"
+    }, Object(external_preact_["h"])("input", {
+      name: "file",
+      type: "file",
+      class: "grow border border-gray-700"
+    }), Object(external_preact_["h"])("button", {
+      class: submitButtonCss,
+      type: "submit"
+    }, "GO")));
+  }, [_onSubmit]);
+  var option2 = Object(hooks_module["c" /* useMemo */])(function () {
+    return Object(external_preact_["h"])("form", {
+      class: "px-4 py-2 border border-4 border-gray-600 rounded h-full",
+      onSubmit: function onSubmit(ev) {
+        var _formData$get;
+        ev.preventDefault();
+        var formData = new FormData(ev.currentTarget);
+        var sample = (_formData$get = formData.get('sample')) === null || _formData$get === void 0 ? void 0 : _formData$get.toString().trim();
+        if (sample) {
+          _onSubmit(sample);
+        }
       }
-    }
-  }, Object(external_preact_["h"])("div", {
-    class: "text-3xl text-center mb-4"
-  }, "Option 2"), Object(external_preact_["h"])("div", {
-    class: "text-xl text-gray-400 mb-2"
-  }, "Pick a sample file"), Object(external_preact_["h"])("div", {
-    className: "flex items-stretch space-x-2"
-  }, Object(external_preact_["h"])("select", {
-    name: "sample",
-    class: "grow border border-gray-700"
-  }, Object(external_preact_["h"])("option", {
-    value: ""
-  }), SAMPLES.map(function (sample, idx) {
-    return Object(external_preact_["h"])("option", {
-      value: sample.path,
-      key: idx
-    }, sample.name);
-  })), Object(external_preact_["h"])("button", {
-    type: "submit"
-  }, "Go")));
+    }, Object(external_preact_["h"])("div", {
+      class: "text-3xl text-center mb-4"
+    }, "Option 2"), Object(external_preact_["h"])("div", {
+      class: "text-xl text-gray-400 mb-2"
+    }, "Pick a sample file"), Object(external_preact_["h"])("div", {
+      className: "flex items-stretch space-x-2"
+    }, Object(external_preact_["h"])("select", {
+      name: "sample",
+      class: "grow border border-gray-700"
+    }, Object(external_preact_["h"])("option", {
+      value: ""
+    }), SAMPLES.map(function (sample, idx) {
+      return Object(external_preact_["h"])("option", {
+        value: sample.path,
+        key: idx
+      }, sample.name);
+    })), Object(external_preact_["h"])("button", {
+      class: submitButtonCss,
+      type: "submit"
+    }, "GO")));
+  }, [_onSubmit]);
+  var advanced = Object(hooks_module["c" /* useMemo */])(function () {
+    return Object(external_preact_["h"])(ui_Spoiler, {
+      title: "Advanced"
+    }, Object(external_preact_["h"])("div", {
+      class: "space-y-2"
+    }, Object(external_preact_["h"])("div", null, Object(external_preact_["h"])("label", {
+      class: "flex items-center"
+    }, Object(external_preact_["h"])("input", {
+      type: "checkbox",
+      checked: defaultUserSettings.preserveDrawingBuffer,
+      onChange: function onChange(ev) {
+        setDefaultUserSettings(_objectSpread(_objectSpread({}, defaultUserSettings), {}, {
+          preserveDrawingBuffer: ev.currentTarget.checked
+        }));
+      }
+    }), Object(external_preact_["h"])("span", {
+      class: "font-bold ml-2"
+    }, "WebGL / Preserve Drawing Buffer")), Object(external_preact_["h"])("span", {
+      class: "text-gray-300 text-sm"
+    }, "Disable this only if the model rendering is lagging (might not even change anything).\n            Disabling this will also disable the \"Save Model Image\" button and the ability to\n            \"Right click > Save Image As\""))));
+  }, [defaultUserSettings, setDefaultUserSettings]);
   return Object(external_preact_["h"])("div", {
-    class: "min-w-screen min-h-screen bg-gray-800 flex justify-center items-center text-white"
+    class: "min-w-screen min-h-screen bg-gray-800 flex flex-col justify-center items-center"
   }, Object(external_preact_["h"])("div", {
-    class: "flex flex-col space-y-6"
-  }, option1, option2));
+    style: {
+      maxWidth: 800
+    },
+    class: "container flex justify-center items-stretch\r flex-col-reverse md:flex-col"
+  }, Object(external_preact_["h"])("div", {
+    class: "flex flex-wrap items-stretch"
+  }, Object(external_preact_["h"])("div", {
+    class: "flex-1 p-4",
+    style: {
+      minWidth: 300
+    }
+  }, controlsInfo), Object(external_preact_["h"])("div", {
+    class: "flex-1 p-4",
+    style: {
+      minWidth: 300
+    }
+  }, miscInfo)), Object(external_preact_["h"])("div", {
+    class: "flex flex-wrap items-stretch"
+  }, Object(external_preact_["h"])("div", {
+    class: "flex-1 p-4"
+  }, option1), Object(external_preact_["h"])("div", {
+    class: "flex-1 p-4"
+  }, option2)), Object(external_preact_["h"])("div", {
+    class: "mt-8 self-center"
+  }, advanced)));
 };
 /* harmony default export */ var loader_FileChooser = (FileChooser_FileChooser);
 // EXTERNAL MODULE: ../node_modules/@takingdoms/lib-3do/dist/index.js
@@ -1398,17 +1507,17 @@ var htmlColors = {
   9: 'brown'
 };
 // CONCATENATED MODULE: ./lib/utils.ts
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+function utils_slicedToArray(arr, i) { return utils_arrayWithHoles(arr) || utils_iterableToArrayLimit(arr, i) || utils_unsupportedIterableToArray(arr, i) || utils_nonIterableRest(); }
+function utils_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function utils_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return utils_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return utils_arrayLikeToArray(o, minLen); }
+function utils_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function utils_iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function utils_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function compareObjectsShallow(obj1, obj2) {
   var entries1 = Object.entries(obj1);
   var entries2 = Object.keys(obj2);
   return entries1.length === entries2.length && entries1.every(function (_ref) {
-    var _ref2 = _slicedToArray(_ref, 2),
+    var _ref2 = utils_slicedToArray(_ref, 2),
       key1 = _ref2[0],
       value1 = _ref2[1];
     return key1 in obj2 && obj2[key1] === value1;
@@ -1430,20 +1539,20 @@ var Utils = {
 };
 // CONCATENATED MODULE: ./lib/engines/engine.ts
 function engine_typeof(obj) { "@babel/helpers - typeof"; return engine_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, engine_typeof(obj); }
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function engine_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function engine_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? engine_ownKeys(Object(source), !0).forEach(function (key) { engine_defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : engine_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, engine_toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return engine_typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (engine_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (engine_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function engine_defineProperty(obj, key, value) { key = engine_toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function engine_toPropertyKey(arg) { var key = engine_toPrimitive(arg, "string"); return engine_typeof(key) === "symbol" ? key : String(key); }
+function engine_toPrimitive(input, hint) { if (engine_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (engine_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var Engine = /*#__PURE__*/function () {
   function Engine(config) {
     _classCallCheck(this, Engine);
-    _defineProperty(this, "config", void 0);
-    _defineProperty(this, "resizeObserver", void 0);
-    _defineProperty(this, "cleanupEvents", void 0);
+    engine_defineProperty(this, "config", void 0);
+    engine_defineProperty(this, "resizeObserver", void 0);
+    engine_defineProperty(this, "cleanupEvents", void 0);
     this.config = config;
   }
   _createClass(Engine, [{
@@ -1526,7 +1635,7 @@ var Engine = /*#__PURE__*/function () {
       var onMouseUp = function onMouseUp() {
         mouseAction = mouseStartX = mouseStartY = controlStartX = controlStartY = undefined;
         if (didChange) {
-          listener.onModelControlsChanged(_objectSpread({}, _this.config.modelControls));
+          listener.onModelControlsChanged(engine_objectSpread({}, _this.config.modelControls));
           didChange = false;
         }
       };
@@ -1541,7 +1650,7 @@ var Engine = /*#__PURE__*/function () {
         if (_this.config.mode === 'static') {
           _this.render();
         }
-        listener.onModelControlsChanged(_objectSpread({}, _this.config.modelControls)); // TODO DEBOUNCE! (or not?)
+        listener.onModelControlsChanged(engine_objectSpread({}, _this.config.modelControls)); // TODO DEBOUNCE! (or not?)
       };
 
       canvas.addEventListener('mousedown', onMouseDown);
@@ -6086,34 +6195,6 @@ var CanvasWrapper_CanvasWrapper = function CanvasWrapper(_ref) {
   }, canvas);
 };
 /* harmony default export */ var canvas_CanvasWrapper = (CanvasWrapper_CanvasWrapper);
-// CONCATENATED MODULE: ./components/ui/Spoiler.tsx
-function Spoiler_slicedToArray(arr, i) { return Spoiler_arrayWithHoles(arr) || Spoiler_iterableToArrayLimit(arr, i) || Spoiler_unsupportedIterableToArray(arr, i) || Spoiler_nonIterableRest(); }
-function Spoiler_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function Spoiler_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return Spoiler_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return Spoiler_arrayLikeToArray(o, minLen); }
-function Spoiler_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
-function Spoiler_iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function Spoiler_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-
-var Spoiler_Spoiler = function Spoiler(_ref) {
-  var title = _ref.title,
-    children = _ref.children,
-    showByDefault = _ref.showByDefault;
-  var _useState = Object(hooks_module["e" /* useState */])(showByDefault !== null && showByDefault !== void 0 ? showByDefault : false),
-    _useState2 = Spoiler_slicedToArray(_useState, 2),
-    show = _useState2[0],
-    setShow = _useState2[1];
-  var content = show ? Object(external_preact_["h"])("div", null, children) : null;
-  var showHide = Object(external_preact_["h"])("button", {
-    onClick: function onClick() {
-      return setShow(!show);
-    }
-  }, show ? '[Hide]' : '[Show]');
-  return Object(external_preact_["h"])("div", null, Object(external_preact_["h"])("div", {
-    class: "flex justify-between"
-  }, title, showHide), content);
-};
-/* harmony default export */ var ui_Spoiler = (Spoiler_Spoiler);
 // CONCATENATED MODULE: ./components/object-list/ObjectListTree.module.css
 // extracted by mini-css-extract-plugin
 /* harmony default export */ var ObjectListTree_module = ({"NameWrapper":"NameWrapper__lk4ti","LeftBorder":"LeftBorder__WZG0Y","MiddleBorder":"MiddleBorder__FcOEe","Root":"Root__0piuG"});
@@ -6484,7 +6565,9 @@ var TextureManager_TextureManager = function TextureManager(_ref) {
             return "continue";
           }
           var updateMapping = function updateMapping(image) {
-            var fileBasename = file.name.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '');
+            var fileBasename = file.name.replace(/^.*[\\\/]/, '') // get filename (remove parent directories)
+            .replace(/\.[^/.]+$/, ''); // get basename (remove extension)
+
             newMapping[fileBasename] = {
               type: 'html',
               image: image
@@ -6854,11 +6937,22 @@ var Loader_Loader = function Loader(_ref) {
       class: "text-gray-400"
     }, message));
   }
-  var allTexturesFailed = Object(hooks_module["c" /* useMemo */])(function () {
-    return Object.values(textures).every(function (value) {
+  var defaultViewMode = Object(hooks_module["c" /* useMemo */])(function () {
+    var allTexturesFailed = Object.values(textures).every(function (value) {
       return value === null;
     });
-  }, [textures]);
+    return allTexturesFailed ? 'wireframe' : defaultModelControls.viewMode;
+  }, [textures, defaultModelControls]);
+  var defaultLogoColorIdx = Object(hooks_module["c" /* useMemo */])(function () {
+    var fileName = typeof dataSource === 'string' ? dataSource.replace(/^.*[\\\/]/, '') : dataSource.name; // File type
+
+    if (fileName.startsWith('ara')) return 3;
+    if (fileName.startsWith('tar')) return 1;
+    if (fileName.startsWith('ver')) return 0;
+    if (fileName.startsWith('zon')) return 7;
+    if (fileName.startsWith('cre')) return 6;
+    return defaultModelControls.logoColorIdx;
+  }, [defaultModelControls, dataSource]);
   return Object(external_preact_["h"])(components_Main, {
     engineName: "webgl",
     object3doTree: result,
@@ -6869,7 +6963,8 @@ var Loader_Loader = function Loader(_ref) {
     userService: userService,
     defaultUserSettings: defaultUserSettings,
     defaultModelControls: Loader_objectSpread(Loader_objectSpread({}, defaultModelControls), {}, {
-      viewMode: allTexturesFailed ? 'wireframe' : defaultModelControls.viewMode
+      viewMode: defaultViewMode,
+      logoColorIdx: defaultLogoColorIdx
     })
   });
 };
@@ -7095,7 +7190,7 @@ var App_App = function App() {
   var _useState5 = Object(hooks_module["e" /* useState */])(),
     _useState6 = App_slicedToArray(_useState5, 2),
     defaultUserSettings = _useState6[0],
-    setDefaultUserSettings = _useState6[1];
+    _setDefaultUserSettings = _useState6[1];
   var _useState7 = Object(hooks_module["e" /* useState */])(),
     _useState8 = App_slicedToArray(_useState7, 2),
     defaultModelControls = _useState8[0],
@@ -7110,7 +7205,7 @@ var App_App = function App() {
       userSettings = DEFAULT_USER_SETTINGS;
       userService.save(userSettings);
     }
-    setDefaultUserSettings(userSettings);
+    _setDefaultUserSettings(userSettings);
     setDefaultModelControls(App_objectSpread(App_objectSpread({}, DEFAULT_MODEL_CONTROLS), {}, {
       textureFilterMin: userSettings.defaultTextureFilterMin,
       textureFilterMag: userSettings.defaultTextureFilterMag
@@ -7123,7 +7218,12 @@ var App_App = function App() {
   }
   if (dataSource === undefined) {
     return Object(external_preact_["h"])(loader_FileChooser, {
-      onSubmit: setDataSource
+      onSubmit: setDataSource,
+      defaultUserSettings: defaultUserSettings,
+      setDefaultUserSettings: function setDefaultUserSettings(newUserSettings) {
+        _setDefaultUserSettings(newUserSettings);
+        userService.save(newUserSettings);
+      }
     });
   }
   return Object(external_preact_["h"])(loader_Loader, {
