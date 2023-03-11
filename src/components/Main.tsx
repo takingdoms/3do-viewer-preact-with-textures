@@ -105,6 +105,19 @@ const Main: FunctionComponent<{
   }, [canvasRef, shaders, defaultObjStateMap, engineName, object3doTree, regularTextures, logoDefs,
       defaultModelControls]);
 
+  useEffect(() => {
+    const canvas = canvasRef.current;
+
+    if (!canvas) {
+      return;
+    }
+
+    canvas.style.background = modelControls.canvasBackground;
+    canvas.style.backgroundSize = modelControls.canvasBackgroundSize;
+    canvas.style.backgroundRepeat = modelControls.canvasBackgroundRepeat;
+    canvas.style.backgroundPosition = 'center';
+  }, [canvasRef, modelControls]);
+
   //:: Memos
 
   const canvasWrapper = useMemo(() => (

@@ -98,7 +98,7 @@ export abstract class WebglSubRenderer<TProgramInfo extends AnyProgramInfo> {
     const viewWidth = gl.drawingBufferWidth;
     const viewHeight = gl.drawingBufferHeight;
 
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clearColor(0.0, 0.0, 0.0, 0.0);
     gl.clearDepth(1.0);
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LEQUAL);

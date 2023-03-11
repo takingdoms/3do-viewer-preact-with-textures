@@ -11,6 +11,9 @@ export type ModelControls = {
   zoom: number;
   viewMode: ViewMode;
   viewColor?: ViewColor;
+  canvasBackground: string;
+  canvasBackgroundSize: 'auto' | 'cover' | 'contain';
+  canvasBackgroundRepeat: 'repeat' | 'no-repeat';
 
   //:: Regular mode options
   enableLightingRegular: boolean;
@@ -35,6 +38,9 @@ export const DEFAULT_MODEL_CONTROLS: ModelControls = {
   zoom: 900,
   viewMode: 'regular',
   viewColor: [1.0, 1.0, 1.0, 1.0], // mixes multiplicatively
+  canvasBackground: 'black',
+  canvasBackgroundSize: 'auto',
+  canvasBackgroundRepeat: 'repeat',
 
   enableLightingRegular: false,
   logoColorIdx: 0,
