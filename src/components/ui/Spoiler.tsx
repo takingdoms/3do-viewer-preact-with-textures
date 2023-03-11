@@ -22,8 +22,8 @@ const Spoiler: FunctionComponent<{
 
   return (
     <div>
-      <div class="flex justify-between">
-        {title}
+      <div class="flex justify-between space-x-2">
+        <span>{title}</span>
         {showHide}
       </div>
 

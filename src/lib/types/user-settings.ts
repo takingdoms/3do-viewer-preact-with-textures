@@ -11,5 +11,5 @@ export const DEFAULT_USER_SETTINGS: UserSettings = {
   sidebarWidth: 300,
   defaultTextureFilterMin: 'nearest',
   defaultTextureFilterMag: 'nearest',
-  preserveDrawingBuffer: false,
+  preserveDrawingBuffer: true,
 };
