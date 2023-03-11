@@ -95,6 +95,9 @@ const Main: FunctionComponent<{
       ? new WebglEngine(engineConfig, shaders, object3doTree, logoDefs)
       : new UiDebugEngine(engineConfig);
 
+    // \/ used purely to trigger an initial changeModelControls
+    engine.setModelControls(defaultModelControls);
+
     setEngine(engine);
 
     return () => {
