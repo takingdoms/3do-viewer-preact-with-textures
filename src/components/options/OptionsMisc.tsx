@@ -1,14 +1,19 @@
 import { FunctionComponent, h } from 'preact';
-import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
+import { MutableRef, useCallback, useEffect, useMemo, useState } from "preact/hooks";
 import { IoUtils } from "../../lib/io-utils";
 import { ModelControls } from "../../lib/types/model-controls";
+import { UserSettings } from "../../lib/types/user-settings";
 
 const OptionsMisc: FunctionComponent<{
   modelControls: ModelControls;
   setModelControls: (m: ModelControls) => void;
+  canvasRef: MutableRef<HTMLCanvasElement | undefined>;
+  enableSaveImageButton: boolean;
 }> = ({
   modelControls,
   setModelControls,
+  enableSaveImageButton,
+  canvasRef,
 }) => {
   const [canvasBg, setCanvasBg] = useState(getInitialBg(modelControls.canvasBackground));
 
@@ -93,11 +98,44 @@ const OptionsMisc: FunctionComponent<{
     );
   }, [canvasBg, modelControls]);
 
+  const saveCanvasImage = useCallback(() => {
+    const canvas = canvasRef.current;
+
+    if (canvas === undefined) {
+      return;
+    }
+
+    const dataURL = canvas.toDataURL();
+    const downloadLink = document.createElement('a');
+    const timestamp = new Date().getTime();
+
+    downloadLink.href = dataURL;
+    downloadLink.download = `3do-${timestamp}.png`;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  }, [canvasRef]);
+
+  const saveImageButton = useMemo(() => {
+    if (!enableSaveImageButton) {
+      return null;
+    }
+
+    return (
+      <div class="text-center">
+        <button
+          class="text-white hover:text-yellow-500 focus:text-yellow-500"
+          onClick={saveCanvasImage}
+        >
+          Save Model Image
+        </button>
+      </div>
+    );
+  }, [enableSaveImageButton, saveCanvasImage]);
+
   return (
     <div class="space-y-4">
-      {/* <div class="text-center">
-        <button class="text-white hover:text-yellow-500 focus:text-yellow-500">Save Image</button>
-      </div> */}
+      {saveImageButton}
 
       <div>
         Canvas Background

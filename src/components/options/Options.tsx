@@ -1,5 +1,5 @@
 import { FunctionComponent, h, Fragment } from 'preact';
-import { useMemo } from "preact/hooks";
+import { MutableRef, useMemo } from "preact/hooks";
 import { TakLogoColorsDefinitions } from "../../lib/logo-colors";
 import { ModelControls } from "../../lib/types/model-controls";
 import { UserSettings } from "../../lib/types/user-settings";
@@ -16,6 +16,7 @@ type OptionsProps = {
   userSettings: UserSettings;
   setUserSettings: (s: UserSettings) => void;
   logoDefs: TakLogoColorsDefinitions;
+  canvasRef: MutableRef<HTMLCanvasElement | undefined>;
 };
 
 const Options: FunctionComponent<OptionsProps> = ({
@@ -24,6 +25,7 @@ const Options: FunctionComponent<OptionsProps> = ({
   userSettings,
   setUserSettings,
   logoDefs,
+  canvasRef,
 }) => {
   const controls = useMemo(() => (
     <OptionsControls modelControls={modelControls} setModelControls={setModelControls} />
@@ -62,7 +64,12 @@ const Options: FunctionComponent<OptionsProps> = ({
       {user}
 
       <div class="text-center font-bold border-b border-gray-700 mb-2 pb-1 mt-6">Misc.</div>
-      <OptionsMisc modelControls={modelControls} setModelControls={setModelControls} />
+      <OptionsMisc
+        modelControls={modelControls}
+        setModelControls={setModelControls}
+        canvasRef={canvasRef}
+        enableSaveImageButton={userSettings.preserveDrawingBuffer}
+      />
     </div>
   );
 };
