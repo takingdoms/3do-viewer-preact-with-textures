@@ -33,7 +33,9 @@ export class WebglEngine extends Engine {
   ) {
     super(config);
 
-    const gl = config.canvas.getContext('webgl');
+    const gl = config.canvas.getContext('webgl', {
+      preserveDrawingBuffer: config.preserveDrawingBuffer,
+    });
 
     if (gl === null) {
       throw `Couldn't get WebGL rendering context!`;

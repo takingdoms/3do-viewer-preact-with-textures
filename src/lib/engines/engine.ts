@@ -16,6 +16,7 @@ export type EngineConfig = {
   textureMapping: TextureMapping;
   objStateMap: ObjectStateMap;
   listener: EngineListener;
+  preserveDrawingBuffer: boolean; // needs to be true for "Right Click > Save Image" to work
 };
 
 export abstract class Engine {

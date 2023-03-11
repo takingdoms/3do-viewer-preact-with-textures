@@ -88,6 +88,7 @@ const Main: FunctionComponent<{
       listener: engineListener,
       textureMapping: { ...regularTextures },
       objStateMap: defaultObjStateMap,
+      preserveDrawingBuffer: defaultUserSettings.preserveDrawingBuffer,
     };
 
     const engine = engineName === 'webgl'
@@ -103,7 +104,20 @@ const Main: FunctionComponent<{
     };
     // \/ important: all dependencies should come from non-stateful values: AKA never change
   }, [canvasRef, shaders, defaultObjStateMap, engineName, object3doTree, regularTextures, logoDefs,
-      defaultModelControls]);
+      defaultModelControls, defaultUserSettings]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+
+    if (!canvas) {
+      return;
+    }
+
+    canvas.style.background = modelControls.canvasBackground;
+    canvas.style.backgroundSize = modelControls.canvasBackgroundSize;
+    canvas.style.backgroundRepeat = modelControls.canvasBackgroundRepeat;
+    canvas.style.backgroundPosition = 'center';
+  }, [canvasRef, modelControls]);
 
   //:: Memos
 
@@ -154,8 +168,9 @@ const Main: FunctionComponent<{
       userSettings={userSettings}
       setUserSettings={setUserSettings}
       logoDefs={logoDefs}
+      canvasRef={canvasRef}
     />
-  ), [engine, modelControls, userSettings, setUserSettings, logoDefs]);
+  ), [engine, modelControls, userSettings, setUserSettings, logoDefs, canvasRef]);
 
   const objectsPanel = useMemo(() => {
     return (

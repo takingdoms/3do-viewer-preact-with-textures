@@ -1,4 +1,4 @@
-import { UserSettings } from "../types/user-settings";
+import { UserSettings, DEFAULT_USER_SETTINGS } from "../types/user-settings";
 
 export type UserService = {
   save: (userSettings: UserSettings) => void;
@@ -47,11 +47,18 @@ export const localStorageUserService: UserService = {
       throw new Error(`Invalid defaultTextureFilterMag`);
     }
 
+    let preserveDrawingBuffer = obj['preserveDrawingBuffer'];
+
+    if (typeof preserveDrawingBuffer !== 'boolean') {
+      preserveDrawingBuffer = DEFAULT_USER_SETTINGS.preserveDrawingBuffer;
+    }
+
     return {
       sidebarPosition,
       sidebarWidth,
       defaultTextureFilterMin,
       defaultTextureFilterMag,
+      preserveDrawingBuffer,
     };
   },
 };
