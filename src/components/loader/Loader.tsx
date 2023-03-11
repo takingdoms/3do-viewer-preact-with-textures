@@ -2,7 +2,7 @@ import { Object3do, Object3doTree, Parse3do } from "@takingdoms/lib-3do";
 import { FunctionComponent,h  } from "preact";
 import { useEffect, useMemo, useState } from "preact/hooks";
 import { WebglEngineShaderSources } from "../../lib/engines/webgl-engine";
-import { defaultLogoColorsDefinitions, TakLogoColorsDefinitions } from "../../lib/logo-colors";
+import { defaultLogoColorsDefinitions, TakLogoColorsDefinitions, TakLogoIndex } from "../../lib/logo-colors";
 import { UserService } from "../../lib/services/user-service";
 import { TextureMapping } from "../../lib/texture-mapping";
 import { ModelControls } from "../../lib/types/model-controls";
@@ -69,9 +69,25 @@ const Loader: FunctionComponent<{
     );
   }
 
-  const allTexturesFailed = useMemo(() => {
-    return Object.values(textures).every((value) => value === null);
-  }, [textures]);
+  const defaultViewMode = useMemo(() => {
+    const allTexturesFailed = Object.values(textures).every((value) => value === null);
+
+    return allTexturesFailed ? 'wireframe' : defaultModelControls.viewMode;
+  }, [textures, defaultModelControls]);
+
+  const defaultLogoColorIdx: TakLogoIndex = useMemo(() => {
+    const fileName = typeof dataSource === 'string'
+      ? dataSource.replace(/^.*[\\\/]/, '')
+      : dataSource.name; // File type
+
+    if (fileName.startsWith('ara')) return 3;
+    if (fileName.startsWith('tar')) return 1;
+    if (fileName.startsWith('ver')) return 0;
+    if (fileName.startsWith('zon')) return 7;
+    if (fileName.startsWith('cre')) return 6;
+
+    return defaultModelControls.logoColorIdx;
+  }, [defaultModelControls, dataSource]);
 
   return (
     <Main
@@ -85,7 +101,8 @@ const Loader: FunctionComponent<{
       defaultUserSettings={defaultUserSettings}
       defaultModelControls={{
         ...defaultModelControls,
-        viewMode: allTexturesFailed ? 'wireframe' : defaultModelControls.viewMode,
+        viewMode: defaultViewMode,
+        logoColorIdx: defaultLogoColorIdx,
       }}
     />
   );
