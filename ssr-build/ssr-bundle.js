@@ -487,10 +487,12 @@ module.exports = require("preact");
 /* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(preact__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var preact_hooks__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("QRet");
 /* harmony import */ var _OptionsControls__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("NOVX");
-/* harmony import */ var _OptionsUser__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("/dwh");
-/* harmony import */ var _view_modes_RegularOptions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("nF9+");
-/* harmony import */ var _view_modes_SolidColorOptions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__("qiYd");
-/* harmony import */ var _view_modes_WireframeOptions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__("b2Zb");
+/* harmony import */ var _OptionsMisc__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("tpTz");
+/* harmony import */ var _OptionsUser__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("/dwh");
+/* harmony import */ var _view_modes_RegularOptions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__("nF9+");
+/* harmony import */ var _view_modes_SolidColorOptions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__("qiYd");
+/* harmony import */ var _view_modes_WireframeOptions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__("b2Zb");
+
 
 
 
@@ -503,7 +505,8 @@ var Options = function Options(_ref) {
     setModelControls = _ref.setModelControls,
     userSettings = _ref.userSettings,
     setUserSettings = _ref.setUserSettings,
-    logoDefs = _ref.logoDefs;
+    logoDefs = _ref.logoDefs,
+    canvasRef = _ref.canvasRef;
   var controls = Object(preact_hooks__WEBPACK_IMPORTED_MODULE_1__[/* useMemo */ "c"])(function () {
     return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_OptionsControls__WEBPACK_IMPORTED_MODULE_2__[/* default */ "a"], {
       modelControls: modelControls,
@@ -511,21 +514,21 @@ var Options = function Options(_ref) {
     });
   }, [modelControls, setModelControls]);
   var user = Object(preact_hooks__WEBPACK_IMPORTED_MODULE_1__[/* useMemo */ "c"])(function () {
-    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_OptionsUser__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"], {
+    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_OptionsUser__WEBPACK_IMPORTED_MODULE_4__[/* default */ "a"], {
       userSettings: userSettings,
       setUserSettings: setUserSettings
     });
   }, [userSettings, setUserSettings]);
   var viewModeOptions = Object(preact_hooks__WEBPACK_IMPORTED_MODULE_1__[/* useMemo */ "c"])(function () {
     var viewMode = modelControls.viewMode;
-    var sub = viewMode === 'regular' ? Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_view_modes_RegularOptions__WEBPACK_IMPORTED_MODULE_4__[/* default */ "a"], {
+    var sub = viewMode === 'regular' ? Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_view_modes_RegularOptions__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"], {
       modelControls: modelControls,
       setModelControls: setModelControls,
       logoDefs: logoDefs
-    }) : viewMode === 'solid_color' ? Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_view_modes_SolidColorOptions__WEBPACK_IMPORTED_MODULE_5__[/* default */ "a"], {
+    }) : viewMode === 'solid_color' ? Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_view_modes_SolidColorOptions__WEBPACK_IMPORTED_MODULE_6__[/* default */ "a"], {
       modelControls: modelControls,
       setModelControls: setModelControls
-    }) : viewMode === 'wireframe' ? Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_view_modes_WireframeOptions__WEBPACK_IMPORTED_MODULE_6__[/* default */ "a"], {
+    }) : viewMode === 'wireframe' ? Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_view_modes_WireframeOptions__WEBPACK_IMPORTED_MODULE_7__[/* default */ "a"], {
       modelControls: modelControls,
       setModelControls: setModelControls
     }) : null;
@@ -539,7 +542,14 @@ var Options = function Options(_ref) {
     class: "text-center font-bold border-b border-gray-700 mb-2 pb-1"
   }, "Controls"), controls, viewModeOptions, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
     class: "text-center font-bold border-b border-gray-700 mb-2 pb-1 mt-6"
-  }, "User Settings"), user);
+  }, "User Settings"), user, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
+    class: "text-center font-bold border-b border-gray-700 mb-2 pb-1 mt-6"
+  }, "Misc."), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])(_OptionsMisc__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"], {
+    modelControls: modelControls,
+    setModelControls: setModelControls,
+    canvasRef: canvasRef,
+    enableSaveImageButton: userSettings.preserveDrawingBuffer
+  }));
 };
 /* harmony default export */ __webpack_exports__["a"] = (Options);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__("HteQ")["Fragment"]))
@@ -1123,7 +1133,7 @@ __webpack_require__.d(mat4_namespaceObject, "ortho", function() { return ortho; 
 __webpack_require__.d(mat4_namespaceObject, "orthoZO", function() { return orthoZO; });
 __webpack_require__.d(mat4_namespaceObject, "lookAt", function() { return lookAt; });
 __webpack_require__.d(mat4_namespaceObject, "targetTo", function() { return targetTo; });
-__webpack_require__.d(mat4_namespaceObject, "str", function() { return str; });
+__webpack_require__.d(mat4_namespaceObject, "str", function() { return mat4_str; });
 __webpack_require__.d(mat4_namespaceObject, "frob", function() { return frob; });
 __webpack_require__.d(mat4_namespaceObject, "add", function() { return add; });
 __webpack_require__.d(mat4_namespaceObject, "subtract", function() { return subtract; });
@@ -1195,8 +1205,17 @@ var external_preact_ = __webpack_require__("HteQ");
 // EXTERNAL MODULE: ../node_modules/preact/hooks/dist/hooks.module.js
 var hooks_module = __webpack_require__("QRet");
 
+// CONCATENATED MODULE: ./lib/types/user-settings.ts
+var DEFAULT_USER_SETTINGS = {
+  sidebarPosition: 'right',
+  sidebarWidth: 300,
+  defaultTextureFilterMin: 'nearest',
+  defaultTextureFilterMag: 'nearest',
+  preserveDrawingBuffer: false
+};
 // CONCATENATED MODULE: ./lib/services/user-service.ts
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
 var localStorageUserService = {
   save: function save(userSettings) {
     var str = JSON.stringify(userSettings);
@@ -1227,11 +1246,16 @@ var localStorageUserService = {
     if (defaultTextureFilterMag !== 'nearest' && defaultTextureFilterMag !== 'linear') {
       throw new Error("Invalid defaultTextureFilterMag");
     }
+    var preserveDrawingBuffer = obj['preserveDrawingBuffer'];
+    if (typeof preserveDrawingBuffer !== 'boolean') {
+      preserveDrawingBuffer = DEFAULT_USER_SETTINGS.preserveDrawingBuffer;
+    }
     return {
       sidebarPosition: sidebarPosition,
       sidebarWidth: sidebarWidth,
       defaultTextureFilterMin: defaultTextureFilterMin,
-      defaultTextureFilterMag: defaultTextureFilterMag
+      defaultTextureFilterMag: defaultTextureFilterMag,
+      preserveDrawingBuffer: preserveDrawingBuffer
     };
   }
 };
@@ -1246,7 +1270,9 @@ var DEFAULT_MODEL_CONTROLS = {
   viewMode: 'regular',
   viewColor: [1.0, 1.0, 1.0, 1.0],
   // mixes multiplicatively
-
+  canvasBackground: 'black',
+  canvasBackgroundSize: 'auto',
+  canvasBackgroundRepeat: 'repeat',
   enableLightingRegular: false,
   logoColorIdx: 0,
   textureFilterMin: 'linear',
@@ -1254,13 +1280,6 @@ var DEFAULT_MODEL_CONTROLS = {
   enableLightingSolidColor: true,
   solidColor: [1.0, 1.0, 1.0, 1.0],
   wireframeColor: [1.0, 1.0, 1.0, 1.0]
-};
-// CONCATENATED MODULE: ./lib/types/user-settings.ts
-var DEFAULT_USER_SETTINGS = {
-  sidebarPosition: 'right',
-  sidebarWidth: 300,
-  defaultTextureFilterMin: 'nearest',
-  defaultTextureFilterMag: 'nearest'
 };
 // CONCATENATED MODULE: ./components/loader/FileChooser.tsx
 
@@ -3492,7 +3511,7 @@ function targetTo(out, eye, target, up) {
  * @returns {String} string representation of the matrix
  */
 
-function str(a) {
+function mat4_str(a) {
   return "mat4(" + a[0] + ", " + a[1] + ", " + a[2] + ", " + a[3] + ", " + a[4] + ", " + a[5] + ", " + a[6] + ", " + a[7] + ", " + a[8] + ", " + a[9] + ", " + a[10] + ", " + a[11] + ", " + a[12] + ", " + a[13] + ", " + a[14] + ", " + a[15] + ")";
 }
 /**
@@ -5679,7 +5698,7 @@ var webgl_sub_renderer_WebglSubRenderer = /*#__PURE__*/function () {
       var _modelControls$viewCo;
       var viewWidth = gl.drawingBufferWidth;
       var viewHeight = gl.drawingBufferHeight;
-      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.clearColor(0.0, 0.0, 0.0, 0.0);
       gl.clearDepth(1.0);
       gl.enable(gl.DEPTH_TEST);
       gl.depthFunc(gl.LEQUAL);
@@ -5957,7 +5976,9 @@ var webgl_engine_WebglEngine = /*#__PURE__*/function (_Engine) {
     _this = _super.call(this, config);
     webgl_engine_defineProperty(webgl_engine_assertThisInitialized(_this), "gl", void 0);
     webgl_engine_defineProperty(webgl_engine_assertThisInitialized(_this), "subRenderers", void 0);
-    var gl = config.canvas.getContext('webgl');
+    var gl = config.canvas.getContext('webgl', {
+      preserveDrawingBuffer: config.preserveDrawingBuffer
+    });
     if (gl === null) {
       throw "Couldn't get WebGL rendering context!";
     }
@@ -6378,41 +6399,9 @@ var ObjectList_ObjectList = function ObjectList(_ref) {
 // EXTERNAL MODULE: ./components/options/Options.tsx
 var Options = __webpack_require__("IomO");
 
-// CONCATENATED MODULE: ./lib/io-utils.ts
-function loadDataUrl(file) {
-  var fileReader = new FileReader();
-  var loadDataUrlPromise = new Promise(function (resolve, reject) {
-    fileReader.onload = function () {
-      var result = fileReader.result;
-      if (typeof result === 'string') {
-        resolve(result);
-      } else {
-        reject(new Error("Failed to read file: ".concat(file.name)));
-      }
-    };
-    fileReader.onerror = function () {
-      reject(new Error("Failed to read file: ".concat(file.name)));
-    };
-  });
-  fileReader.readAsDataURL(file);
-  return loadDataUrlPromise;
-}
-function createImageFromDataUrl(dataUrl) {
-  return new Promise(function (resolve, reject) {
-    var image = new Image();
-    image.onload = function () {
-      resolve(image);
-    };
-    image.onerror = function () {
-      reject(new Error("Failed to create image for dataUrl: ".concat(dataUrl)));
-    };
-    image.src = dataUrl;
-  });
-}
-var IoUtils = {
-  loadDataUrl: loadDataUrl,
-  createImageFromDataUrl: createImageFromDataUrl
-};
+// EXTERNAL MODULE: ./lib/io-utils.ts
+var io_utils = __webpack_require__("u6ao");
+
 // CONCATENATED MODULE: ./components/textures/TextureList.tsx
 function TextureList_slicedToArray(arr, i) { return TextureList_arrayWithHoles(arr) || TextureList_iterableToArrayLimit(arr, i) || TextureList_unsupportedIterableToArray(arr, i) || TextureList_nonIterableRest(); }
 function TextureList_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -6501,7 +6490,7 @@ var TextureManager_TextureManager = function TextureManager(_ref) {
               image: image
             };
           };
-          yield IoUtils.loadDataUrl(file).then(IoUtils.createImageFromDataUrl).then(updateMapping).catch(console.error);
+          yield io_utils["a" /* IoUtils */].loadDataUrl(file).then(io_utils["a" /* IoUtils */].createImageFromDataUrl).then(updateMapping).catch(console.error);
         };
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var _ret = yield* _loop();
@@ -6650,7 +6639,8 @@ var Main_Main = function Main(_ref) {
       modelControls: defaultModelControls,
       listener: engineListener,
       textureMapping: Main_objectSpread({}, regularTextures),
-      objStateMap: defaultObjStateMap
+      objStateMap: defaultObjStateMap,
+      preserveDrawingBuffer: defaultUserSettings.preserveDrawingBuffer
     };
     var engine = engineName === 'webgl' ? new webgl_engine_WebglEngine(engineConfig, shaders, object3doTree, logoDefs) : new UiDebugEngine(engineConfig);
     setEngine(engine);
@@ -6660,7 +6650,17 @@ var Main_Main = function Main(_ref) {
       alert("Unmounting the engine. This should probably not be happening normally!!!");
     };
     // \/ important: all dependencies should come from non-stateful values: AKA never change
-  }, [canvasRef, shaders, defaultObjStateMap, engineName, object3doTree, regularTextures, logoDefs, defaultModelControls]);
+  }, [canvasRef, shaders, defaultObjStateMap, engineName, object3doTree, regularTextures, logoDefs, defaultModelControls, defaultUserSettings]);
+  Object(hooks_module["b" /* useEffect */])(function () {
+    var canvas = canvasRef.current;
+    if (!canvas) {
+      return;
+    }
+    canvas.style.background = modelControls.canvasBackground;
+    canvas.style.backgroundSize = modelControls.canvasBackgroundSize;
+    canvas.style.backgroundRepeat = modelControls.canvasBackgroundRepeat;
+    canvas.style.backgroundPosition = 'center';
+  }, [canvasRef, modelControls]);
 
   //:: Memos
 
@@ -6702,9 +6702,10 @@ var Main_Main = function Main(_ref) {
       },
       userSettings: userSettings,
       setUserSettings: setUserSettings,
-      logoDefs: logoDefs
+      logoDefs: logoDefs,
+      canvasRef: canvasRef
     });
-  }, [engine, modelControls, userSettings, setUserSettings, logoDefs]);
+  }, [engine, modelControls, userSettings, setUserSettings, logoDefs, canvasRef]);
   var objectsPanel = Object(hooks_module["c" /* useMemo */])(function () {
     return Object(external_preact_["h"])(object_list_ObjectList, {
       object3doTree: object3doTree,
@@ -6776,9 +6777,15 @@ var Main_Main = function Main(_ref) {
 };
 /* harmony default export */ var components_Main = (Main_Main);
 // CONCATENATED MODULE: ./components/loader/Loader.tsx
+function Loader_typeof(obj) { "@babel/helpers - typeof"; return Loader_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, Loader_typeof(obj); }
 function Loader_asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function Loader_asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { Loader_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { Loader_asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 function Loader_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = Loader_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function Loader_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function Loader_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? Loader_ownKeys(Object(source), !0).forEach(function (key) { Loader_defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : Loader_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function Loader_defineProperty(obj, key, value) { key = Loader_toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function Loader_toPropertyKey(arg) { var key = Loader_toPrimitive(arg, "string"); return Loader_typeof(key) === "symbol" ? key : String(key); }
+function Loader_toPrimitive(input, hint) { if (Loader_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (Loader_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function Loader_slicedToArray(arr, i) { return Loader_arrayWithHoles(arr) || Loader_iterableToArrayLimit(arr, i) || Loader_unsupportedIterableToArray(arr, i) || Loader_nonIterableRest(); }
 function Loader_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function Loader_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return Loader_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return Loader_arrayLikeToArray(o, minLen); }
@@ -6847,6 +6854,11 @@ var Loader_Loader = function Loader(_ref) {
       class: "text-gray-400"
     }, message));
   }
+  var allTexturesFailed = Object(hooks_module["c" /* useMemo */])(function () {
+    return Object.values(textures).every(function (value) {
+      return value === null;
+    });
+  }, [textures]);
   return Object(external_preact_["h"])(components_Main, {
     engineName: "webgl",
     object3doTree: result,
@@ -6856,7 +6868,9 @@ var Loader_Loader = function Loader(_ref) {
     logoDefs: logoDefs,
     userService: userService,
     defaultUserSettings: defaultUserSettings,
-    defaultModelControls: defaultModelControls
+    defaultModelControls: Loader_objectSpread(Loader_objectSpread({}, defaultModelControls), {}, {
+      viewMode: allTexturesFailed ? 'wireframe' : defaultModelControls.viewMode
+    })
   });
 };
 /* harmony default export */ var loader_Loader = (Loader_Loader);
@@ -7176,6 +7190,204 @@ var SolidColorOptions = function SolidColorOptions(_ref) {
   })));
 };
 /* harmony default export */ __webpack_exports__["a"] = (SolidColorOptions);
+
+/***/ }),
+
+/***/ "tpTz":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("HteQ");
+/* harmony import */ var preact__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(preact__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var preact_hooks__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("QRet");
+/* harmony import */ var _lib_io_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("u6ao");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+var OptionsMisc = function OptionsMisc(_ref) {
+  var modelControls = _ref.modelControls,
+    setModelControls = _ref.setModelControls,
+    enableSaveImageButton = _ref.enableSaveImageButton,
+    canvasRef = _ref.canvasRef;
+  var _useState = Object(preact_hooks__WEBPACK_IMPORTED_MODULE_1__[/* useState */ "e"])(getInitialBg(modelControls.canvasBackground)),
+    _useState2 = _slicedToArray(_useState, 2),
+    canvasBg = _useState2[0],
+    setCanvasBg = _useState2[1];
+  var onChangeCanvasBg = Object(preact_hooks__WEBPACK_IMPORTED_MODULE_1__[/* useCallback */ "a"])(function (value) {
+    setCanvasBg(value);
+    if (value !== 'custom') {
+      setModelControls(_objectSpread(_objectSpread({}, modelControls), {}, {
+        canvasBackground: value
+      }));
+    }
+  }, [modelControls, setModelControls]);
+  var customBgFile = Object(preact_hooks__WEBPACK_IMPORTED_MODULE_1__[/* useMemo */ "c"])(function () {
+    if (canvasBg !== 'custom') {
+      return null;
+    }
+    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("input", {
+      type: "file",
+      multiple: false,
+      onChange: function onChange(ev) {
+        var files = ev.currentTarget.files;
+        if (files === null || files.length === 0) {
+          ev.currentTarget.value = '';
+          return;
+        }
+        var file = files[0];
+        _lib_io_utils__WEBPACK_IMPORTED_MODULE_2__[/* IoUtils */ "a"].loadDataUrl(file).then(function (dataUrl) {
+          var imageUrl = "url(".concat(dataUrl, ")");
+          setModelControls(_objectSpread(_objectSpread({}, modelControls), {}, {
+            canvasBackground: imageUrl
+          }));
+        });
+      }
+    });
+  }, [canvasBg, modelControls, setModelControls]);
+  var selectBgSize = Object(preact_hooks__WEBPACK_IMPORTED_MODULE_1__[/* useMemo */ "c"])(function () {
+    if (canvasBg !== 'custom') {
+      return null;
+    }
+    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, "Background Size"), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("select", {
+      class: "w-full",
+      value: modelControls.canvasBackgroundSize,
+      onChange: function onChange(ev) {
+        setModelControls(_objectSpread(_objectSpread({}, modelControls), {}, {
+          canvasBackgroundSize: ev.currentTarget.value
+        }));
+      }
+    }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("option", {
+      value: "auto"
+    }, "Auto"), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("option", {
+      value: "cover"
+    }, "Cover"), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("option", {
+      value: "contain"
+    }, "Contain")));
+  }, [canvasBg, modelControls]);
+  var selectBgRepeat = Object(preact_hooks__WEBPACK_IMPORTED_MODULE_1__[/* useMemo */ "c"])(function () {
+    if (canvasBg !== 'custom' || modelControls.canvasBackgroundSize === 'cover') {
+      return null;
+    }
+    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, "Background Repeat"), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("select", {
+      class: "w-full",
+      value: modelControls.canvasBackgroundRepeat,
+      onChange: function onChange(ev) {
+        setModelControls(_objectSpread(_objectSpread({}, modelControls), {}, {
+          canvasBackgroundRepeat: ev.currentTarget.value
+        }));
+      }
+    }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("option", {
+      value: "repeat"
+    }, "On"), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("option", {
+      value: "no-repeat"
+    }, "Off")));
+  }, [canvasBg, modelControls]);
+  var saveCanvasImage = Object(preact_hooks__WEBPACK_IMPORTED_MODULE_1__[/* useCallback */ "a"])(function () {
+    var canvas = canvasRef.current;
+    if (canvas === undefined) {
+      return;
+    }
+    var dataURL = canvas.toDataURL();
+    var downloadLink = document.createElement('a');
+    var timestamp = new Date().getTime();
+    downloadLink.href = dataURL;
+    downloadLink.download = "3do-".concat(timestamp, ".png");
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  }, [canvasRef]);
+  var saveImageButton = Object(preact_hooks__WEBPACK_IMPORTED_MODULE_1__[/* useMemo */ "c"])(function () {
+    if (!enableSaveImageButton) {
+      return null;
+    }
+    return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
+      class: "text-center"
+    }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("button", {
+      class: "text-white hover:text-yellow-500 focus:text-yellow-500",
+      onClick: saveCanvasImage
+    }, "Save Model Image"));
+  }, [enableSaveImageButton, saveCanvasImage]);
+  return Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
+    class: "space-y-4"
+  }, saveImageButton, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", null, "Canvas Background", Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("select", {
+    class: "w-full",
+    value: canvasBg,
+    onChange: function onChange(ev) {
+      return onChangeCanvasBg(ev.currentTarget.value);
+    }
+  }, Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("option", {
+    value: "transparent"
+  }, "Transparent"), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("option", {
+    value: "black"
+  }, "Black"), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("option", {
+    value: "white"
+  }, "White"), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("option", {
+    value: "custom"
+  }, "(Custom Image)")), Object(preact__WEBPACK_IMPORTED_MODULE_0__["h"])("div", {
+    class: "mt-0.5"
+  }, customBgFile)), selectBgSize, selectBgRepeat);
+};
+/* harmony default export */ __webpack_exports__["a"] = (OptionsMisc);
+function getInitialBg(canvasBg) {
+  if (canvasBg === 'black' || canvasBg === 'white' || canvasBg === 'transparent') {
+    return canvasBg;
+  }
+  return 'custom';
+}
+
+/***/ }),
+
+/***/ "u6ao":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return IoUtils; });
+function loadDataUrl(file) {
+  var fileReader = new FileReader();
+  var loadDataUrlPromise = new Promise(function (resolve, reject) {
+    fileReader.onload = function () {
+      var result = fileReader.result;
+      if (typeof result === 'string') {
+        resolve(result);
+      } else {
+        reject(new Error("Failed to read file: ".concat(file.name)));
+      }
+    };
+    fileReader.onerror = function () {
+      reject(new Error("Failed to read file: ".concat(file.name)));
+    };
+  });
+  fileReader.readAsDataURL(file);
+  return loadDataUrlPromise;
+}
+function createImageFromDataUrl(dataUrl) {
+  return new Promise(function (resolve, reject) {
+    var image = new Image();
+    image.onload = function () {
+      resolve(image);
+    };
+    image.onerror = function () {
+      reject(new Error("Failed to create image for dataUrl: ".concat(dataUrl)));
+    };
+    image.src = dataUrl;
+  });
+}
+var IoUtils = {
+  loadDataUrl: loadDataUrl,
+  createImageFromDataUrl: createImageFromDataUrl
+};
 
 /***/ }),
 
