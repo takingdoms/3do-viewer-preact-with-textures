@@ -1,6 +1,6 @@
 import { Object3do, Object3doTree, Parse3do } from "@takingdoms/lib-3do";
 import { FunctionComponent,h  } from "preact";
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useMemo, useState } from "preact/hooks";
 import { WebglEngineShaderSources } from "../../lib/engines/webgl-engine";
 import { defaultLogoColorsDefinitions, TakLogoColorsDefinitions } from "../../lib/logo-colors";
 import { UserService } from "../../lib/services/user-service";
@@ -69,6 +69,10 @@ const Loader: FunctionComponent<{
     );
   }
 
+  const allTexturesFailed = useMemo(() => {
+    return Object.values(textures).every((value) => value === null);
+  }, [textures]);
+
   return (
     <Main
       engineName="webgl"
@@ -79,7 +83,10 @@ const Loader: FunctionComponent<{
       logoDefs={logoDefs}
       userService={userService}
       defaultUserSettings={defaultUserSettings}
-      defaultModelControls={defaultModelControls}
+      defaultModelControls={{
+        ...defaultModelControls,
+        viewMode: allTexturesFailed ? 'wireframe' : defaultModelControls.viewMode,
+      }}
     />
   );
 }
