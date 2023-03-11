@@ -28,7 +28,10 @@ const TextureManager: FunctionComponent<TextureManagerProps> = ({
       }
 
       const updateMapping = (image: HTMLImageElement) => {
-        const fileBasename = file.name.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, '');
+        const fileBasename = file.name
+          .replace(/^.*[\\\/]/, '')   // get filename (remove parent directories)
+          .replace(/\.[^/.]+$/, '');  // get basename (remove extension)
+
         newMapping[fileBasename] = { type: 'html', image };
       };
 

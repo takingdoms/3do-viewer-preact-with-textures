@@ -43,7 +43,14 @@ const App = () => {
 
   if (dataSource === undefined) {
     return (
-      <FileChooser onSubmit={setDataSource} />
+      <FileChooser
+        onSubmit={setDataSource}
+        defaultUserSettings={defaultUserSettings}
+        setDefaultUserSettings={(newUserSettings) => {
+          setDefaultUserSettings(newUserSettings);
+          userService.save(newUserSettings);
+        }}
+      />
     );
   }
 
