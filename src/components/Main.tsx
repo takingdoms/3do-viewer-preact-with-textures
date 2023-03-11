@@ -119,6 +119,37 @@ const Main: FunctionComponent<{
     canvas.style.backgroundPosition = 'center';
   }, [canvasRef, modelControls]);
 
+  useEffect(() => {
+    if (engine) {
+      engine.setModelControls(modelControls);
+    }
+  }, [engine, modelControls]);
+
+  useEffect(() => {
+    if (
+      modelControls.textureFilterMin !== userSettings.defaultTextureFilterMin ||
+      modelControls.textureFilterMag !== userSettings.defaultTextureFilterMag
+    ) {
+      setUserSettings({
+        ...userSettings,
+        defaultTextureFilterMin: modelControls.textureFilterMin,
+        defaultTextureFilterMag: modelControls.textureFilterMag,
+      });
+    }
+  }, [engine, modelControls, userSettings, setUserSettings]);
+
+  useEffect(() => {
+    if (engine) {
+      engine.setObjectStateMap(objStateMap);
+    }
+  }, [engine, objStateMap]);
+
+  useEffect(() => {
+    if (engine) {
+      engine.setTextureMapping({ ...regularTextures, ...customTextures });
+    }
+  }, [engine, regularTextures, customTextures]);
+
   //:: Memos
 
   const canvasWrapper = useMemo(() => (
@@ -148,61 +179,33 @@ const Main: FunctionComponent<{
   const optionsPanel = useMemo(() => (
     <Options
       modelControls={modelControls}
-      setModelControls={(newModelControls) => {
-        setModelControls(newModelControls);
-
-        if (newModelControls.textureFilterMin !== modelControls.textureFilterMin ||
-            newModelControls.textureFilterMag !== modelControls.textureFilterMag)
-        {
-          setUserSettings({
-            ...userSettings,
-            defaultTextureFilterMin: newModelControls.textureFilterMin,
-            defaultTextureFilterMag: newModelControls.textureFilterMag,
-          });
-        }
-
-        if (engine) {
-          engine.setModelControls(newModelControls);
-        }
-      }}
+      setModelControls={setModelControls}
       userSettings={userSettings}
       setUserSettings={setUserSettings}
       logoDefs={logoDefs}
       canvasRef={canvasRef}
     />
-  ), [engine, modelControls, userSettings, setUserSettings, logoDefs, canvasRef]);
+  ), [modelControls, userSettings, setUserSettings, logoDefs, canvasRef]);
 
   const objectsPanel = useMemo(() => {
     return (
       <ObjectList
         object3doTree={object3doTree}
         objStateMap={objStateMap}
-        setObjStateMap={(newObjStateMap) => {
-          setObjStateMap(newObjStateMap);
-
-          if (engine) {
-            engine.setObjectStateMap(newObjStateMap);
-          }
-        }}
+        setObjStateMap={setObjStateMap}
       />
     );
-  }, [engine, object3doTree, objStateMap]);
+  }, [object3doTree, objStateMap]);
 
   const texturesPanel = useMemo(() => {
     return (
       <TextureManager
         regularTextures={regularTextures}
         customTextures={customTextures}
-        setCustomTextures={(newCustomTextures) => {
-          if (engine) {
-            engine.setTextureMapping({ ...regularTextures, ...newCustomTextures });
-          }
-
-          setCustomTextures(newCustomTextures);
-        }}
+        setCustomTextures={setCustomTextures}
       />
     );
-  }, [engine, customTextures, regularTextures]);
+  }, [customTextures, regularTextures]);
 
   const sidebar = useMemo(() => {
     return (
