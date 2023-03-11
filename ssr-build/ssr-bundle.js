@@ -6680,11 +6680,11 @@ var Main_Main = function Main(_ref) {
   var _useState5 = Object(hooks_module["e" /* useState */])(defaultModelControls),
     _useState6 = Main_slicedToArray(_useState5, 2),
     modelControls = _useState6[0],
-    _setModelControls = _useState6[1];
+    setModelControls = _useState6[1];
   var _useState7 = Object(hooks_module["e" /* useState */])(defaultObjStateMap),
     _useState8 = Main_slicedToArray(_useState7, 2),
     objStateMap = _useState8[0],
-    _setObjStateMap = _useState8[1];
+    setObjStateMap = _useState8[1];
   var _useState9 = Object(hooks_module["e" /* useState */])(),
     _useState10 = Main_slicedToArray(_useState9, 2),
     engine = _useState10[0],
@@ -6700,7 +6700,7 @@ var Main_Main = function Main(_ref) {
   var _useState13 = Object(hooks_module["e" /* useState */])({}),
     _useState14 = Main_slicedToArray(_useState13, 2),
     customTextures = _useState14[0],
-    _setCustomTextures = _useState14[1];
+    setCustomTextures = _useState14[1];
   var canvasRef = Object(hooks_module["d" /* useRef */])();
 
   //:: Effects
@@ -6714,7 +6714,7 @@ var Main_Main = function Main(_ref) {
     canvas.height = canvas.clientHeight;
     console.log('Creating the Engine');
     var engineListener = {
-      onModelControlsChanged: _setModelControls
+      onModelControlsChanged: setModelControls
     };
     var engineConfig = {
       mode: 'static',
@@ -6744,6 +6744,29 @@ var Main_Main = function Main(_ref) {
     canvas.style.backgroundRepeat = modelControls.canvasBackgroundRepeat;
     canvas.style.backgroundPosition = 'center';
   }, [canvasRef, modelControls]);
+  Object(hooks_module["b" /* useEffect */])(function () {
+    if (engine) {
+      engine.setModelControls(modelControls);
+    }
+  }, [engine, modelControls]);
+  Object(hooks_module["b" /* useEffect */])(function () {
+    if (modelControls.textureFilterMin !== userSettings.defaultTextureFilterMin || modelControls.textureFilterMag !== userSettings.defaultTextureFilterMag) {
+      setUserSettings(Main_objectSpread(Main_objectSpread({}, userSettings), {}, {
+        defaultTextureFilterMin: modelControls.textureFilterMin,
+        defaultTextureFilterMag: modelControls.textureFilterMag
+      }));
+    }
+  }, [engine, modelControls, userSettings, setUserSettings]);
+  Object(hooks_module["b" /* useEffect */])(function () {
+    if (engine) {
+      engine.setObjectStateMap(objStateMap);
+    }
+  }, [engine, objStateMap]);
+  Object(hooks_module["b" /* useEffect */])(function () {
+    if (engine) {
+      engine.setTextureMapping(Main_objectSpread(Main_objectSpread({}, regularTextures), customTextures));
+    }
+  }, [engine, regularTextures, customTextures]);
 
   //:: Memos
 
@@ -6771,48 +6794,27 @@ var Main_Main = function Main(_ref) {
   var optionsPanel = Object(hooks_module["c" /* useMemo */])(function () {
     return Object(external_preact_["h"])(Options["a" /* default */], {
       modelControls: modelControls,
-      setModelControls: function setModelControls(newModelControls) {
-        _setModelControls(newModelControls);
-        if (newModelControls.textureFilterMin !== modelControls.textureFilterMin || newModelControls.textureFilterMag !== modelControls.textureFilterMag) {
-          setUserSettings(Main_objectSpread(Main_objectSpread({}, userSettings), {}, {
-            defaultTextureFilterMin: newModelControls.textureFilterMin,
-            defaultTextureFilterMag: newModelControls.textureFilterMag
-          }));
-        }
-        if (engine) {
-          engine.setModelControls(newModelControls);
-        }
-      },
+      setModelControls: setModelControls,
       userSettings: userSettings,
       setUserSettings: setUserSettings,
       logoDefs: logoDefs,
       canvasRef: canvasRef
     });
-  }, [engine, modelControls, userSettings, setUserSettings, logoDefs, canvasRef]);
+  }, [modelControls, userSettings, setUserSettings, logoDefs, canvasRef]);
   var objectsPanel = Object(hooks_module["c" /* useMemo */])(function () {
     return Object(external_preact_["h"])(object_list_ObjectList, {
       object3doTree: object3doTree,
       objStateMap: objStateMap,
-      setObjStateMap: function setObjStateMap(newObjStateMap) {
-        _setObjStateMap(newObjStateMap);
-        if (engine) {
-          engine.setObjectStateMap(newObjStateMap);
-        }
-      }
+      setObjStateMap: setObjStateMap
     });
-  }, [engine, object3doTree, objStateMap]);
+  }, [object3doTree, objStateMap]);
   var texturesPanel = Object(hooks_module["c" /* useMemo */])(function () {
     return Object(external_preact_["h"])(textures_TextureManager, {
       regularTextures: regularTextures,
       customTextures: customTextures,
-      setCustomTextures: function setCustomTextures(newCustomTextures) {
-        if (engine) {
-          engine.setTextureMapping(Main_objectSpread(Main_objectSpread({}, regularTextures), newCustomTextures));
-        }
-        _setCustomTextures(newCustomTextures);
-      }
+      setCustomTextures: setCustomTextures
     });
-  }, [engine, customTextures, regularTextures]);
+  }, [customTextures, regularTextures]);
   var sidebar = Object(hooks_module["c" /* useMemo */])(function () {
     return Object(external_preact_["h"])("div", {
       class: "h-full flex flex-col"
@@ -6882,6 +6884,7 @@ function Loader_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 var Loader_Loader = function Loader(_ref) {
+  var _getDefaultViewMode, _getDefaultLogoColor;
   var dataSource = _ref.dataSource,
     userService = _ref.userService,
     defaultUserSettings = _ref.defaultUserSettings,
@@ -6914,7 +6917,7 @@ var Loader_Loader = function Loader(_ref) {
       setResult(res);
       return loadTextures(res, logoDefs, 'assets/custom/pngs/', 'png');
     }).then(setTextures).catch(setError);
-  }, [dataSource]);
+  }, [dataSource, logoDefs]);
   if (error !== undefined) {
     return Object(external_preact_["h"])("div", {
       class: "min-w-screen min-h-screen flex flex-col justify-center items-center text-3xl\r bg-black"
@@ -6937,22 +6940,6 @@ var Loader_Loader = function Loader(_ref) {
       class: "text-gray-400"
     }, message));
   }
-  var defaultViewMode = Object(hooks_module["c" /* useMemo */])(function () {
-    var allTexturesFailed = Object.values(textures).every(function (value) {
-      return value === null;
-    });
-    return allTexturesFailed ? 'wireframe' : defaultModelControls.viewMode;
-  }, [textures, defaultModelControls]);
-  var defaultLogoColorIdx = Object(hooks_module["c" /* useMemo */])(function () {
-    var fileName = typeof dataSource === 'string' ? dataSource.replace(/^.*[\\\/]/, '') : dataSource.name; // File type
-
-    if (fileName.startsWith('ara')) return 3;
-    if (fileName.startsWith('tar')) return 1;
-    if (fileName.startsWith('ver')) return 0;
-    if (fileName.startsWith('zon')) return 7;
-    if (fileName.startsWith('cre')) return 6;
-    return defaultModelControls.logoColorIdx;
-  }, [defaultModelControls, dataSource]);
   return Object(external_preact_["h"])(components_Main, {
     engineName: "webgl",
     object3doTree: result,
@@ -6963,8 +6950,8 @@ var Loader_Loader = function Loader(_ref) {
     userService: userService,
     defaultUserSettings: defaultUserSettings,
     defaultModelControls: Loader_objectSpread(Loader_objectSpread({}, defaultModelControls), {}, {
-      viewMode: defaultViewMode,
-      logoColorIdx: defaultLogoColorIdx
+      viewMode: (_getDefaultViewMode = getDefaultViewMode(textures)) !== null && _getDefaultViewMode !== void 0 ? _getDefaultViewMode : defaultModelControls.viewMode,
+      logoColorIdx: (_getDefaultLogoColor = getDefaultLogoColor(dataSource)) !== null && _getDefaultLogoColor !== void 0 ? _getDefaultLogoColor : defaultModelControls.logoColorIdx
     })
   });
 };
@@ -7157,6 +7144,22 @@ function _loadTextures() {
     return result;
   });
   return _loadTextures.apply(this, arguments);
+}
+function getDefaultViewMode(textures) {
+  var allTexturesFailed = Object.values(textures).every(function (value) {
+    return value === null;
+  });
+  return allTexturesFailed ? 'wireframe' : undefined;
+}
+function getDefaultLogoColor(dataSource) {
+  var fileName = typeof dataSource === 'string' ? dataSource.replace(/^.*[\\\/]/, '') : dataSource.name; // File type
+
+  if (fileName.startsWith('ara')) return 3;
+  if (fileName.startsWith('tar')) return 1;
+  if (fileName.startsWith('ver')) return 0;
+  if (fileName.startsWith('zon')) return 7;
+  if (fileName.startsWith('cre')) return 6;
+  return undefined;
 }
 // CONCATENATED MODULE: ./components/App.tsx
 function App_typeof(obj) { "@babel/helpers - typeof"; return App_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, App_typeof(obj); }
