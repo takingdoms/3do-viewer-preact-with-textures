@@ -6725,7 +6725,10 @@ var Main_Main = function Main(_ref) {
       objStateMap: defaultObjStateMap,
       preserveDrawingBuffer: defaultUserSettings.preserveDrawingBuffer
     };
-    var engine = engineName === 'webgl' ? new webgl_engine_WebglEngine(engineConfig, shaders, object3doTree, logoDefs) : new UiDebugEngine(engineConfig);
+    var actualLogoDefs = Main_objectSpread(Main_objectSpread({}, logoDefs), {}, {
+      defaultIdx: defaultModelControls.logoColorIdx
+    });
+    var engine = engineName === 'webgl' ? new webgl_engine_WebglEngine(engineConfig, shaders, object3doTree, actualLogoDefs) : new UiDebugEngine(engineConfig);
     setEngine(engine);
     return function () {
       engine.destroy();
