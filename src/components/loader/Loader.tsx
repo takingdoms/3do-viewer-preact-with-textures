@@ -7,6 +7,7 @@ import { UserService } from "../../lib/services/user-service";
 import { TextureMapping } from "../../lib/texture-mapping";
 import { ModelControls } from "../../lib/types/model-controls";
 import { UserSettings } from "../../lib/types/user-settings";
+import { ViewMode } from "../../lib/types/view";
 import { Utils } from "../../lib/utils";
 import Main, { ObjectStateMap } from "../Main";
 
@@ -38,7 +39,7 @@ const Loader: FunctionComponent<{
       })
       .then(setTextures)
       .catch(setError);
-  }, [dataSource]);
+  }, [dataSource, logoDefs]);
 
   if (error !== undefined) {
     return (
@@ -69,26 +70,6 @@ const Loader: FunctionComponent<{
     );
   }
 
-  const defaultViewMode = useMemo(() => {
-    const allTexturesFailed = Object.values(textures).every((value) => value === null);
-
-    return allTexturesFailed ? 'wireframe' : defaultModelControls.viewMode;
-  }, [textures, defaultModelControls]);
-
-  const defaultLogoColorIdx: TakLogoIndex = useMemo(() => {
-    const fileName = typeof dataSource === 'string'
-      ? dataSource.replace(/^.*[\\\/]/, '')
-      : dataSource.name; // File type
-
-    if (fileName.startsWith('ara')) return 3;
-    if (fileName.startsWith('tar')) return 1;
-    if (fileName.startsWith('ver')) return 0;
-    if (fileName.startsWith('zon')) return 7;
-    if (fileName.startsWith('cre')) return 6;
-
-    return defaultModelControls.logoColorIdx;
-  }, [defaultModelControls, dataSource]);
-
   return (
     <Main
       engineName="webgl"
@@ -101,8 +82,8 @@ const Loader: FunctionComponent<{
       defaultUserSettings={defaultUserSettings}
       defaultModelControls={{
         ...defaultModelControls,
-        viewMode: defaultViewMode,
-        logoColorIdx: defaultLogoColorIdx,
+        viewMode: getDefaultViewMode(textures) ?? defaultModelControls.viewMode,
+        logoColorIdx: getDefaultLogoColor(dataSource) ?? defaultModelControls.logoColorIdx,
       }}
     />
   );
@@ -248,4 +229,23 @@ async function loadTextures(
   }));
 
   return result;
+}
+
+function getDefaultViewMode(textures: TextureMapping): ViewMode | undefined {
+  const allTexturesFailed = Object.values(textures).every((value) => value === null);
+  return allTexturesFailed ? 'wireframe' : undefined;
+}
+
+function getDefaultLogoColor(dataSource: File | string): TakLogoIndex | undefined {
+  const fileName = typeof dataSource === 'string'
+    ? dataSource.replace(/^.*[\\\/]/, '')
+    : dataSource.name; // File type
+
+  if (fileName.startsWith('ara')) return 3;
+  if (fileName.startsWith('tar')) return 1;
+  if (fileName.startsWith('ver')) return 0;
+  if (fileName.startsWith('zon')) return 7;
+  if (fileName.startsWith('cre')) return 6;
+
+  return undefined;
 }
