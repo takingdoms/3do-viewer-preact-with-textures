@@ -668,7 +668,18 @@ var OptionsControls_OptionsControls = function OptionsControls(_ref) {
     value: "solid_color"
   }, "Solid Color"), Object(external_preact_["h"])("option", {
     value: "wireframe"
-  }, "Wireframe"))));
+  }, "Wireframe"))), Object(external_preact_["h"])("div", null, Object(external_preact_["h"])("label", {
+    class: "flex items-center space-x-2",
+    title: "This is a temporary, band-aid solution to fix issues with Z-Fighting"
+  }, Object(external_preact_["h"])("input", {
+    type: "checkbox",
+    checked: modelControls.enableFaceCulling,
+    onChange: function onChange(ev) {
+      setModelControls(_objectSpread(_objectSpread({}, modelControls), {}, {
+        enableFaceCulling: ev.currentTarget.checked
+      }));
+    }
+  }), Object(external_preact_["h"])("span", null, "Enable face-culling"))));
 };
 /* harmony default export */ var options_OptionsControls = __webpack_exports__["a"] = (OptionsControls_OptionsControls);
 
@@ -1273,6 +1284,7 @@ var DEFAULT_MODEL_CONTROLS = {
   canvasBackground: 'black',
   canvasBackgroundSize: 'auto',
   canvasBackgroundRepeat: 'repeat',
+  enableFaceCulling: false,
   enableLightingRegular: false,
   logoColorIdx: 0,
   textureFilterMin: 'linear',
@@ -5922,6 +5934,11 @@ var regular_renderer_RegularRenderer = /*#__PURE__*/function (_WebglSubRenderer)
   }, {
     key: "inBeforeTheRootRender",
     value: function inBeforeTheRootRender(gl, modelControls) {
+      if (modelControls.enableFaceCulling) {
+        gl.enable(gl.CULL_FACE);
+      } else {
+        gl.disable(gl.CULL_FACE);
+      }
       this.ctx.setUniformBool('useLights', modelControls.enableLightingRegular);
       var minFilter = modelControls.textureFilterMin === 'linear' ? gl.LINEAR : gl.NEAREST;
       var magFilter = modelControls.textureFilterMag === 'linear' ? gl.LINEAR : gl.NEAREST;
@@ -5992,6 +6009,11 @@ var solid_color_renderer_SolidColorRenderer = /*#__PURE__*/function (_WebglSubRe
   }, {
     key: "inBeforeTheRootRender",
     value: function inBeforeTheRootRender(gl, modelControls) {
+      if (modelControls.enableFaceCulling) {
+        gl.enable(gl.CULL_FACE);
+      } else {
+        gl.disable(gl.CULL_FACE);
+      }
       this.ctx.setUniformBool('useLights', modelControls.enableLightingSolidColor);
     }
   }]);
@@ -6611,7 +6633,12 @@ var TextureManager_TextureManager = function TextureManager(_ref) {
     }
   });
   return Object(external_preact_["h"])("div", {
-    class: "flex flex-col max-h-full overflow-hidden"
+    class: "flex flex-col h-full overflow-hidden"
+  }, Object(external_preact_["h"])("div", {
+    class: "flex flex-col overflow-hidden pb-4",
+    style: {
+      maxHeight: '50%'
+    }
   }, Object(external_preact_["h"])("div", {
     class: "text-center font-bold mb-2"
   }, "Custom Textures"), Object(external_preact_["h"])("div", {
@@ -6621,15 +6648,15 @@ var TextureManager_TextureManager = function TextureManager(_ref) {
     setTextures: setCustomTextures
   })), Object(external_preact_["h"])("div", {
     className: "px-6 mt-2"
-  }, fileInput), Object(external_preact_["h"])("div", {
-    class: "mb-6"
-  }), Object(external_preact_["h"])("div", {
+  }, fileInput)), Object(external_preact_["h"])("div", {
+    class: "grow basis-1/2 flex flex-col overflow-hidden"
+  }, Object(external_preact_["h"])("div", {
     class: "text-center font-bold mb-2"
   }, "TAK Textures"), Object(external_preact_["h"])("div", {
     class: "grow overflow-auto px-6"
   }, Object(external_preact_["h"])(textures_TextureList, {
     textures: regularTextures
-  })));
+  }))));
 };
 /* harmony default export */ var textures_TextureManager = (TextureManager_TextureManager);
 // CONCATENATED MODULE: ./components/Main.tsx
