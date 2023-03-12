@@ -72,6 +72,22 @@ const OptionsControls: FunctionComponent<{
           <option value="wireframe">Wireframe</option>
         </select>
       </div>
+      <div>
+        <label
+          class="flex items-center space-x-2"
+          title="This is a temporary, band-aid solution to fix issues with Z-Fighting"
+        >
+          <input
+            type="checkbox"
+            checked={modelControls.enableFaceCulling}
+            onChange={(ev) => {
+              setModelControls({ ...modelControls, enableFaceCulling: ev.currentTarget.checked });
+            }}
+          />
+
+          <span>Enable face-culling</span>
+        </label>
+      </div>
     </div>
   );
 }

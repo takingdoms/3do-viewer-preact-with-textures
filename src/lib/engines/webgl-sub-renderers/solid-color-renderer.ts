@@ -43,6 +43,12 @@ export class SolidColorRenderer extends WebglSubRenderer<SolidColorProgramInfo> 
   }
 
   protected override inBeforeTheRootRender(gl: WebGLRenderingContext, modelControls: ModelControls): void {
+    if (modelControls.enableFaceCulling) {
+      gl.enable(gl.CULL_FACE);
+    } else {
+      gl.disable(gl.CULL_FACE);
+    }
+
     this.ctx.setUniformBool('useLights', modelControls.enableLightingSolidColor);
   }
 }

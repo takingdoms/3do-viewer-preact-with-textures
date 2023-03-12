@@ -14,6 +14,7 @@ export type ModelControls = {
   canvasBackground: string;
   canvasBackgroundSize: 'auto' | 'cover' | 'contain';
   canvasBackgroundRepeat: 'repeat' | 'no-repeat';
+  enableFaceCulling: boolean;
 
   //:: Regular mode options
   enableLightingRegular: boolean;
@@ -41,6 +42,7 @@ export const DEFAULT_MODEL_CONTROLS: ModelControls = {
   canvasBackground: 'black',
   canvasBackgroundSize: 'auto',
   canvasBackgroundRepeat: 'repeat',
+  enableFaceCulling: false,
 
   enableLightingRegular: false,
   logoColorIdx: 0,

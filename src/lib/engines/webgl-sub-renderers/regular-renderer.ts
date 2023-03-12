@@ -52,6 +52,12 @@ export class RegularRenderer extends WebglSubRenderer<RegularProgramInfo> {
   }
 
   protected override inBeforeTheRootRender(gl: WebGLRenderingContext, modelControls: ModelControls): void {
+    if (modelControls.enableFaceCulling) {
+      gl.enable(gl.CULL_FACE);
+    } else {
+      gl.disable(gl.CULL_FACE);
+    }
+
     this.ctx.setUniformBool('useLights', modelControls.enableLightingRegular);
 
     const minFilter = modelControls.textureFilterMin === 'linear' ? gl.LINEAR : gl.NEAREST;
