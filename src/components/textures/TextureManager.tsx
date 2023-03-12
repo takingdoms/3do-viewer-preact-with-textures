@@ -75,18 +75,21 @@ const TextureManager: FunctionComponent<TextureManagerProps> = ({
   );
 
   return (
-    <div class="flex flex-col max-h-full overflow-hidden">
+    <div class="flex flex-col h-full overflow-hidden">
 
-      <div class="text-center font-bold mb-2">Custom Textures</div>
-      <div class="grow overflow-auto px-6">
-        <TextureList textures={customTextures} setTextures={setCustomTextures} />
+      <div class="flex flex-col overflow-hidden pb-4" style={{ maxHeight: '50%' }}>
+        <div class="text-center font-bold mb-2">Custom Textures</div>
+        <div class="grow overflow-auto px-6">
+          <TextureList textures={customTextures} setTextures={setCustomTextures} />
+        </div>
+        <div className="px-6 mt-2">{fileInput}</div>
       </div>
-      <div className="px-6 mt-2">{fileInput}</div>
-      <div class="mb-6" />
 
-      <div class="text-center font-bold mb-2">TAK Textures</div>
-      <div class="grow overflow-auto px-6">
-        <TextureList textures={regularTextures} />
+      <div class="grow basis-1/2 flex flex-col overflow-hidden">
+        <div class="text-center font-bold mb-2">TAK Textures</div>
+        <div class="grow overflow-auto px-6">
+          <TextureList textures={regularTextures} />
+        </div>
       </div>
 
     </div>
